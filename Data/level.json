@@ -1,0 +1,119 @@
+[
+  // Arena
+  { "brick": "block", "x": -300, "y": -300, "w": 600, "d": 600, "h": 1, "z": -1 },
+
+  // Ramp gallery
+  { "brick": "block", "x": -14, "y": 20, "w": 8, "d": 4, "h": 2 },
+  { "brick": "block", "x": -14, "y": 12, "w": 4, "d": 8, "h": 1 },
+  { "brick": "ramp", "x": -14, "y": 8, "facing": "north", "w": 4, "run": 4, "h": 1, "m": "danger" },
+  { "brick": "block", "x": -8, "y": 12, "w": 4, "d": 4, "h": 1.5 },
+  { "brick": "ramp", "x": -8, "y": 9, "facing": "north", "w": 4, "run": 3, "h": 1.5, "m": "danger" },
+  { "brick": "block", "x": -4, "y": 12, "w": 2, "d": 4, "h": 1.5 },
+  { "brick": "ramp", "x": -4, "y": 12, "z": 1.5, "facing": "east", "w": 4, "run": 2, "h": 1, "m": "danger" },
+  { "brick": "block", "x": -2, "y": 12, "w": 4, "d": 8, "h": 2.5 },
+  { "brick": "ramp", "x": -2, "y": 9.5, "facing": "north", "w": 4, "run": 2.5, "h": 2.5, "m": "danger" },
+  { "brick": "block", "x": 4, "y": 12, "w": 4, "d": 4, "h": 3 },
+  { "brick": "ramp", "x": 4, "y": 10.5, "facing": "north", "w": 4, "run": 1.5, "h": 3, "m": "danger" },
+
+  // Tower
+  { "brick": "block", "x": 2, "y": 24, "w": 4, "d": 4, "h": 10 },
+  { "brick": "block", "x": -2, "y": 20, "w": 4, "d": 4, "h": 3 },
+  { "brick": "block", "x": 2, "y": 20, "w": 4, "d": 4, "h": 3 },
+  { "brick": "stairs", "x": 2, "y": 20, "z": 3, "facing": "east", "w": 4, "steps": 8, "m": "danger" },
+  { "brick": "block", "x": 6, "y": 20, "z": 3, "w": 4, "d": 4, "h": 2 },
+  { "brick": "stairs", "x": 6, "y": 24, "z": 5, "facing": "north", "w": 4, "steps": 8, "m": "danger" },
+  { "brick": "block", "x": 6, "y": 28, "z": 5, "w": 4, "d": 4, "h": 2 },
+  { "brick": "stairs", "x": 2, "y": 28, "z": 7, "facing": "west", "w": 4, "steps": 8, "m": "danger" },
+  { "brick": "block", "x": -2, "y": 24, "z": 7, "w": 4, "d": 8, "h": 2 },
+  { "brick": "ramp", "x": 0, "y": 24, "z": 9, "facing": "east", "w": 2, "run": 2, "h": 1, "m": "danger" },
+  { "brick": "block", "x": 2, "y": 20, "z": 8, "w": 4, "d": 4, "h": 2 },
+  { "brick": "block", "x": 6, "y": 20, "z": 9, "w": 4, "d": 4, "h": 1 },
+  
+  // Callable lifts
+  { "brick": "button", "x": 7, "y": 21, "z": 10, "w": 2, "d": 2, "emit": "tower-call" },
+  { "brick": "platform", "id": "lift1", "w": 4, "d": 4, "h": 0.25, "m": "danger",
+    "mode": "called", "on": "tower-call",
+    "speed": 6, "dwell": 2, "stops": [[10, 39, 11.75], [10, 20, 9.75]] },
+  { "brick": "block", "x": 6, "y": 43, "z": 11, "w": 8, "d": 8, "h": 1 },
+  
+  { "brick": "button", "x": -1, "y": 25, "z": 0, "w": 2, "d": 2, "emit": "lift-call" },
+  // Same lift, called by hand: the bus does not care which source sent the signal
+  { "brick": "pillar", "x": 1.5, "y": 25, "h": 1.2, "r": 0.25, "m": "interactive" },
+  { "brick": "interact", "x": 1.5, "y": 25, "w": 0.5, "d": 0.5, "h": 1.2, "r": 2,
+    "prompt": "Actionner le levier", "emit": "lift-call" },
+  { "brick": "platform", "id": "lift2", "w": 4, "d": 4, "h": 0.25, "m": "danger",
+    "mode": "called", "on": "lift-call",
+    "speed": 6, "dwell": 2, "stops": [[-6, 28, 8.75], [-6, 28, 0]] },
+
+  // Staircase and its landing
+  { "brick": "stairs", "x": -20, "y": 2, "facing": "north", "w": 4, "steps": 8, "m": "danger" },
+  { "brick": "block", "x": -20, "y": 6, "w": 4, "d": 4, "h": 2 },
+
+  // Pyramid
+  { "brick": "block", "x": 12, "y": 12, "w": 12, "d": 12, "h": 1 },
+  { "brick": "block", "x": 14, "y": 16, "w": 8, "d": 6, "h": 1, "z": 1 },
+  { "brick": "block", "x": 18, "y": 18, "w": 2, "d": 2, "h": 1, "z": 2 },
+  { "brick": "ramp", "x": 10, "y": 14, "facing": "east", "w": 2, "run": 2, "h": 1, "m": "danger" },
+  { "brick": "ramp", "x": 16, "y": 14, "facing": "north", "w": 2, "run": 2, "h": 1, "z": 1, "m": "danger" },
+  { "brick": "ramp", "x": 16, "y": 18, "facing": "east", "w": 2, "run": 2, "h": 1, "z": 2, "m": "danger" },
+
+  // Jump platforms
+  { "brick": "block", "x": 10, "y": -3, "w": 3, "d": 3, "h": 1 },
+  { "brick": "block", "x": 10, "y": 1, "w": 3, "d": 3, "h": 2 },
+  { "brick": "block", "x": 17, "y": 1, "w": 3, "d": 3, "h": 2 },
+  { "brick": "block", "x": 13, "y": 1, "z": 1, "w": 4, "d": 3, "h": 1 },
+  { "brick": "block", "x": 10, "y": 5, "w": 3, "d": 3, "h": 3 },
+
+  // Obstacles
+  { "brick": "pillar", "x": 2, "y": 0, "h": 2.5 },
+  { "brick": "pillar", "x": -3, "y": -4, "h": 2.5 },
+  { "brick": "pillar", "x": 4, "y": -9, "h": 2.3 },
+
+  // Moving platforms
+  { "brick": "platform", "id": "shuttle", "mode": "shuttle", "speed": 6, "dwell": 1,
+    "w": 3, "d": 3, "h": 0.25, "m": "danger",
+    "stops": [[13.5, 8, 0.375], [13.5, -12.75, 0.375]] },
+  { "brick": "platform", "id": "elevator", "mode": "shuttle", "speed": 6, "dwell": 1,
+    "w": 3, "d": 3, "h": 0.25, "m": "danger",
+    "stops": [[13.25, -18.25, 0.375], [13.25, -18.25, 11.875]] },
+
+  // Balance beam on two pillars
+  { "brick": "pillar", "x": -16, "y": -6, "h": 2 },
+  { "brick": "pillar", "x": -16, "y": 2, "h": 2 },
+  { "brick": "block", "x": -16, "y": -7, "w": 1, "d": 10, "h": 0.25, "z": 2, "m": "interactive" },
+  
+  //---
+
+  // Shop: Exterior
+  { "brick": "block", "x": -11, "y": 0, "w": 3, "d": 1, "h": 3 },
+  { "brick": "block", "x": -6, "y": 0, "w": 3, "d": 1, "h": 3 },
+  { "brick": "block", "x": -4, "y": 1, "w": 1, "d": 3, "h": 3 },
+  { "brick": "block", "x": -11, "y": 1, "w": 1, "d": 3, "h": 3 },
+  { "brick": "block", "x": -11, "y": 4, "w": 8, "d": 1, "h": 3 },
+  { "brick": "block", "x": -11, "y": 0, "z": 3, "w": 8, "d": 5, "h": 1 },
+  { "brick": "portal", "w": 2, "h": 2.5,
+    "a": { "x": -8, "y": 0, "z": 0, "facing": "south" },
+    "b": { "x": 9998, "y": -5, "z": 0, "facing": "north" } },
+
+  // Shop: Interior
+  { "brick": "space", "id": "shop1", 
+    "x": 9991, "y": -6, "z": -1, "w": 16, "d": 16, "h": 6,
+    "distance": 60, "fov": 0.3, "pivot": "center", "fog": 0 },
+  
+  { "brick": "block", "x": 9994, "y": -4, "z": -1, "w": 12, "d": 12, "h": 1 },
+  { "brick": "block", "x": 9997, "y": -8, "z": -1, "w": 4, "d": 4, "h": 1 },
+  { "brick": "block", "x": 9993, "y": -5, "z": 3, "w": 14, "d": 1, "h": 1 },
+  { "brick": "block", "x": 9994, "y": 8, "w": 12, "d": 1, "h": 3 },
+  { "brick": "block", "x": 9993, "y": -5, "w": 1, "d": 14, "h": 3 },
+  { "brick": "block", "x": 10006, "y": -5, "w": 1, "d": 14, "h": 3 },
+  { "brick": "block", "x": 9994, "y": -5, "w": 4, "d": 1, "h": 3 },
+  { "brick": "block", "x": 10000, "y": -5, "w": 6, "d": 1, "h": 3 },
+  { "brick": "block", "x": 9996, "y": 4, "w": 8, "d": 2, "h": 1, "m": "interactive" },
+  { "brick": "pillar", "x": 9995, "y": -2, "h": 3 },
+  { "brick": "pillar", "x": 10004, "y": -2, "h": 3 },
+
+  // Shop: Chest, waiting for a sequence to answer it
+  { "brick": "block", "x": 9998, "y": 0, "w": 1, "d": 1, "h": 0.8, "m": "interactive" },
+  { "brick": "interact", "x": 9998, "y": 0, "w": 1, "d": 1, "h": 0.8, "r": 1.8,
+    "prompt": "Fouiller le coffre", "emit": "chest-shop", "once": true },
+]

@@ -1,0 +1,15 @@
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+.vs/
+.idea/
+.vscode/
+
+bin
+obj/
+packages/
+
+.DS_Store
+
+publish/
