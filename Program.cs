@@ -61,11 +61,11 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
 
         // Setup world
         game.World.Setup(world => {
-            // Build playground environment (swap with BrickPlayground / Playground for the coded ones)
-            LevelPlayground.Build(world, game.Primitives, materials, shadowMap, terrain);
-            
+            // Build the level, which says where the player starts
+            var spawn = LevelPlayground.Build(world, game.Primitives, materials, shadowMap, terrain);
+
             // Spawn character
-            CharacterRig.Build(world, game, materials);
+            CharacterRig.Build(world, game, materials, spawn);
         });
 
         // Systems
@@ -79,7 +79,8 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
         game.AddSystem<CharacterIntentSystem>(game.PhysicsPhase, order: 110);
         game.AddSystem<CharacterMovementSystem>(game.PhysicsPhase, order: 120);
         
-        game.AddSystem<InteractionSystem>(QuarkPhases.Gameplay, order: -13);
+        game.AddSystem<InteractionSystem>(QuarkPhases.Gameplay, order: -14);
+        game.AddSystem<TriggerSystem>(QuarkPhases.Gameplay, order: -13);
         game.AddSystem<TriggerProbeSystem>(QuarkPhases.Gameplay, order: -12);
         game.AddSystem<InteractionProbeSystem>(QuarkPhases.Gameplay, order: -12);
         game.AddSystem<ButtonSystem>(QuarkPhases.Gameplay, order: -11);

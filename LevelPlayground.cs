@@ -13,13 +13,21 @@ namespace AdventureGame;
 // LevelReloadSystem. What carries behaviour rather than shape - sun, terrain, moving platforms - stays
 // in code. Same signature as the other playgrounds, so Program swaps between them by class name.
 static class LevelPlayground {
-    public static void Build(EntityCommands world, GamePrimitiveLibrary p, GreyboxMaterials g, CascadeShadowMap sun, GameMesh terrain) {
+    static readonly Vector3d DefaultSpawn = new(0, -6, -0.5);
+
+    // Returns where the player starts, which the file may override.
+    public static Vector3d Build(EntityCommands world, GamePrimitiveLibrary p, GreyboxMaterials g, CascadeShadowMap sun, GameMesh terrain) {
         Sun(world, sun);
 
-        if (LevelFile.TryRead(LevelFile.Path, out var bricks) == LevelReadResult.Loaded)
-            LevelFile.Apply(bricks, new Bricks(world, p, g), g);
+        var spawn = DefaultSpawn;
+        if (LevelFile.TryRead(LevelFile.Path, out var level) == LevelReadResult.Loaded) {
+            LevelFile.Apply(level, new Bricks(world, p, g), g);
+            spawn = level.SpawnPoint ?? DefaultSpawn;
+            Console.WriteLine($"[Level] Loaded {level.Objects.Count} objects.");
+        }
 
         world.Spawn(terrain).At(new Vector3d(0, -14, 0)).Static(layer: Layers.Environment);
+        return spawn;
     }
 
     // Lighting

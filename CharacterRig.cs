@@ -9,8 +9,8 @@ using Quark.Numerics;
 namespace AdventureGame;
 
 static class CharacterRig {
-    public static void Build(EntityCommands entityCommands, Game game, GreyboxMaterials greyboxMaterials) {
-        var character = Character.Spawn(entityCommands, game.Rendering, game.Primitives, game.Assets, greyboxMaterials);
+    public static void Build(EntityCommands entityCommands, Game game, GreyboxMaterials greyboxMaterials, Vector3d spawn) {
+        var character = Character.Spawn(entityCommands, game.Rendering, game.Primitives, game.Assets, greyboxMaterials, spawn);
             
         // Spawn rigs and camera
         var followRig = FollowRigSystem.SpawnRig(entityCommands, character);

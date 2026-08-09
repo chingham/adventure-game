@@ -6,12 +6,13 @@ using Quark.Platform.Input;
 
 namespace AdventureGame.Systems;
 
-// Something the character can act on. Purely spatial - a point with a reach, no trigger volume - so it
-// rides any entity, still or moving, and costs two lines to author. Using it emits `Emit` on the signal
-// bus; what answers is the bus's business, exactly as for a button.
+// Something the character can act on: a point offset from its object, with a reach. No volume, so it
+// rides any entity, still or moving, and costs one modifier to author. Using it emits `Emit` on the
+// signal bus; what answers is the bus's business, exactly as for a button.
 struct Interactable() {
     public string Prompt = "";
     public string Emit = "";
+    public Vector3d Offset;       // where the hand lands, from the entity's origin, turning with it
     public double Reach;
     public bool Once;             // retires the moment it is used; a sequence can also disable it
     public bool Enabled = true;
@@ -56,11 +57,13 @@ sealed class InteractionSystem(IInput input) : ISystem {
             if (!interactable.Enabled)
                 continue;
 
-            var offset = row.Component2.LocalTransform.Position - movement.Position;
-            if (Math.Abs(offset.Z) > VerticalReach)
+            var transform = row.Component2.LocalTransform;
+            var point = transform.Position + Vector3d.Transform(interactable.Offset, transform.Rotation);
+            var toPoint = point - movement.Position;
+            if (Math.Abs(toPoint.Z) > VerticalReach)
                 continue;
 
-            var flat = Utils.FlattenXY(offset);
+            var flat = Utils.FlattenXY(toPoint);
             var distance = flat.Length();
             if (distance > interactable.Reach)
                 continue;

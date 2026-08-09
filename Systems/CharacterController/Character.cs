@@ -14,14 +14,13 @@ using Quark.Physics.Dimension3D;
 namespace AdventureGame.Systems.CharacterController;
 
 static class Character {
-    static readonly Vector3d SpawnPosition = new(0, -6, -0.5f);
-    
     public static Entity Spawn(
-        EntityCommands world, 
+        EntityCommands world,
         DefaultRenderingModule rendering,
         GamePrimitiveLibrary primitives,
         AssetLibrary assets,
-        GreyboxMaterials g) {
+        GreyboxMaterials g,
+        Vector3d spawn) {
         // Primitive
         var restPose = Pose.At(new Vector3(0, 0, Constants.CapsuleRestHeight));
         var capsule = primitives.Capsule(
@@ -44,7 +43,7 @@ static class Character {
             .Kinematic(layer: Layers.Character)
             .With(new InputBasis())
             .With(new CharacterIntent())
-            .With(new CharacterMovement { Position = SpawnPosition })
+            .With(new CharacterMovement { Position = spawn })
             .With(new CharacterAnimParams())
             .With(new Interactor())
             .With(new ParticleEmitter {

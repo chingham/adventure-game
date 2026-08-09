@@ -29,7 +29,7 @@ sealed class LevelReloadSystem : ISystem, IDisposable {
             return;
 
         // Read first: a level that fails to parse leaves the running one untouched.
-        var result = LevelFile.TryRead(LevelFile.Path, out var bricks);
+        var result = LevelFile.TryRead(LevelFile.Path, out var level);
         if (result == LevelReadResult.Locked) {
             watcher.Rearm();   // still being written, try again next frame
             return;
@@ -40,8 +40,8 @@ sealed class LevelReloadSystem : ISystem, IDisposable {
         foreach (var row in world.Query<LevelBrick>())
             commands.Destroy(row.Entity);
 
-        LevelFile.Apply(bricks, new Bricks(commands, primitives, materials), materials);
-        Console.WriteLine($"[Level] Reloaded {bricks.Count} bricks.");
+        LevelFile.Apply(level, new Bricks(commands, primitives, materials), materials);
+        Console.WriteLine($"[Level] Reloaded {level.Objects.Count} objects.");
     }
 
     public void Dispose() => watcher.Dispose();

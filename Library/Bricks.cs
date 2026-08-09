@@ -15,38 +15,48 @@ namespace AdventureGame.Library;
 // Which way a ramp ascends or stairs climb.
 enum Facing { North, East, South, West }   // +Y, +X, -Y, -X
 
-// Lego-style greybox kit. Every brick is placed by the minimum corner of its footprint (x, y), grows
-// toward +X/+Y and upward from the base altitude z; placements return the top altitude, so bricks stack
-// by feeding one into the next. Material defaults to the environment grey.
+// Whether an object draws, and what its body does. Both defaults are the common case, so a plain
+// `default` shell is the visible solid every piece of scenery wants.
+enum Look { Visible, Hidden }
+enum Solidity { Solid, Trigger, None }
+
+readonly record struct Shell(Look Look = Look.Visible, Solidity Solidity = Solidity.Solid);
+
+// Lego-style greybox kit. Every object is placed by the minimum corner of its footprint (x, y), grows
+// toward +X/+Y and upward from the base altitude z. Shape verbs return the entity they spawned so the
+// modifiers below can ride it. Material defaults to the environment grey.
 sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMaterials g) {
     // Steps
     public const float StepRise = 0.25f;
     public const float StepRun = 0.5f;
 
-    // Flat bricks
+    // Flat shapes
 
-    public float Block(float x, float y, float w, float d, float h, float z = 0, MaterialHandle m = default) {
-        Spawn(p.Box(new Vector3(w, d, h), Mat(m)), new Vector3d(x + w / 2, y + d / 2, z + h / 2));
-        return z + h;
-    }
+    public Entity Block(float x, float y, float w, float d, float h, float z = 0,
+        MaterialHandle m = default, Shell shell = default) =>
+        Spawn(p.Box(new Vector3(w, d, h), Mat(m)),
+            new Vector3d(x + w / 2, y + d / 2, z + h / 2), default, shell);
 
-    public float Pillar(float x, float y, float h, float radius = 0.5f, float z = 0, MaterialHandle m = default) {
-        Spawn(p.Cylinder(radius, h, Mat(m)), new Vector3d(x + radius, y + radius, z + h / 2));
-        return z + h;
-    }
+    public Entity Pillar(float x, float y, float h, float radius = 0.5f, float z = 0,
+        MaterialHandle m = default, Shell shell = default) =>
+        Spawn(p.Cylinder(radius, h, Mat(m)),
+            new Vector3d(x + radius, y + radius, z + h / 2), default, shell);
 
-    // Climbing bricks
+    // A place and nothing else - no mesh, no body. For a modifier that wants a spot rather than an
+    // object: an interaction point on a doorway, a marker on the ground.
+    public Entity Point(float x, float y, float z = 0) =>
+        world.Spawn().At(new Vector3d(x, y, z)).With(new LevelBrick());
 
-    public float Ramp(float x, float y, Facing facing, float w, float run, float h, float z = 0, MaterialHandle m = default) {
+    // Climbing shapes
+
+    public Entity Ramp(float x, float y, Facing facing, float w, float run, float h, float z = 0,
+        MaterialHandle m = default, Shell shell = default) {
         var footprint = Footprint(facing, across: w, along: run);
-        Spawn(
-            p.Wedge(new Vector3(w, run, h), Mat(m)),
-            new Vector3d(x + footprint.X / 2, y + footprint.Y / 2, z + h / 2),
-            Yaw(facing));
-        return z + h;
+        return Spawn(p.Wedge(new Vector3(w, run, h), Mat(m)),
+            new Vector3d(x + footprint.X / 2, y + footprint.Y / 2, z + h / 2), Yaw(facing), shell);
     }
 
-    public float Stairs(float x, float y, Facing facing, int steps, float w, float z = 0, MaterialHandle m = default) {
+    public void Stairs(float x, float y, Facing facing, int steps, float w, float z = 0, MaterialHandle m = default) {
         var along = steps * StepRun;
         var footprint = Footprint(facing, across: w, along: along);
         var center = new Vector2(x + footprint.X / 2, y + footprint.Y / 2);
@@ -59,10 +69,8 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
             var size = facing is Facing.North or Facing.South
                 ? new Vector3(w, StepRun, h)
                 : new Vector3(StepRun, w, h);
-            Spawn(p.Box(size, Mat(m)), new Vector3d(step.X, step.Y, z + h / 2));
+            Spawn(p.Box(size, Mat(m)), new Vector3d(step.X, step.Y, z + h / 2), default, default);
         }
-
-        return z + steps * StepRise;
     }
 
     // Devices
@@ -70,7 +78,7 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
     // Solid pad that sinks when stood on, plus the trigger volume above it that does the detecting.
     // Pressing emits `emit`; the pad pops back when "<emit>.done" comes home. The pad is static: its
     // few centimetres of travel never have to carry the rider.
-    public float Button(float x, float y, float w, float d, float z = 0, string emit = "button") {
+    public void Button(float x, float y, float w, float d, float z = 0, string emit = "button") {
         const float padHeight = 0.2f;
         var cx = x + w / 2;
         var cy = y + d / 2;
@@ -92,23 +100,11 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
             .With(new Button { Emit = emit, Pad = pad, RestZ = z + padHeight / 2 })
             .With(new LevelBrick())
             .Named($"button:{emit}");
-
-        return z + padHeight;
     }
 
-    // Point the character can act on, with no body of its own: hand it the footprint of whatever it sits
-    // on and it lands on top of it, in the middle. Using it emits `emit`, like a button does.
-    public void Interact(float x, float y, float w, float d, float h, float z,
-        float reach, string prompt, string emit, bool once) {
-        world.Spawn()
-            .At(new Vector3d(x + w / 2, y + d / 2, z + h))
-            .With(new Interactable { Prompt = prompt, Emit = emit, Reach = reach, Once = once })
-            .With(new LevelBrick())
-            .Named($"interact:{emit}");
-    }
-
-    // Moving deck. Stops are footprint corners like every brick; the deck idles on the first stop.
-    public Entity Platform(float w, float d, float h, Vector3d home, Vector3d stop, MovingPlatform route, MaterialHandle m = default) {
+    // Moving deck. Stops are footprint corners like every object; the deck idles on the first stop.
+    public Entity Platform(float w, float d, float h, Vector3d home, Vector3d stop, MovingPlatform route,
+        MaterialHandle m = default) {
         var half = new Vector3d(w / 2, d / 2, h / 2);
         route.From = home + half;
         route.To = stop + half;
@@ -117,8 +113,7 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
             .At(route.From)
             .Kinematic(layer: Layers.Environment)
             .With(route)
-            .With(new LevelBrick())
-            .Named("platform");
+            .With(new LevelBrick());
     }
 
     // One portal end: corner of its door footprint and the direction the character faces on arrival.
@@ -168,46 +163,62 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
         return new Vector3d(end.X + footprint.X / 2, end.Y + footprint.Y / 2, end.Z);
     }
 
-    // Camera spaces
+    // Modifiers - behaviour bolted onto an object the shape verbs just spawned
+
+    public void Name(Entity entity, string id) => world.Add(entity, new Name(id));
+
+    // Overlap volume wired to the bus. `rearm` is the signal that unlatches it after an entry, so a
+    // one-shot volume can wait for whatever it summoned to come home.
+    public void Trigger(Entity entity, string? enter, string? exit = null, string? rearm = null) =>
+        world.Add(entity, new Trigger { Enter = enter, Exit = exit, Rearm = rearm });
+
+    // Point on the object the character can act on. The offset is measured from the entity's own
+    // origin and turns with it, so it rides anything, still or moving.
+    public void Interactable(Entity entity, Vector3d offset, string prompt, string emit,
+        float reach, bool once) =>
+        world.Add(entity, new Interactable {
+            Offset = offset,
+            Prompt = prompt,
+            Emit = emit,
+            Reach = reach,
+            Once = once
+        });
 
     // Invisible volume that sets the mood of a place: how far the isometric shot sits, how wide it
     // is, whether it rides the character or holds still on the room's middle, and its fog.
-    public void Space(float x, float y, float z, float w, float d, float h,
-        float distance, float fov, bool centerPivot, float? fog = null, string? id = null) {
-        var min = new Vector3d(x, y, z);
-        world.Spawn()
-            .At(min + new Vector3d(w, d, h) * 0.5)
-            .With(new Space {
-                Min = min,
-                Max = min + new Vector3d(w, d, h),
-                Distance = distance,
-                FieldOfView = fov,
-                CenterPivot = centerPivot,
-                Fog = fog
-            })
-            .With(new LevelBrick())
-            .Named(id ?? "space");
-    }
-
-    // Trigger volumes
-
-    // Overlap-only volume: no contacts, it just reports who is inside. Rendered while zones are being
-    // authored - swap to WithoutMesh once they carry real behaviour.
-    public float Zone(float x, float y, float w, float d, float h, float z = 0, string? id = null) {
-        world.Spawn(p.Box(new Vector3(w, d, h), g.Interactive))
-            .At(new Vector3d(x + w / 2, y + d / 2, z + h / 2))
-            .Body(new RigidBody { Kind = RigidBodyKind.Static, IsTrigger = true, Layer = Layers.Trigger })
-            .With(new LevelBrick())
-            .Named(id ?? "zone");
-        return z + h;
-    }
+    public void Space(Entity entity, Vector3d min, Vector3d max,
+        float distance, float fov, bool centerPivot, float? fog) =>
+        world.Add(entity, new Space {
+            Min = min,
+            Max = max,
+            Distance = distance,
+            FieldOfView = fov,
+            CenterPivot = centerPivot,
+            Fog = fog
+        });
 
     // Helpers
 
     MaterialHandle Mat(MaterialHandle m) => m.IsValid ? m : g.Environment;
 
-    void Spawn(GameMesh mesh, Vector3d position, Quaternion rotation = default) =>
-        world.Spawn(mesh).At(position, rotation).Static(layer: Layers.Environment).With(new LevelBrick());
+    // The shell decides what survives of the primitive: its mesh, its collider, or only its place.
+    Entity Spawn(GameMesh mesh, Vector3d position, Quaternion rotation, Shell shell) {
+        var spawn = world
+            .Spawn(shell.Look == Look.Hidden ? mesh.WithoutMesh() : mesh)
+            .At(position, rotation);
+
+        spawn = shell.Solidity switch {
+            Solidity.Solid => spawn.Static(layer: Layers.Environment),
+            Solidity.Trigger => spawn.Body(new RigidBody {
+                Kind = RigidBodyKind.Static,
+                IsTrigger = true,
+                Layer = Layers.Trigger
+            }),
+            _ => spawn
+        };
+
+        return spawn.With(new LevelBrick());
+    }
 
     // Ground extent once turned toward the facing: across and along swap on the east-west axis.
     static Vector2 Footprint(Facing f, float across, float along) =>
