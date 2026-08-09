@@ -248,12 +248,22 @@ sealed class SequenceSystem(Flags flags, PlayerControl control, Toasts toasts) :
         }
     }
 
+    // Whichever of the two an object carries. Toggling also unlatches a volume, so it comes back armed
+    // rather than stuck on whatever it was waiting for when it was silenced.
     static void Switch(World world, Entity target, bool enabled) {
-        if (target.IsNull || !world.Has<Interactable>(target))
+        if (target.IsNull)
             return;
 
-        ref var interactable = ref world.Get<Interactable>(target);
-        interactable.Enabled = enabled;
+        if (world.Has<Interactable>(target)) {
+            ref var interactable = ref world.Get<Interactable>(target);
+            interactable.Enabled = enabled;
+        }
+
+        if (world.Has<Trigger>(target)) {
+            ref var trigger = ref world.Get<Trigger>(target);
+            trigger.Enabled = enabled;
+            trigger.Latched = false;
+        }
     }
 
     // Helpers

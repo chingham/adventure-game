@@ -1,7 +1,5 @@
 using Quark.Ecs;
-using Quark.Kit;
 using Quark.Kit.Components;
-using Quark.Kit.Rendering.Meshes;
 using Quark.Numerics;
 
 namespace AdventureGame.Systems;
@@ -51,19 +49,6 @@ sealed class PlatformCallSystem : ISystem {
 sealed class MovingPlatformSystem : ISystem {
     // Seconds a called platform spends accelerating (and decelerating); cruise fills the middle.
     const double RampTime = 0.6;
-
-    // Spawns a deck from its two centre positions, for playgrounds authored straight in C#. The brick
-    // kit's Platform() is the corner-based counterpart.
-    public static Entity SpawnPlatform(
-        EntityCommands world, GameMesh mesh, string name,
-        Vector3d from, Vector3d to, double speed, double dwell) =>
-        world.Spawn(mesh)
-            .At(from)
-            .Kinematic(layer: Layers.Environment)
-            .With(new MovingPlatform {
-                From = from, To = to, Mode = PlatformMode.Shuttle, Speed = speed, Dwell = dwell
-            })
-            .Named(name);
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
         foreach (var row in world.Query<RelativeTransform, MovingPlatform>()) {

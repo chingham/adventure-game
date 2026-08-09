@@ -23,6 +23,7 @@ sealed record ObjectEntry {
     public string? Id { get; init; }
     public string? M { get; init; }
     public bool? Visible { get; init; }
+    public bool? Solid { get; init; }
 
     // Minimum corner of the footprint, and the altitude it sits on
     public float X { get; init; }
@@ -38,13 +39,6 @@ sealed record ObjectEntry {
     public float R { get; init; } = 0.5f;
     public string? Facing { get; init; }
 
-    // The platform route: 2 corner stops, home first
-    public string? Mode { get; init; }
-    public string? On { get; init; }
-    public float Speed { get; init; }
-    public float Dwell { get; init; }
-    public float[][]? Stops { get; init; }
-
     // Portal ends
     public PortalEndEntry? A { get; init; }
     public PortalEndEntry? B { get; init; }
@@ -53,6 +47,7 @@ sealed record ObjectEntry {
     public TriggerEntry? Trigger { get; init; }
     public InteractableEntry? Interactable { get; init; }
     public SpaceEntry? Space { get; init; }
+    public MoverEntry? Mover { get; init; }
 
     // Reads
 
@@ -65,12 +60,21 @@ sealed record ObjectEntry {
     // Both stop drawing too, unless `visible` asks for them back while they are being placed.
     bool IsAir => Trigger is not null || Space is not null;
 
+    // What carries the body, in order: a modifier that owns one, else `solid`, else a plain solid.
     public Shell Shell => new(
         (Visible ?? !IsAir) ? Look.Visible : Look.Hidden,
-        Trigger is not null ? Solidity.Trigger : IsAir ? Solidity.None : Solidity.Solid);
+        Trigger is not null ? Solidity.Trigger
+        : Mover is not null ? Solidity.Moving
+        : IsAir ? Solidity.None
+        : Solid ?? true ? Solidity.Solid : Solidity.None);
 
     public Vector3d Min => new(X, Y, Z);
     public Vector3d Max => new(X + W, Y + D, Z + H);
+
+    // Where the shape verb parks this object's origin, and where a mover carries it.
+    public Vector3d Origin => Min + Half;
+    public Vector3d MoverStop =>
+        new Vector3d(Mover!.To![0], Mover.To[1], Mover.To[2]) + Half;
 
     // Half the object's own extent, which is where its origin sits above the footprint corner.
     Vector3d Half => Kind switch {
@@ -97,7 +101,6 @@ sealed record ObjectEntry {
             : this is { W: > 0, Run: > 0, H: > 0 } ? null : "w, run and h must be positive",
         "stairs" => LevelSpelling.AsFacing(Facing) is null ? $"unknown facing '{Facing}'"
             : this is { W: > 0, Steps: > 0 } ? null : "w and steps must be positive",
-        "platform" => Route(),
         "portal" => this is not { W: > 0, H: > 0 } ? "w and h must be positive"
             : A is null || B is null ? "both ends a and b are required"
             : LevelSpelling.AsFacing(A.Facing) is null || LevelSpelling.AsFacing(B.Facing) is null
@@ -105,28 +108,19 @@ sealed record ObjectEntry {
         _ => "unknown object type"
     };
 
-    string? Route() {
-        if (this is not { W: > 0, D: > 0, H: > 0 })
-            return "w, d and h must be positive";
-        if (Stops is not [{ Length: 3 }, { Length: 3 }])
-            return "stops must hold exactly 2 [x, y, z] corners (home first)";
-
-        return LevelSpelling.AsMode(Mode) switch {
-            null => $"unknown mode '{Mode}'",
-            _ when Speed <= 0 => "speed must be positive",
-            _ when Dwell <= 0 => "dwell must be positive",
-            PlatformMode.Called when string.IsNullOrEmpty(On) => "on is required",
-            _ => null
-        };
-    }
+    bool HasModifiers => Trigger is not null || Interactable is not null
+        || Space is not null || Mover is not null;
 
     string? Modifiers() {
-        if (Spreads && (Trigger is not null || Interactable is not null || Space is not null))
+        if (Spreads && HasModifiers)
             return $"a {Kind} spans several entities and cannot carry modifiers";
         if (Space is not null && Kind is "point")
             return "a space needs a volume, not a point";
+        // Say so rather than quietly picking a winner
+        if (Solid is not null && (Trigger is not null || Space is not null || Mover is not null))
+            return "solid contradicts a modifier that already decides this object's body";
 
-        return Trigger?.Validate() ?? Interactable?.Validate() ?? Space?.Validate();
+        return Trigger?.Validate() ?? Interactable?.Validate() ?? Space?.Validate() ?? Mover?.Validate();
     }
 }
 
@@ -187,6 +181,24 @@ sealed record InteractableEntry {
         string.IsNullOrEmpty(Emit) ? "an interactable needs emit"
         : Offset is not (null or { Length: 3 }) ? "offset must be [x, y, z]"
         : Reach > 0 ? null : "reach must be positive";
+}
+
+// A round trip between where the object stands and one far stop, given as a footprint corner like
+// every placement here. A shuttle leaves on its own; a called one waits for `on`.
+sealed record MoverEntry {
+    public float[]? To { get; init; }
+    public string? Mode { get; init; }
+    public string? On { get; init; }
+    public float Speed { get; init; } = 6;
+    public float Dwell { get; init; } = 1;
+
+    public string? Validate() =>
+        To is not { Length: 3 } ? "a mover needs to [x, y, z]"
+        : LevelSpelling.AsMode(Mode) is not { } mode ? $"unknown mode '{Mode}'"
+        : Speed <= 0 ? "speed must be positive"
+        : Dwell <= 0 ? "dwell must be positive"
+        : mode is PlatformMode.Called && string.IsNullOrEmpty(On) ? "a called mover needs on"
+        : null;
 }
 
 // How this volume frames the place: where the isometric shot sits, how wide it is, what it holds on,

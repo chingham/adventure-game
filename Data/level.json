@@ -35,17 +35,15 @@
     { "type": "block", "id": "tower-pad", "x": 7, "y": 21, "z": 10, "w": 2, "d": 2, "h": 0.2, "m": "interactive" },
     { "type": "block", "x": 7, "y": 21, "z": 10.2, "w": 2, "d": 2, "h": 1,
       "trigger": { "enter": "tower-press", "rearm": "tower-press.done" } },
-    { "type": "platform", "id": "lift1", "w": 4, "d": 4, "h": 0.25, "m": "danger",
-      "mode": "called", "on": "tower-call",
-      "speed": 6, "dwell": 2, "stops": [[10, 39, 11.75], [10, 20, 9.75]] },
+    { "type": "block", "id": "lift1", "x": 10, "y": 39, "z": 11.75, "w": 4, "d": 4, "h": 0.25, "m": "danger",
+      "mover": { "mode": "called", "on": "tower-call", "speed": 6, "dwell": 2, "to": [10, 20, 9.75] } },
     { "type": "block", "x": 6, "y": 43, "z": 11, "w": 8, "d": 8, "h": 1 },
 
     { "type": "block", "id": "lift-pad", "x": -1, "y": 25, "w": 2, "d": 2, "h": 0.2, "m": "interactive" },
     { "type": "block", "x": -1, "y": 25, "z": 0.2, "w": 2, "d": 2, "h": 1,
       "trigger": { "enter": "lift-press", "rearm": "lift-press.done" } },
-    { "type": "platform", "id": "lift2", "w": 4, "d": 4, "h": 0.25, "m": "danger",
-      "mode": "called", "on": "lift-call",
-      "speed": 6, "dwell": 2, "stops": [[-6, 28, 8.75], [-6, 28, 0]] },
+    { "type": "block", "id": "lift2", "x": -6, "y": 28, "z": 8.75, "w": 4, "d": 4, "h": 0.25, "m": "danger",
+      "mover": { "mode": "called", "on": "lift-call", "speed": 6, "dwell": 2, "to": [-6, 28, 0] } },
 
     { "type": "pillar", "x": 1.5, "y": 25, "h": 1.2, "r": 0.25, "m": "interactive",
       "interactable": { "offset": [0.25, 0.25, 1.2], "reach": 2,
@@ -76,12 +74,10 @@
     { "type": "pillar", "x": 4, "y": -9, "h": 2.3 },
 
     // Moving platforms
-    { "type": "platform", "id": "shuttle", "mode": "shuttle", "speed": 6, "dwell": 1,
-      "w": 3, "d": 3, "h": 0.25, "m": "danger",
-      "stops": [[13.5, 8, 0.375], [13.5, -12.75, 0.375]] },
-    { "type": "platform", "id": "elevator", "mode": "shuttle", "speed": 6, "dwell": 1,
-      "w": 3, "d": 3, "h": 0.25, "m": "danger",
-      "stops": [[13.25, -18.25, 0.375], [13.25, -18.25, 11.875]] },
+    { "type": "block", "id": "shuttle", "x": 13.5, "y": 8, "z": 0.375, "w": 3, "d": 3, "h": 0.25, "m": "danger",
+      "mover": { "mode": "shuttle", "speed": 6, "dwell": 1, "to": [13.5, -12.75, 0.375] } },
+    { "type": "block", "id": "elevator", "x": 13.25, "y": -18.25, "z": 0.375, "w": 3, "d": 3, "h": 0.25, "m": "danger",
+      "mover": { "mode": "shuttle", "speed": 6, "dwell": 1, "to": [13.25, -18.25, 11.875] } },
 
     // Balance beam on two pillars
     { "type": "pillar", "x": -16, "y": -6, "h": 2 },

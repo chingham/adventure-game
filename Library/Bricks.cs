@@ -18,7 +18,7 @@ enum Facing { North, East, South, West }   // +Y, +X, -Y, -X
 // Whether an object draws, and what its body does. Both defaults are the common case, so a plain
 // `default` shell is the visible solid every piece of scenery wants.
 enum Look { Visible, Hidden }
-enum Solidity { Solid, Trigger, None }
+enum Solidity { Solid, Trigger, Moving, None }
 
 readonly record struct Shell(Look Look = Look.Visible, Solidity Solidity = Solidity.Solid);
 
@@ -74,20 +74,6 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
     }
 
     // Devices
-
-    // Moving deck. Stops are footprint corners like every object; the deck idles on the first stop.
-    public Entity Platform(float w, float d, float h, Vector3d home, Vector3d stop, MovingPlatform route,
-        MaterialHandle m = default) {
-        var half = new Vector3d(w / 2, d / 2, h / 2);
-        route.From = home + half;
-        route.To = stop + half;
-
-        return world.Spawn(p.Box(new Vector3(w, d, h), Mat(m)))
-            .At(route.From)
-            .Kinematic(layer: Layers.Environment)
-            .With(route)
-            .With(new LevelBrick());
-    }
 
     // One portal end: corner of its door footprint and the direction the character faces on arrival.
     public readonly record struct PortalAnchor(float X, float Y, float Z, Facing Arrive);
@@ -145,6 +131,19 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
     public void Trigger(Entity entity, string? enter, string? exit = null, string? rearm = null) =>
         world.Add(entity, new Trigger { Enter = enter, Exit = exit, Rearm = rearm });
 
+    // Round trip between where the object stands and one far stop, both already resolved to origins.
+    // A shuttle leaves on its own; a called one waits for its signal and reports "<on>.done" home.
+    public void Mover(Entity entity, Vector3d from, Vector3d to,
+        PlatformMode mode, float speed, float dwell, string? on) =>
+        world.Add(entity, new MovingPlatform {
+            From = from,
+            To = to,
+            Mode = mode,
+            Speed = speed,
+            Dwell = dwell,
+            On = on
+        });
+
     // Point on the object the character can act on. The offset is measured from the entity's own
     // origin and turns with it, so it rides anything, still or moving.
     public void Interactable(Entity entity, Vector3d offset, string prompt, string emit,
@@ -194,6 +193,7 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
                 IsTrigger = true,
                 Layer = Layers.Trigger
             }),
+            Solidity.Moving => spawn.Kinematic(layer: Layers.Environment),
             _ => spawn
         };
 

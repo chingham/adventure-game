@@ -8,10 +8,11 @@ namespace AdventureGame.Systems;
 // Overlap volume wired to the signal bus: it announces who comes and goes without knowing what listens.
 // Rearm latches it after an entry until the named signal comes home, so a volume that summons something
 // cannot summon it twice while it is still on its way.
-struct Trigger {
+struct Trigger() {
     public string? Enter;
     public string? Exit;
     public string? Rearm;
+    public bool Enabled = true;   // orthogonal pause: a sequence can silence the volume and hand it back
     internal bool Latched;
 }
 
@@ -27,6 +28,8 @@ sealed class TriggerSystem : ISystem {
                 continue;
 
             ref var trigger = ref world.Get<Trigger>(evt.Trigger);
+            if (!trigger.Enabled)
+                continue;
             if (evt.Kind == TriggerEventKind.Exit) {
                 Emit(world, trigger.Exit, evt.Trigger);
                 continue;

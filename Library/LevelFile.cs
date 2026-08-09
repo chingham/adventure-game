@@ -121,12 +121,6 @@ static class LevelFile {
             "pillar" => kit.Pillar(o.X, o.Y, o.H, o.R, o.Z, m, o.Shell),
             "ramp" => kit.Ramp(o.X, o.Y, Facing(o.Facing), o.W, o.Run, o.H, o.Z, m, o.Shell),
             "point" => kit.Point(o.X, o.Y, o.Z),
-            "platform" => kit.Platform(o.W, o.D, o.H, Corner(o.Stops![0]), Corner(o.Stops[1]), new MovingPlatform {
-                Mode = LevelSpelling.AsMode(o.Mode)!.Value,
-                Speed = o.Speed,
-                Dwell = o.Dwell,
-                On = o.On
-            }, m),
             _ => Entity.Null
         };
 
@@ -138,11 +132,11 @@ static class LevelFile {
             kit.Interactable(entity, o.InteractionOffset, i.Prompt, i.Emit!, i.Reach, i.Once);
         if (o.Space is { } s)
             kit.Space(entity, o.Min, o.Max, s.Distance, s.Fov, s.Pivot == "center", s.Fog);
+        if (o.Mover is { } v)
+            kit.Mover(entity, o.Origin, o.MoverStop, LevelSpelling.AsMode(v.Mode)!.Value, v.Speed, v.Dwell, v.On);
     }
 
     static Facing Facing(string? facing) => LevelSpelling.AsFacing(facing)!.Value;
-
-    static Vector3d Corner(float[] stop) => new(stop[0], stop[1], stop[2]);
 
     static Bricks.PortalAnchor Anchor(PortalEndEntry end) =>
         new(end.X, end.Y, end.Z, Facing(end.Facing));
