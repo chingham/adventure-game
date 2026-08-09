@@ -35,8 +35,10 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
         // Tunables the door transition is dialled in with, live
         game.Provide(new DoorTuning());
 
-        // What the world remembers across a hot reload
+        // What the world remembers across a hot reload, who holds the reins, and what it says out loud
         game.Provide<Flags>();
+        game.Provide<PlayerControl>();
+        game.Provide<Toasts>();
 
         // Rendering
         game.Rendering.AddEffect(new Bloom { Threshold = 1.2f, Radius = 1.3f, Intensity = 0.22f });
@@ -82,11 +84,11 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
         game.AddSystem<CharacterIntentSystem>(game.PhysicsPhase, order: 110);
         game.AddSystem<CharacterMovementSystem>(game.PhysicsPhase, order: 120);
         
-        game.AddSystem<InteractionSystem>(QuarkPhases.Gameplay, order: -14);
-        game.AddSystem<TriggerSystem>(QuarkPhases.Gameplay, order: -13);
-        game.AddSystem<TriggerProbeSystem>(QuarkPhases.Gameplay, order: -12);
-        game.AddSystem<InteractionProbeSystem>(QuarkPhases.Gameplay, order: -12);
-        game.AddSystem<ButtonSystem>(QuarkPhases.Gameplay, order: -11);
+        game.AddSystem<InteractionSystem>(QuarkPhases.Gameplay, order: -20);
+        game.AddSystem<TriggerSystem>(QuarkPhases.Gameplay, order: -19);
+        game.AddSystem<SequenceSystem>(QuarkPhases.Gameplay, order: -18);
+        game.AddSystem<TriggerProbeSystem>(QuarkPhases.Gameplay, order: -17);
+        game.AddSystem<InteractionProbeSystem>(QuarkPhases.Gameplay, order: -17);
         game.AddSystem<PlatformCallSystem>(QuarkPhases.Gameplay, order: -10);
         game.AddSystem<PortalSystem>(QuarkPhases.Gameplay, order: -10);
         game.AddSystem(new SpaceSystem(fog), QuarkPhases.Gameplay, order: -7);
@@ -100,6 +102,7 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
         game.AddSystem<CharacterDebugPanel>(QuarkPhases.LateUpdate);
         game.AddSystem<DoorTuningPanel>(QuarkPhases.LateUpdate);
         game.AddSystem<FlagsPanel>(QuarkPhases.LateUpdate);
+        game.AddSystem<ToastPanel>(QuarkPhases.LateUpdate);
 
         game.AddSystem<DebugVolumeSystem>(QuarkPhases.RenderSubmit, order: 10);
 

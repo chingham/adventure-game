@@ -75,33 +75,6 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
 
     // Devices
 
-    // Solid pad that sinks when stood on, plus the trigger volume above it that does the detecting.
-    // Pressing emits `emit`; the pad pops back when "<emit>.done" comes home. The pad is static: its
-    // few centimetres of travel never have to carry the rider.
-    public void Button(float x, float y, float w, float d, float z = 0, string emit = "button") {
-        const float padHeight = 0.2f;
-        var cx = x + w / 2;
-        var cy = y + d / 2;
-
-        var pad = world.Spawn(p.Box(new Vector3(w, d, padHeight), g.Interactive))
-            .At(new Vector3d(cx, cy, z + padHeight / 2))
-            .Static(layer: Layers.Environment)
-            .With(new LevelBrick())
-            .Named($"button-pad:{emit}");
-
-        world.Spawn()
-            .At(new Vector3d(cx, cy, z + padHeight + 0.5))
-            .Body(new RigidBody {
-                Kind = RigidBodyKind.Static,
-                IsTrigger = true,
-                Layer = Layers.Trigger,
-                Shapes = [new TransformedShape(new Box(w, d, 1f))]
-            })
-            .With(new Button { Emit = emit, Pad = pad, RestZ = z + padHeight / 2 })
-            .With(new LevelBrick())
-            .Named($"button:{emit}");
-    }
-
     // Moving deck. Stops are footprint corners like every object; the deck idles on the first stop.
     public Entity Platform(float w, float d, float h, Vector3d home, Vector3d stop, MovingPlatform route,
         MaterialHandle m = default) {
@@ -196,6 +169,13 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
             CenterPivot = centerPivot,
             Fog = fog
         });
+
+    // Rules
+
+    // A sequence has nowhere to stand in the world; it lives as an entity only so a reload sweeps it
+    // away with everything else the file built.
+    public void Sequence(string on, Step[] steps) =>
+        world.Spawn(new SequenceDefinition { On = on, Steps = steps }).With(new LevelBrick());
 
     // Helpers
 

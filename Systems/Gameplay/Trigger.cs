@@ -28,14 +28,14 @@ sealed class TriggerSystem : ISystem {
 
             ref var trigger = ref world.Get<Trigger>(evt.Trigger);
             if (evt.Kind == TriggerEventKind.Exit) {
-                Emit(world, trigger.Exit);
+                Emit(world, trigger.Exit, evt.Trigger);
                 continue;
             }
             if (trigger.Latched)
                 continue;
 
             trigger.Latched = trigger.Rearm is not null;
-            Emit(world, trigger.Enter);
+            Emit(world, trigger.Enter, evt.Trigger);
         }
 
         // Release: whatever the volume was waiting on has come home
@@ -45,8 +45,8 @@ sealed class TriggerSystem : ISystem {
                     row.Component1.Latched = false;
     }
 
-    static void Emit(World world, string? name) {
+    static void Emit(World world, string? name, Entity source) {
         if (name is not null)
-            world.Events<Signal>().Write(new Signal(name));
+            world.Events<Signal>().Write(new Signal(name, source));
     }
 }

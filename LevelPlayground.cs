@@ -23,7 +23,7 @@ static class LevelPlayground {
         if (LevelFile.TryRead(LevelFile.Path, out var level) == LevelReadResult.Loaded) {
             LevelFile.Apply(level, new Bricks(world, p, g), g);
             spawn = level.SpawnPoint ?? DefaultSpawn;
-            Console.WriteLine($"[Level] Loaded {level.Objects.Count} objects.");
+            Console.WriteLine($"[Level] Loaded {level.Objects.Count} objects, {level.Sequences.Count} sequences.");
         }
 
         world.Spawn(terrain).At(new Vector3d(0, -14, 0)).Static(layer: Layers.Environment);

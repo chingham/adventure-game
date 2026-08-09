@@ -7,6 +7,7 @@ namespace AdventureGame.Library;
 sealed record LevelDocument {
     public float[]? Spawn { get; init; }
     public IReadOnlyList<ObjectEntry> Objects { get; init; } = [];
+    public IReadOnlyList<SequenceEntry> Sequences { get; init; } = [];
 
     // Read once at startup: moving the start point should not teleport a player mid-session.
     public Vector3d? SpawnPoint => Spawn is { Length: 3 } s ? new Vector3d(s[0], s[1], s[2]) : null;
@@ -37,8 +38,7 @@ sealed record ObjectEntry {
     public float R { get; init; } = 0.5f;
     public string? Facing { get; init; }
 
-    // Devices: the signal a button emits, and the platform route (2 corner stops, home first)
-    public string? Emit { get; init; }
+    // The platform route: 2 corner stops, home first
     public string? Mode { get; init; }
     public string? On { get; init; }
     public float Speed { get; init; }
@@ -58,8 +58,8 @@ sealed record ObjectEntry {
 
     public string Kind => Type.ToLowerInvariant();
 
-    // Stairs, buttons and portals spread over several entities, so there is no single one to ride.
-    public bool Spreads => Kind is "stairs" or "button" or "portal";
+    // Stairs and portals spread over several entities, so there is no single one to ride.
+    public bool Spreads => Kind is "stairs" or "portal";
 
     // A volume modifier turns its geometry into air: a space is never solid, a trigger never blocks.
     // Both stop drawing too, unless `visible` asks for them back while they are being placed.
@@ -97,8 +97,6 @@ sealed record ObjectEntry {
             : this is { W: > 0, Run: > 0, H: > 0 } ? null : "w, run and h must be positive",
         "stairs" => LevelSpelling.AsFacing(Facing) is null ? $"unknown facing '{Facing}'"
             : this is { W: > 0, Steps: > 0 } ? null : "w and steps must be positive",
-        "button" => this is not { W: > 0, D: > 0 } ? "w and d must be positive"
-            : string.IsNullOrEmpty(Emit) ? "emit is required" : null,
         "platform" => Route(),
         "portal" => this is not { W: > 0, H: > 0 } ? "w and h must be positive"
             : A is null || B is null ? "both ends a and b are required"
@@ -129,6 +127,31 @@ sealed record ObjectEntry {
             return "a space needs a volume, not a point";
 
         return Trigger?.Validate() ?? Interactable?.Validate() ?? Space?.Validate();
+    }
+}
+
+// A rule with no place in the world: hearing `on` runs these steps. The step verbs are described
+// where they run, in Sequence.cs.
+sealed record SequenceEntry {
+    public string? On { get; init; }
+    public Step[] Steps { get; init; } = [];
+
+    public string? Validate() {
+        if (string.IsNullOrEmpty(On))
+            return "a sequence needs on";
+        if (Steps.Length == 0)
+            return "a sequence needs steps";
+
+        foreach (var step in Steps)
+            if (step.Validate() is { } error)
+                return error;
+        return null;
+    }
+
+    public IEnumerable<string> References() {
+        foreach (var step in Steps)
+            foreach (var reference in step.References())
+                yield return reference;
     }
 }
 

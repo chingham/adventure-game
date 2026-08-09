@@ -74,6 +74,19 @@ static class LevelFile {
                 return Warn($"object {i} '{o.Type}': id '{id}' is already taken.");
         }
 
+        // Sequences resolve against those names: a typo that quietly does nothing is the worst kind
+        var listening = new HashSet<string>();
+        foreach (var sequence in read.Sequences) {
+            if (sequence.Validate() is { } issue)
+                return Warn($"sequence '{sequence.On}': {issue}.");
+            if (!listening.Add(sequence.On!))
+                return Warn($"sequence '{sequence.On}': two sequences answer the same signal.");
+
+            foreach (var reference in sequence.References())
+                if (!named.Contains(reference))
+                    return Warn($"sequence '{sequence.On}': nothing here is called '{reference}'.");
+        }
+
         level = read;
         return LevelReadResult.Loaded;
     }
@@ -88,6 +101,8 @@ static class LevelFile {
     public static void Apply(LevelDocument level, Bricks kit, GreyboxMaterials materials) {
         foreach (var o in level.Objects)
             Build(o, kit, materials.ByName(o.M));
+        foreach (var sequence in level.Sequences)
+            kit.Sequence(sequence.On!, sequence.Steps);
     }
 
     static void Build(ObjectEntry o, Bricks kit, MaterialHandle m) {
@@ -95,9 +110,6 @@ static class LevelFile {
         switch (o.Kind) {
             case "stairs":
                 kit.Stairs(o.X, o.Y, Facing(o.Facing), o.Steps, o.W, o.Z, m);
-                return;
-            case "button":
-                kit.Button(o.X, o.Y, o.W, o.D, o.Z, o.Emit!);
                 return;
             case "portal":
                 kit.Portal(o.W, o.H, Anchor(o.A!), Anchor(o.B!));

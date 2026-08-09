@@ -41,7 +41,7 @@ sealed class LevelReloadSystem : ISystem, IDisposable {
             commands.Destroy(row.Entity);
 
         LevelFile.Apply(level, new Bricks(commands, primitives, materials), materials);
-        Console.WriteLine($"[Level] Reloaded {level.Objects.Count} objects.");
+        Console.WriteLine($"[Level] Reloaded {level.Objects.Count} objects, {level.Sequences.Count} sequences.");
     }
 
     public void Dispose() => watcher.Dispose();

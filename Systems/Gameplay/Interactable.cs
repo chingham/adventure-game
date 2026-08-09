@@ -23,7 +23,7 @@ struct Interactor {
     public Entity Candidate;
 }
 
-sealed class InteractionSystem(IInput input, Flags flags) : ISystem {
+sealed class InteractionSystem(IInput input, Flags flags, PlayerControl control) : ISystem {
     // Cosine of half the 120 degree cone in front of the character, and how far up or down reach carries.
     const double ConeCos = 0.5;
     const double VerticalReach = 2;
@@ -33,12 +33,13 @@ sealed class InteractionSystem(IInput input, Flags flags) : ISystem {
     public static string UsedFlag(string emit) => emit + ".used";
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
-        // Consume takes the press edge exactly once, whoever is first to ask
-        var used = input.Consume(Controls.Interact);
+        // Consume takes the press edge exactly once. A sequence holding the reins drains it all the
+        // same, so a press made mid-scene cannot fire the instant control comes back.
+        var used = input.Consume(Controls.Interact) && !control.Locked;
 
         foreach (var row in world.Query<CharacterMovement, Interactor>()) {
             ref var interactor = ref row.Component2;
-            interactor.Candidate = Select(world, row.Component1);
+            interactor.Candidate = control.Locked ? Entity.Null : Select(world, row.Component1);
 
             if (!used || interactor.Candidate.IsNull)
                 continue;
@@ -46,7 +47,7 @@ sealed class InteractionSystem(IInput input, Flags flags) : ISystem {
             var interactable = world.Get<Interactable>(interactor.Candidate);
             if (interactable.Once)
                 flags.Set(UsedFlag(interactable.Emit));
-            world.Events<Signal>().Write(new Signal(interactable.Emit));
+            world.Events<Signal>().Write(new Signal(interactable.Emit, interactor.Candidate));
         }
     }
 
