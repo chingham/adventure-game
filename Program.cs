@@ -97,8 +97,11 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
         game.AddSystem<CharacterDebugPanel>(QuarkPhases.LateUpdate);
         game.AddSystem<DoorTuningPanel>(QuarkPhases.LateUpdate);
 
+        game.AddSystem<DebugVolumeSystem>(QuarkPhases.RenderSubmit, order: 10);
+
         // Help message
         Console.WriteLine("Click the scene to grab the cursor, Esc to release it");
         Console.WriteLine("Mouse: look   WASD: move   Wheel: zoom   V: Toggle camera   E: Interact");
+        Console.WriteLine("F3: Show hidden volumes   F5: Reload level");
     })
     .Run();

@@ -19,6 +19,7 @@ static class Controls {
 
     // Authoring
     public static readonly ButtonAction ReloadLevel = new("reload_level");
+    public static readonly ButtonAction ToggleVolumes = new("toggle_volumes");
 
     public static void Bind(InputMap map) {
         // Camera
@@ -49,5 +50,6 @@ static class Controls {
 
         // Authoring
         map.Button(ReloadLevel).Key(InputKey.F5);
+        map.Button(ToggleVolumes).Key(InputKey.F3);
     }
 }
