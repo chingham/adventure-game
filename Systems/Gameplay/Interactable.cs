@@ -14,8 +14,8 @@ struct Interactable() {
     public string Emit = "";
     public Vector3d Offset;       // where the hand lands, from the entity's origin, turning with it
     public double Reach;
-    public bool Once;             // retires the moment it is used; a sequence can also disable it
-    public bool Enabled = true;
+    public bool Once;             // retires for good once used, remembered outside the world
+    public bool Enabled = true;   // orthogonal pause: a sequence can silence it and hand it back
 }
 
 // Rides whoever can use things, and holds what he has in reach right now.
@@ -23,10 +23,14 @@ struct Interactor {
     public Entity Candidate;
 }
 
-sealed class InteractionSystem(IInput input) : ISystem {
+sealed class InteractionSystem(IInput input, Flags flags) : ISystem {
     // Cosine of half the 120 degree cone in front of the character, and how far up or down reach carries.
     const double ConeCos = 0.5;
     const double VerticalReach = 2;
+
+    // A spent one-shot is remembered as a flag rather than on the component: the level is rebuilt from
+    // its file on every reload, and an emptied chest must not refill itself.
+    public static string UsedFlag(string emit) => emit + ".used";
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
         // Consume takes the press edge exactly once, whoever is first to ask
@@ -39,22 +43,23 @@ sealed class InteractionSystem(IInput input) : ISystem {
             if (!used || interactor.Candidate.IsNull)
                 continue;
 
-            ref var interactable = ref world.Get<Interactable>(interactor.Candidate);
-            interactable.Enabled = !interactable.Once;
+            var interactable = world.Get<Interactable>(interactor.Candidate);
+            if (interactable.Once)
+                flags.Set(UsedFlag(interactable.Emit));
             world.Events<Signal>().Write(new Signal(interactable.Emit));
         }
     }
 
     // Best thing within its own reach and inside the cone the character faces, scored by how deep into
     // that reach he stands - so a small thing he is on top of wins over a wide one further out.
-    static Entity Select(World world, in CharacterMovement movement) {
+    Entity Select(World world, in CharacterMovement movement) {
         var facing = new Vector3d(Math.Sin(movement.Yaw), Math.Cos(movement.Yaw), 0);
         var best = Entity.Null;
         var bestScore = double.MaxValue;
 
         foreach (var row in world.Query<Interactable, RelativeTransform>()) {
             var interactable = row.Component1;
-            if (!interactable.Enabled)
+            if (!interactable.Enabled || interactable.Once && flags.Has(UsedFlag(interactable.Emit)))
                 continue;
 
             var transform = row.Component2.LocalTransform;

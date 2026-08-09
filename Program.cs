@@ -35,6 +35,9 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
         // Tunables the door transition is dialled in with, live
         game.Provide(new DoorTuning());
 
+        // What the world remembers across a hot reload
+        game.Provide<Flags>();
+
         // Rendering
         game.Rendering.AddEffect(new Bloom { Threshold = 1.2f, Radius = 1.3f, Intensity = 0.22f });
 
@@ -96,6 +99,7 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
 
         game.AddSystem<CharacterDebugPanel>(QuarkPhases.LateUpdate);
         game.AddSystem<DoorTuningPanel>(QuarkPhases.LateUpdate);
+        game.AddSystem<FlagsPanel>(QuarkPhases.LateUpdate);
 
         game.AddSystem<DebugVolumeSystem>(QuarkPhases.RenderSubmit, order: 10);
 
