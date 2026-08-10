@@ -1,0 +1,26 @@
+# UI
+- Menu principal
+  - Nouvelle partie
+  - Charger une partie
+  - Options
+  - Quitter
+- Menu pause
+  - Reprendre
+  - Charger une partie
+  - Sauvegarder la partie
+  - Options
+  - Quitter
+- Boites de dialogues
+- HUD
+  - Vie
+  - Mana
+  - Trèfles (boites vides et pleines)
+  - Compteur de pièces (kashes)
+  - Indicateur d'arme
+  - Barre de vie de boss ou d'ennemi
+- Actions contextuelles (parler, pousser, monter)
+- Inventaire
+- Journal (résumé de l'histoire jusqu'à présent, quêtes en cours, quêtes terminées éventuellement)
+- Toasts (pas sûr que ce soit nécessaire)
+- Map view
+- Game over view

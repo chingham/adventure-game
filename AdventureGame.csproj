@@ -12,6 +12,10 @@
         <ProjectReference Include="..\..\engine\Quark.Assets\Quark.Assets.csproj" />
         <ProjectReference Include="..\..\engine\Quark.Ecs\Quark.Ecs.csproj" />
         <ProjectReference Include="..\..\engine\Quark.Graphics\Quark.Graphics.csproj" />
+        <ProjectReference Include="..\..\engine\Quark.Kit.ImGui\Quark.Kit.ImGui.csproj" />
+        <ProjectReference Include="..\..\engine\Quark.Kit.Physics\Quark.Kit.Physics.csproj" />
+        <ProjectReference Include="..\..\engine\Quark.Kit.Profiling\Quark.Kit.Profiling.csproj" />
+        <ProjectReference Include="..\..\engine\Quark.Kit.Ui\Quark.Kit.Ui.csproj" />
         <ProjectReference Include="..\..\engine\Quark.Kit\Quark.Kit.csproj" />
         <ProjectReference Include="..\..\engine\Quark.Numerics\Quark.Numerics.csproj" />
         <ProjectReference Include="..\..\engine\Quark.Physics\Quark.Physics.csproj" />

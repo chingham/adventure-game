@@ -6,6 +6,8 @@ using AdventureGame.Systems;
 using AdventureGame.Systems.Camera;
 using AdventureGame.Systems.CharacterController;
 using Quark.Kit;
+using Quark.Kit.Components;
+using Quark.Kit.Profiling;
 using Quark.Kit.Rendering;
 using Quark.Kit.Rendering.Environments;
 using Quark.Kit.Rendering.Meshes;
@@ -79,10 +81,10 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
             game.ToDispose(new LevelReloadSystem(game.Input, game.Primitives, materials)),
             QuarkPhases.Input, order: 20);
         
-        game.AddSystem<MovingPlatformSystem>(game.PhysicsPhase, order: 5);
-        game.AddSystem<InputBasisSystem>(game.PhysicsPhase, order: 10);
-        game.AddSystem<CharacterIntentSystem>(game.PhysicsPhase, order: 110);
-        game.AddSystem<CharacterMovementSystem>(game.PhysicsPhase, order: 120);
+        game.AddSystem<MovingPlatformSystem>(game.Physics.Phase, order: 5);
+        game.AddSystem<InputBasisSystem>(game.Physics.Phase, order: 10);
+        game.AddSystem<CharacterIntentSystem>(game.Physics.Phase, order: 110);
+        game.AddSystem<CharacterMovementSystem>(game.Physics.Phase, order: 120);
         
         game.AddSystem<InteractionSystem>(QuarkPhases.Gameplay, order: -20);
         game.AddSystem<TriggerSystem>(QuarkPhases.Gameplay, order: -19);
@@ -96,7 +98,7 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
         game.AddSystem<FollowRigSystem>(QuarkPhases.Gameplay, order: -5);
         game.AddSystem<CameraDirectorSystem>(QuarkPhases.Gameplay, order: -4);
         
-        game.AddSystem(new CharacterInterpolationSystem(game.PhysicsPhase), QuarkPhases.LateUpdate, order: -10);
+        game.AddSystem(new CharacterInterpolationSystem(game.Physics.Phase), QuarkPhases.LateUpdate, order: -10);
         game.AddSystem<CharacterCapsuleAnimationSystem>(QuarkPhases.LateUpdate, order: -8);
 
         game.AddSystem<CharacterDebugPanel>(QuarkPhases.LateUpdate);

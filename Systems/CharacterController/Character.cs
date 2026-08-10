@@ -4,6 +4,7 @@ using Quark.Ecs;
 using Quark.Graphics;
 using Quark.Kit;
 using Quark.Kit.Assets;
+using Quark.Kit.Components;
 using Quark.Kit.Rendering;
 using Quark.Kit.Rendering.Meshes;
 using Quark.Kit.Rendering.Particles;
