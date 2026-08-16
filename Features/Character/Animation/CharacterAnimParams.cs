@@ -19,7 +19,7 @@ struct CharacterAnimParams {
         var carried = Utils.FlattenXY(movement.carryVelocity).Length();
 
         Grounded = movement.Grounded;
-        Speed01 = Utils.Clamp01((movement.ActualHorizontalSpeed - carried) / tuning.MaxSpeed);
+        Speed01 = ((movement.ActualHorizontalSpeed - carried) / tuning.MaxSpeed).Clamp01();
         VerticalSpeed = movement.Grounded ? 0 : movement.Velocity.Z;
         TurnRate = movement.TurnRate;
         SlopeAngle = Math.Acos(Math.Clamp(movement.groundNormalSmoothed.Z, -1, 1));

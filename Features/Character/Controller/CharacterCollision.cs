@@ -77,7 +77,7 @@ partial class CharacterMovementSystem {
 
             leftover = movement.Grounded
                 ? Utils.ProjectAndScale(leftover, hit.Normal)
-                : Utils.ProjectOnPlane(leftover, hit.Normal);
+                : Vector3d.ProjectOnPlane(leftover, hit.Normal);
         }
         else {
             // Step up first: a capsule meets a low step on its top edge, so the contact normal comes
@@ -88,12 +88,12 @@ partial class CharacterMovementSystem {
             // Scale to simulate friction against the wall
             var scale = 1d;
             if (Utils.TryFlatDir(hit.Normal, out var n) && Utils.TryFlatDir(-motion, out var m)) {
-                scale = Utils.Clamp01(1 - Vector3d.Dot(n, m));
+                scale = (1 - Vector3d.Dot(n, m)).Clamp01();
             }
 
             leftover = (movement.Grounded && !verticalPass)
                 ? Utils.ProjectOnPlaneXY(leftover, hit.Normal) * scale
-                : Utils.ProjectOnPlane(leftover, hit.Normal) * scale;
+                : Vector3d.ProjectOnPlane(leftover, hit.Normal) * scale;
         }
 
         // If this is a second contact
@@ -186,7 +186,7 @@ partial class CharacterMovementSystem {
         if (contact.Normal.Z > -0.1 || movement.Velocity.Z <= 0) return;
 
         // Deviate
-        movement.Velocity = Utils.ProjectOnPlane(movement.Velocity, contact.Normal);
+        movement.Velocity = Vector3d.ProjectOnPlane(movement.Velocity, contact.Normal);
 
         TryCornerCorrect(ref movement, deltaTime);
     }

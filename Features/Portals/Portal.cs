@@ -47,14 +47,14 @@ sealed class PortalSystem : ISystem {
                 continue;
 
             var landing = portal.ExitCenter + Utils.TurnZ(offset, portal.YawDelta);
-            var yaw = Utils.WrapAngle(movement.Yaw + portal.YawDelta);
+            var yaw = Angle.Wrap(movement.Yaw + portal.YawDelta);
 
             // Previous* are written too: TeleportedThisTick only lives inside a fixed tick, and the
             // interpolation must not blend across the jump.
             movement.Position = landing;
             movement.PreviousPosition = landing;
             movement.Yaw = yaw;
-            movement.VisualYaw = Utils.WrapAngle(movement.VisualYaw + portal.YawDelta);
+            movement.VisualYaw = Angle.Wrap(movement.VisualYaw + portal.YawDelta);
             movement.PreviousVisualYaw = movement.VisualYaw;
             movement.Velocity = Utils.TurnZ(movement.Velocity, portal.YawDelta);
 

@@ -35,7 +35,7 @@ sealed class DoorApproachSystem(CameraTuning tuning) : ISystem {
             var position = target.LocalTransform.Position;
             var (closeness, doorYaw) = NearestDoor(world, position);
 
-            director.Approach = Utils.SmoothStep01(closeness);
+            director.Approach = Ease.Smooth.Evaluate((float)closeness);
             follow.DoorWeight = director.Approach;
             follow.DoorYaw = doorYaw;
             world.Get<CameraRig>(director.DoorRig).Pivot = position + new Vector3d(0, 0, tuning.FocusHeight);
@@ -55,8 +55,8 @@ sealed class DoorApproachSystem(CameraTuning tuning) : ISystem {
 
                 ref var iso = ref world.Get<CameraRig>(director.IsometricRig);
                 ref var door = ref world.Get<CameraRig>(director.DoorRig);
-                iso.Yaw = Utils.WrapAngle(iso.Yaw + evt.YawDelta);
-                door.Yaw = Utils.WrapAngle(door.Yaw + evt.YawDelta);
+                iso.Yaw = Angle.Wrap(iso.Yaw + evt.YawDelta);
+                door.Yaw = Angle.Wrap(door.Yaw + evt.YawDelta);
             }
     }
 
@@ -79,7 +79,7 @@ sealed class DoorApproachSystem(CameraTuning tuning) : ISystem {
 
             var axial = 1 - Math.Max(0, Math.Abs(along) - tuning.DoorPlateau) / (tuning.ApproachDepth - tuning.DoorPlateau);
             var sideways = 1 - Math.Max(0, lateral - portal.HalfWidth) / tuning.LateralFalloff;
-            var closeness = Utils.Clamp01(axial) * Utils.Clamp01(sideways);
+            var closeness = (axial).Clamp01() * (sideways).Clamp01();
 
             if (closeness <= closest)
                 continue;

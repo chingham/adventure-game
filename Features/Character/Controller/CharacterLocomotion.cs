@@ -19,7 +19,7 @@ partial class CharacterMovementSystem {
         // Control on steep slide
         if (!movement.Grounded && movement.touchedSteep) {
             //NOTE: Commented because this causes jump to go lower when against a wall
-            var downhill = Utils.ProjectOnPlane(-Vector3d.UnitZ, movement.steepNormal);
+            var downhill = Vector3d.ProjectOnPlane(-Vector3d.UnitZ, movement.steepNormal);
             if (downhill.LengthSquared() > Utils.Epsilon) {
                 downhill = downhill.Normalized();
                 movement.Velocity.Z += downhill.Z * tuning.SlideAcceleration * deltaTime;
@@ -37,12 +37,12 @@ partial class CharacterMovementSystem {
             : Vector3d.Dot(intent.Direction, horizontal / hl);
         var rate = movement.Grounded
             ? double.Lerp(tuning.MaxSpeed / tuning.TimeToMaxSpeed, tuning.MaxSpeed / tuning.TimeToStop,
-                Utils.Clamp01(-dot))
+                (-dot).Clamp01())
             : movement.ActualHorizontalSpeed < 0.5
                 ? tuning.MaxSpeed / tuning.TimeToMaxSpeed
                 : tuning.MaxSpeed / tuning.AirTimeToMax;
 
-        horizontal = Utils.MoveTowards(horizontal, target, rate * deltaTime);
+        horizontal = Vector3d.MoveTowards(horizontal, target, rate * deltaTime);
         movement.Velocity.X = horizontal.X;
         movement.Velocity.Y = horizontal.Y;
     }
@@ -106,18 +106,18 @@ partial class CharacterMovementSystem {
         }
 
         // Degressive rotation
-        var speed01 = Utils.Clamp01(movement.ActualHorizontalSpeed / tuning.MaxSpeed);
+        var speed01 = (movement.ActualHorizontalSpeed / tuning.MaxSpeed).Clamp01();
         var maxStep = tuning.TurnSpeed * double.Lerp(1, 0.45, speed01) * deltaTime;
 
-        var delta = Utils.WrapAngle(targetYaw - movement.Yaw);
-        movement.Yaw = Utils.WrapAngle(movement.Yaw + double.Clamp(delta, -maxStep, maxStep));
+        var delta = Angle.Wrap(targetYaw - movement.Yaw);
+        movement.Yaw = Angle.Wrap(movement.Yaw + double.Clamp(delta, -maxStep, maxStep));
     }
 
     // What the mesh turns to, always a little behind the yaw the controller works in
     void UpdateVisualYaw(ref CharacterMovement movement, float deltaTime) {
         var previous = movement.VisualYaw;
-        var d = Utils.WrapAngle(movement.Yaw - movement.VisualYaw);
-        movement.VisualYaw = Utils.WrapAngle(movement.VisualYaw + d * (1 - Utils.Exp2(-deltaTime / 0.05f)));
-        movement.TurnRate = Utils.WrapAngle(movement.VisualYaw - previous) / deltaTime;
+        var d = Angle.Wrap(movement.Yaw - movement.VisualYaw);
+        movement.VisualYaw = Angle.Wrap(movement.VisualYaw + d * (1 - (-deltaTime / 0.05f).Exp2()));
+        movement.TurnRate = Angle.Wrap(movement.VisualYaw - previous) / deltaTime;
     }
 }

@@ -147,7 +147,7 @@ sealed unsafe partial class CharacterMovementSystem(RigidBodySimulation simulati
 
         // Collide and slide
         CollideAndSlide(ref movement, ref tick, deltaTime);
-        movement.carryVelocity *= Utils.Exp2(-deltaTime / tuning.CarryHalfLife);
+        movement.carryVelocity *= (-deltaTime / tuning.CarryHalfLife).Exp2();
 
         // Ground
         ProbeGround(world, entity, ref movement, ref tick, deltaTime);
@@ -199,7 +199,7 @@ sealed unsafe partial class CharacterMovementSystem(RigidBodySimulation simulati
     void OnJumpStarted(World world, Entity entity, ref CharacterMovement movement) {
         if (movement.platformMemory > 0) {
             movement.carryVelocity =
-                Utils.ClampLength(Utils.FlattenXY(movement.platformVelocity), tuning.MaxInheritedSpeed);
+                Vector3d.ClampLength(Utils.FlattenXY(movement.platformVelocity), tuning.MaxInheritedSpeed);
             movement.Velocity.Z +=
                 Math.Clamp(movement.platformVelocity.Z, -tuning.MaxInheritedRise, tuning.MaxInheritedRise);
         }

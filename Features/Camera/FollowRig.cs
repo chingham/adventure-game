@@ -76,8 +76,8 @@ sealed class FollowRigSystem(
             // pull scales with the weight - barely there at the edge of the approach, firm at the
             // threshold - and the mouse still moves under it.
             if (cam.DoorWeight > 0) {
-                var toDoor = Utils.WrapAngle(cam.DoorYaw - cam.Yaw);
-                cam.Yaw += toDoor * (1 - Utils.Exp2(-deltaTime * tuning.CameraPull * cam.DoorWeight));
+                var toDoor = Angle.Wrap(cam.DoorYaw - cam.Yaw);
+                cam.Yaw += toDoor * (1 - (-deltaTime * tuning.CameraPull * cam.DoorWeight).Exp2());
             }
 
             // Smooth with exponential decay
@@ -105,18 +105,18 @@ sealed class FollowRigSystem(
                     && cam.lookIdleTime > tuning.RecenterGrace
                     && movement.ActualHorizontalSpeed > tuning.RecenterMinSpeed) {
                     var moveYaw = Math.Atan2(movement.Velocity.X, movement.Velocity.Y);
-                    var delta = Utils.WrapAngle(moveYaw - cam.Yaw);
+                    var delta = Angle.Wrap(moveYaw - cam.Yaw);
                     
                     // Don't fight player walking away from or toward the camera
-                    var alignment = Utils.Clamp01(Math.Cos(delta) + 0.99);
-                    var speed01 = Utils.Clamp01(movement.ActualHorizontalSpeed / character.MaxSpeed);
+                    var alignment = (Math.Cos(delta) + 0.99).Clamp01();
+                    var speed01 = (movement.ActualHorizontalSpeed / character.MaxSpeed).Clamp01();
 
                     var error = Math.Abs(delta);
-                    var angleGate = Utils.SmoothStep01((error - tuning.RecenterDeadzone) / tuning.RecenterRamp);
+                    var angleGate = Ease.Smooth.Evaluate((float)((error - tuning.RecenterDeadzone) / tuning.RecenterRamp));
                     
                     var strength = tuning.RecenterDecay * alignment * speed01 * angleGate;
 
-                    cam.Yaw += delta * (1 - Utils.Exp2(-deltaTime * strength));
+                    cam.Yaw += delta * (1 - (-deltaTime * strength).Exp2());
                     cam.Pitch = Decay.ExpDecay(cam.Pitch, cam.PreferredPitch, strength * 0.5, deltaTime);
                 }
             }
@@ -128,8 +128,8 @@ sealed class FollowRigSystem(
             UpdateOcclusionDistance(ref cam, ref rig, cam.Distance, deltaTime);
             
             // Apply to rig
-            rig.Yaw = Utils.WrapAngle(cam.actualYaw);
-            rig.Pitch = Utils.WrapAngle(cam.actualPitch);
+            rig.Yaw = Angle.Wrap(cam.actualYaw);
+            rig.Pitch = Angle.Wrap(cam.actualPitch);
             rig.Distance = cam.actualDistance;
         }
     }
@@ -154,8 +154,8 @@ sealed class FollowRigSystem(
 
                 rig.Pivot = evt.To + Utils.TurnZ(rig.Pivot - evt.From, evt.YawDelta);
                 rig.Lead = Utils.TurnZ(rig.Lead, evt.YawDelta);
-                cam.Yaw = Utils.WrapAngle(cam.Yaw + evt.YawDelta);
-                cam.actualYaw = Utils.WrapAngle(cam.actualYaw + evt.YawDelta);
+                cam.Yaw = Angle.Wrap(cam.Yaw + evt.YawDelta);
+                cam.actualYaw = Angle.Wrap(cam.actualYaw + evt.YawDelta);
             }
         }
 
@@ -192,7 +192,7 @@ sealed class FollowRigSystem(
         }
 
         // Recompute lead
-        var lead = Utils.ClampLength(Utils.FlattenXY(targetVelocity) * cam.LeadTime, tuning.MaxLead);
+        var lead = Vector3d.ClampLength(Utils.FlattenXY(targetVelocity) * cam.LeadTime, tuning.MaxLead);
         rig.Lead = Decay.ExpDecay(rig.Lead, lead, 2, deltaTime);
     }
     void UpdateOcclusionDistance(ref FollowRig cam, ref CameraRig rig, double distance, float deltaTime) {

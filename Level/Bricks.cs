@@ -116,7 +116,7 @@ sealed class Bricks(EntityCommands world, GamePrimitiveLibrary p, GreyboxMateria
             Center = DoorCenter(w, from),
             Through = new Vector3d(-direction.X, -direction.Y, 0),
             ExitCenter = DoorCenter(w, to),
-            YawDelta = Utils.WrapAngle(YawOf(to.Arrive) - YawOf(from.Arrive) - Math.PI),
+            YawDelta = Angle.Wrap(YawOf(to.Arrive) - YawOf(from.Arrive) - Math.PI),
             HalfWidth = w / 2,
             HalfDepth = PortalDepth / 2
         };

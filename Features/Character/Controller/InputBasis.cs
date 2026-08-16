@@ -2,6 +2,7 @@ using AdventureGame.App;
 using AdventureGame.Common;
 using AdventureGame.Features.Camera;
 using Quark.Ecs;
+using Quark.Numerics;
 using Quark.Platform.Input;
 
 namespace AdventureGame.Features.Character;
@@ -38,11 +39,11 @@ sealed class InputBasisSystem(IInput input, CameraTuning tuning) : ISystem {
 
         // How much direction the player is actually asking for: it measures his commitment to the
         // line he is on, and so how much a turning camera would betray him by re-aiming it.
-        var commitment = Utils.Clamp01(input.Axis(Controls.Move).Length());
+        var commitment = (input.Axis(Controls.Move).Length()).Clamp01();
 
         foreach (var row in world.Query<InputBasis>()) {
             ref var basis = ref row.Component1;
-            basis.Yaw = Utils.WrapAngle(basis.Yaw + worldTurn);
+            basis.Yaw = Angle.Wrap(basis.Yaw + worldTurn);
 
             // Asking for nothing: take the live basis right away. It costs nothing now and it is
             // what makes the next push read as "up is up", wherever the camera has gone.
@@ -67,8 +68,8 @@ sealed class InputBasisSystem(IInput input, CameraTuning tuning) : ISystem {
             var rate = steered
                 ? Math.Max(tuning.BasisMinThaw, tuning.BasisThaw * (1 - resistance))
                 : tuning.BasisThaw;
-            var delta = Utils.WrapAngle(yaw - basis.Yaw);
-            basis.Yaw = Utils.WrapAngle(basis.Yaw + delta * (1 - Utils.Exp2(-deltaTime * rate)));
+            var delta = Angle.Wrap(yaw - basis.Yaw);
+            basis.Yaw = Angle.Wrap(basis.Yaw + delta * (1 - (-deltaTime * rate).Exp2()));
 
             if (!steered && Math.Abs(delta) < Utils.Epsilon)
                 basis.Frozen = false;

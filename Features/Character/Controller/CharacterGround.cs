@@ -125,7 +125,7 @@ partial class CharacterMovementSystem {
         }
 
         // Smooth normal
-        var smoothFactor = 1 - Utils.Exp2(-deltaTime / 0.05f);
+        var smoothFactor = 1 - (-deltaTime / 0.05f).Exp2();
         movement.groundNormalSmoothed =
             Vector3d.Lerp(movement.groundNormalSmoothed, movement.GroundNormal, smoothFactor).Normalized();
     }
@@ -172,7 +172,7 @@ partial class CharacterMovementSystem {
         var achieved = movement.Position - before;
 
         // Rotate with platform
-        movement.Yaw = Utils.WrapAngle(movement.Yaw + MovingPlatformYawDelta(ridingPlatform));
+        movement.Yaw = Angle.Wrap(movement.Yaw + MovingPlatformYawDelta(ridingPlatform));
 
         movement.platformVelocity = achieved / deltaTime;
         movement.platformMemory = tuning.CoyoteTime;

@@ -12,8 +12,9 @@ sealed class CharacterPanel(CharacterTuning tuning) : ISystem {
         if (!panel.Open)
             return;
 
-        foreach (var row in world.Query<CharacterAnimParams>()) {
+        foreach (var row in world.Query<CharacterAnimParams, CharacterMovement>()) {
             State(row.Component1);
+            Solver(row.Component2);
             break;
         }
 
@@ -40,6 +41,13 @@ sealed class CharacterPanel(CharacterTuning tuning) : ISystem {
         ImGui.Text($"Vertical speed: {anim.VerticalSpeed:F2} m/s");
         ImGui.Text($"Turn rate: {anim.TurnRate / MathF.PI * 180:F2}°/s");
         ImGui.Text($"Slope angle: {anim.SlopeAngle / MathF.PI * 180:F2}°");
+    }
+
+    // What the solver had to work for: slide passes it needed, and the ones it ran out of
+    static void Solver(in CharacterMovement movement) {
+        ImGui.Separator();
+        ImGui.TextDisabled($"slide passes {movement.slideIterations}   exhausted {movement.exhaustedPasses}   " +
+            $"stuck {movement.stuckTicks}");
     }
 
     // Tuning

@@ -20,7 +20,7 @@ struct CameraRig {
         return new CameraRig {
             Pivot = Vector3d.Lerp(a.Pivot, b.Pivot, t),
             Lead = Vector3d.Lerp(a.Lead, b.Lead, t),
-            Yaw = Utils.WrapAngle(Utils.LerpAngle(a.Yaw, b.Yaw, t)),
+            Yaw = Angle.Wrap(Angle.Lerp(a.Yaw, b.Yaw, t)),
             Pitch = double.Lerp(a.Pitch, b.Pitch, t),
             Distance = double.Lerp(a.Distance, b.Distance, t),
             FieldOfView = Utils.LerpFov(a.FieldOfView, b.FieldOfView, t),

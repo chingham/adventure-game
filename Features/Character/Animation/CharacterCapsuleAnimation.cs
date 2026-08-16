@@ -89,7 +89,7 @@ sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
                 TrackSpace.Offset));
     }
     Clip LandSquash(double impactSpeed) {
-        var strength = (float)Utils.Clamp01(impactSpeed / tuning.TerminalVelocity);
+        var strength = (float)(impactSpeed / tuning.TerminalVelocity).Clamp01();
         var scaleV = float.Lerp(1, tuning.LandMaxSquash, strength);
         var scaleH = 1 / MathF.Sqrt(scaleV);
         var duration = float.Lerp(0.1f, 0.2f, strength);
@@ -111,7 +111,7 @@ sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
         });
     }
     Clip ImpactSmoke(double impactSpeed) {
-        var strength = (float)Utils.Clamp01(impactSpeed / tuning.TerminalVelocity);
+        var strength = (float)(impactSpeed / tuning.TerminalVelocity).Clamp01();
         var count = (int)double.Lerp(5, 20, strength);
         var speed = (float)double.Lerp(0.5, 2, strength);
         var scale = (float)double.Lerp(0.6, 1.1, strength);
@@ -163,7 +163,7 @@ sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
         if (settled
             && capsule.hopLastTimer >= tuning.HopMinInterval
             && ((moving && due) || settle)) {
-            var lead = Utils.ClampLength(velocityXY * tuning.HopDuration, tuning.HopStride);
+            var lead = Vector3d.ClampLength(velocityXY * tuning.HopDuration, tuning.HopStride);
             capsule.hopFrom = capsule.hopTo;
             capsule.hopTo = rootXY + lead;
             capsule.hopTimer = 0;
@@ -178,9 +178,9 @@ sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
         var arc = 0d;
         if (!settled) {
             capsule.hopTimer += deltaTime;
-            var span = Utils.Clamp01((capsule.hopTo - capsule.hopFrom).Length() / tuning.HopStride);
-            var t = Utils.Clamp01(capsule.hopTimer / tuning.HopDuration);
-            visualXY = Vector3d.Lerp(capsule.hopFrom, capsule.hopTo, Utils.SmoothStep01(t));
+            var span = ((capsule.hopTo - capsule.hopFrom).Length() / tuning.HopStride).Clamp01();
+            var t = (capsule.hopTimer / tuning.HopDuration).Clamp01();
+            visualXY = Vector3d.Lerp(capsule.hopFrom, capsule.hopTo, Ease.Smooth.Evaluate((float)t));
             arc = Math.Sin(t * Math.PI) * tuning.HopHeight * double.Lerp(0.35, 1, span);
         }
 
@@ -198,7 +198,7 @@ sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
         var position = new Vector3d(0, 0, arc);
         
         // Continuous fall stretch
-        var stretchV = 1 + Utils.Clamp01(-anim.VerticalSpeed / tuning.TerminalVelocity) * tuning.FallStretch;
+        var stretchV = 1 + (-anim.VerticalSpeed / tuning.TerminalVelocity).Clamp01() * tuning.FallStretch;
         var stretchH = 1 / Math.Sqrt(stretchV);
         
         // Continuous lean in turns

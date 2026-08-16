@@ -240,7 +240,7 @@ sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem
         }
 
         runner.timer += deltaTime;
-        var progress = Utils.SmoothStep01(runner.timer / step.S);
+        var progress = Ease.Smooth.Evaluate((float)(runner.timer / step.S));
         var by = new Vector3d(step.By![0], step.By[1], step.By[2]);
         transform.LocalTransform.Position = runner.moveFrom + by * progress;
 

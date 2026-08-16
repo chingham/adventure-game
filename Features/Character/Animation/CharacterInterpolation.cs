@@ -31,7 +31,7 @@ sealed class CharacterInterpolationSystem(SystemPhase simulationPhase) : ISystem
         
         // Interpolate based on phase alpha
         var position = Vector3d.Lerp(movement.PreviousPosition, movement.Position, alpha);
-        var yaw = Utils.LerpAngle(movement.PreviousVisualYaw, movement.VisualYaw, alpha);
+        var yaw = Angle.Lerp(movement.PreviousVisualYaw, movement.VisualYaw, alpha);
         
         var facing = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, -(float)yaw);
         transform.LocalTransform = new Transform(position, facing);
