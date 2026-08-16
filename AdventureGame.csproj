@@ -27,10 +27,22 @@
         <None Update="Data\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Remove=".gitattributes" />
+        <None Remove=".gitignore" />
+        <None Remove="AdventureGame.csproj.DotSettings" />
+        <None Remove="game-design\**" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="Data\Fonts\.DS_Store" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="game-design\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="game-design\**" />
     </ItemGroup>
 
 </Project>
