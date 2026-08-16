@@ -1,10 +1,12 @@
 using System.Numerics;
 using Quark.Assets;
 using AdventureGame;
+using AdventureGame.Inventory;
 using AdventureGame.Library;
 using AdventureGame.Systems;
 using AdventureGame.Systems.Camera;
 using AdventureGame.Systems.CharacterController;
+using AdventureGame.Ui;
 using Quark.Kit;
 using Quark.Kit.Components;
 using Quark.Kit.Profiling;
@@ -12,16 +14,10 @@ using Quark.Kit.Rendering;
 using Quark.Kit.Rendering.Environments;
 using Quark.Kit.Rendering.Meshes;
 using Quark.Kit.Rendering.PostEffects;
+using Quark.Kit.Ui;
 using Quark.Numerics;
 
-/* TODO LIST
- - Fixed tick rate
- - Trail en debug line derrière le perso
- - Interpolation
- - Radial deadzone (inputs)
- */
-
-Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
+Game.Create("Adventure Game", 1920, 1080, vsync: true)
     .UseInput(Controls.Bind)
     .UseDefaultRendering(rendering => {
         //rendering.MsaaSampleCount = 1;
@@ -33,13 +29,21 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
     })
     .UseProfiling()
     .UseAssets()
+    .UseUi()
     .Setup(game => {
+        
+        // Flow
+        var flow = game.Provide(new GameFlow(game, game.Input));
+        flow.ReplaceAll(ScreenKind.Game);
+        flow.Push(ScreenKind.Inventory);
+        
+        game.AddSystem<FlowSystem>(QuarkPhases.Input);
+        
         // Tunables the door transition is dialled in with, live
         game.Provide(new DoorTuning());
 
         // What the world remembers across a hot reload, who holds the reins, and what it says out loud
         game.Provide<Flags>();
-        game.Provide<PlayerControl>();
         game.Provide<Toasts>();
 
         // Rendering
@@ -74,6 +78,15 @@ Game.Create("Third Person - Quark", 1920, 1080, vsync: true)
             // Spawn character
             CharacterRig.Build(world, game, materials, spawn);
         });
+        
+        // UI
+        var fonts = Fonts.Build(game);
+        var icons = Icons.Build(game);
+        var showroom = InventoryShowroom.Build(game);
+        var inventory = new Inventory();
+        
+        game.Ui.Add(new InventoryPanel(game.Ui, flow, fonts, icons, inventory, showroom));
+        game.Ui.Add(new MenuPanel(game.Ui, flow, fonts));
 
         // Systems
         game.AddSystem<CursorToggleSystem>(QuarkPhases.Input, order: 10);

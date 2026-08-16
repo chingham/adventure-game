@@ -63,7 +63,7 @@ class CameraDirectorSystem(IInput input) : ISystem {
     
     public void Update(World world, EntityCommands commands, float deltaTime) {
         // Input
-        var toggle = input.Button(Controls.ToggleView);
+        //var toggle = input.Button(Controls.ToggleView);
         
         foreach (var e in world.Query<CameraDirector, RelativeTransform, CameraComponent>()) {
             ref var director = ref e.Component1;
@@ -71,9 +71,9 @@ class CameraDirectorSystem(IInput input) : ISystem {
             ref var camera = ref e.Component3;
             
             // The space picks the base shot, the toggle inverts it
-            if (toggle == ButtonState.JustPressed) {
-                director.Flipped = !director.Flipped;
-            }
+            //if (toggle == ButtonState.JustPressed) {
+            //    director.Flipped = !director.Flipped;
+            //}
             director.Target = director.Flipped ? 1 - director.InSpace : director.InSpace;
 
             // Update with decay

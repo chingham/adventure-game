@@ -135,6 +135,8 @@ class CharacterCapsuleAnimationSystem : ISystem {
     }
 
     void Update(World world, Entity e, in RelativeTransform root, in CharacterAnimParams anim, ref CharacterCapsuleAnimation capsule, float deltaTime) {
+        if (deltaTime <= float.Epsilon) return;
+        
         ref var body = ref world.Get<RelativeTransform>(capsule.Body);
         
         // Continuous walk with bob phase driven by distance

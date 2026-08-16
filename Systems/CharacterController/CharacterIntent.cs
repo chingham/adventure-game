@@ -17,14 +17,14 @@ struct CharacterIntent() {
     public bool JumpHeld;
 }
 
-sealed class CharacterIntentSystem(IInput input, PlayerControl control) : ISystem {
+sealed class CharacterIntentSystem(IInput input) : ISystem {
     public void Update(World world, EntityCommands commands, float deltaTime) {
 
         // Get input; Consume takes the press edge exactly once, whatever the fixed step does. A
         // sequence holding the reins drains the press all the same, so it cannot fire on release.
-        var jumpPressed = input.Consume(Controls.Jump) && !control.Locked;
-        var jumpHeld = input.Held(Controls.Jump) && !control.Locked;
-        var move = control.Locked ? Vector2.Zero : input.Axis(Controls.Move);
+        var jumpPressed = input.Consume(Controls.Jump);
+        var jumpHeld = input.Held(Controls.Jump);
+        var move = input.Axis(Controls.Move);
 
         // Apply intent to entities
         foreach (var row in world.Query<InputBasis, CharacterIntent>()) {

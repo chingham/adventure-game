@@ -23,7 +23,7 @@ struct Interactor {
     public Entity Candidate;
 }
 
-sealed class InteractionSystem(IInput input, Flags flags, PlayerControl control) : ISystem {
+sealed class InteractionSystem(IInput input, Flags flags) : ISystem {
     // Cosine of half the 120 degree cone in front of the character, and how far up or down reach carries.
     const double ConeCos = 0.5;
     const double VerticalReach = 2;
@@ -35,11 +35,11 @@ sealed class InteractionSystem(IInput input, Flags flags, PlayerControl control)
     public void Update(World world, EntityCommands commands, float deltaTime) {
         // Consume takes the press edge exactly once. A sequence holding the reins drains it all the
         // same, so a press made mid-scene cannot fire the instant control comes back.
-        var used = input.Consume(Controls.Interact) && !control.Locked;
+        var used = input.Consume(Controls.Interact);
 
         foreach (var row in world.Query<CharacterMovement, Interactor>()) {
             ref var interactor = ref row.Component2;
-            interactor.Candidate = control.Locked ? Entity.Null : Select(world, row.Component1);
+            interactor.Candidate = Select(world, row.Component1);
 
             if (!used || interactor.Candidate.IsNull)
                 continue;

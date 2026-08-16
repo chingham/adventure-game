@@ -29,4 +29,8 @@
         </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="Data\Fonts\.DS_Store" />
+    </ItemGroup>
+
 </Project>

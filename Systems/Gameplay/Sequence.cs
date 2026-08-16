@@ -3,6 +3,7 @@ using Quark.Ecs;
 using Quark.Kit;
 using Quark.Kit.Components;
 using Quark.Numerics;
+using Quark.Platform.Input;
 
 namespace AdventureGame.Systems;
 
@@ -78,9 +79,11 @@ struct SequenceRunner {
 // next and the front must be read again.
 enum StepOutcome { Done, Holding, Rewrote }
 
-sealed class SequenceSystem(Flags flags, PlayerControl control, Toasts toasts) : ISystem {
+sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem {
     readonly EventReader<Signal> signals = new();
     readonly List<Signal> heard = [];
+
+    IDisposable? controlLock = null;
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
         heard.Clear();
@@ -92,9 +95,16 @@ sealed class SequenceSystem(Flags flags, PlayerControl control, Toasts toasts) :
 
         // Recomputed from the runners themselves rather than counted up and down: a runner that dies
         // mid-sequence - a hot reload, say - can then never leave the player frozen.
-        control.Locked = false;
+        var locked = false;
         foreach (var row in world.Query<SequenceRunner>())
-            control.Locked |= row.Component1.Gates > 0;
+            locked |= row.Component1.Gates > 0;
+        
+        if (locked && controlLock is null)
+            controlLock = flow.LockPlayerControl();
+        else if (!locked && controlLock is not null) {
+            controlLock.Dispose();
+            controlLock = null;
+        }
     }
 
     // Starting
