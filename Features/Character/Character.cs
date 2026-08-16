@@ -22,18 +22,18 @@ static class Character {
         DefaultRenderingModule rendering,
         GamePrimitiveLibrary primitives,
         AssetLibrary assets,
-        GreyboxMaterials g,
+        MaterialHandle material,
         Vector3d spawn) {
         // Primitive
         var restPose = Pose.At(new Vector3(0, 0, CharacterShape.CapsuleRestHeight));
         var capsule = primitives.Capsule(
             CharacterShape.CapsuleRadius,
             CharacterShape.CapsuleSegmentHeight,
-            material: g.Neutral,
+            material: material,
             pose: restPose);
         var box = primitives.Box(
             new Vector3(0.5f, 0.25f, 0.2f), 
-            material: g.Neutral);
+            material: material);
         
         // Smoke material
         var smokeTexture = assets.LoadTexture("Data/Textures/smoke.png");

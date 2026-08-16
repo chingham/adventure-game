@@ -1,0 +1,2486 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Quark scene file",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "textures": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Image path, sRGB"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "hdr": {
+                "type": "boolean"
+              },
+              "colorSpace": {
+                "enum": [
+                  "srgb",
+                  "linear"
+                ]
+              },
+              "adjust": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "brightness": {
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "description": null
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "amount": {
+                                  "type": "number",
+                                  "description": null
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "brightness"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "contrast": {
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "description": null
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "amount": {
+                                  "type": "number",
+                                  "description": null
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "contrast"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "hue": {
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "description": null
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "degrees": {
+                                  "type": "number",
+                                  "description": null
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "hue"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "saturation": {
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "description": null
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "amount": {
+                                  "type": "number",
+                                  "description": null
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "saturation"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "tint": {
+                          "oneOf": [
+                            {
+                              "$ref": "#/$defs/color4"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "color": {
+                                  "$ref": "#/$defs/color4"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "tint"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "materials": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "alphaCutoff": {
+            "type": "number",
+            "description": null
+          },
+          "alphaMode": {
+            "enum": [
+              "Opaque",
+              "Mask",
+              "Blend"
+            ]
+          },
+          "baseColor": {
+            "$ref": "#/$defs/color4"
+          },
+          "baseColorTexture": {
+            "type": "string",
+            "description": "Texture name"
+          },
+          "emissive": {
+            "$ref": "#/$defs/color3"
+          },
+          "emissiveStrength": {
+            "type": "number",
+            "description": null
+          },
+          "emissiveTexture": {
+            "type": "string",
+            "description": "Texture name"
+          },
+          "metallic": {
+            "type": "number",
+            "description": null
+          },
+          "metallicRoughnessTexture": {
+            "type": "string",
+            "description": "Texture name"
+          },
+          "normalScale": {
+            "type": "number",
+            "description": null
+          },
+          "normalTexture": {
+            "type": "string",
+            "description": "Texture name"
+          },
+          "occlusionStrength": {
+            "type": "number",
+            "description": null
+          },
+          "occlusionTexture": {
+            "type": "string",
+            "description": "Texture name"
+          },
+          "roughness": {
+            "type": "number",
+            "description": null
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "models": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "glTF/OBJ path, Y-up"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "up": {
+                "enum": [
+                  "y",
+                  "z"
+                ]
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "prefabs": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "at": {
+            "$ref": "#/$defs/vec3"
+          },
+          "rot": {
+            "$ref": "#/$defs/rotation"
+          },
+          "lookAt": {
+            "$ref": "#/$defs/vec3"
+          },
+          "scale": {
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3,
+                "description": null
+              }
+            ]
+          },
+          "material": {
+            "type": "string"
+          },
+          "components": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/entity"
+            }
+          },
+          "particles": {
+            "type": "object",
+            "properties": {
+              "behaviors": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "attractor": {
+                          "type": "object",
+                          "properties": {
+                            "point": {
+                              "$ref": "#/$defs/color3"
+                            },
+                            "strength": {
+                              "type": "number",
+                              "description": null
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "attractor"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "colorOverLife": {
+                          "oneOf": [
+                            {
+                              "oneOf": [
+                                {
+                                  "type": "string",
+                                  "description": "Constant colour"
+                                },
+                                {
+                                  "type": "array",
+                                  "description": "[[time, colour], ...]"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "constant": {},
+                                    "fade": {},
+                                    "between": {
+                                      "type": "array"
+                                    },
+                                    "ramp": {
+                                      "type": "array"
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "gradient": {
+                                  "oneOf": [
+                                    {
+                                      "type": "string",
+                                      "description": "Constant colour"
+                                    },
+                                    {
+                                      "type": "array",
+                                      "description": "[[time, colour], ...]"
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "constant": {},
+                                        "fade": {},
+                                        "between": {
+                                          "type": "array"
+                                        },
+                                        "ramp": {
+                                          "type": "array"
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    }
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "colorOverLife"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "drag": {
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "description": null
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "coefficient": {
+                                  "type": "number",
+                                  "description": null
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "drag"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "gravity": {
+                          "oneOf": [
+                            {
+                              "$ref": "#/$defs/color3"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "acceleration": {
+                                  "$ref": "#/$defs/color3"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "gravity"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "sizeOverLife": {
+                          "oneOf": [
+                            {
+                              "oneOf": [
+                                {
+                                  "type": "number",
+                                  "description": "Constant"
+                                },
+                                {
+                                  "type": "array",
+                                  "description": "[[time, value], ...]"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "constant": {
+                                      "type": "number"
+                                    },
+                                    "linear": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number"
+                                      },
+                                      "minItems": 2,
+                                      "maxItems": 2
+                                    },
+                                    "easeIn": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number"
+                                      },
+                                      "minItems": 2,
+                                      "maxItems": 2
+                                    },
+                                    "easeOut": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number"
+                                      },
+                                      "minItems": 2,
+                                      "maxItems": 2
+                                    },
+                                    "spike": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number"
+                                      },
+                                      "minItems": 3,
+                                      "maxItems": 3
+                                    },
+                                    "keys": {
+                                      "type": "array"
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "curve": {
+                                  "oneOf": [
+                                    {
+                                      "type": "number",
+                                      "description": "Constant"
+                                    },
+                                    {
+                                      "type": "array",
+                                      "description": "[[time, value], ...]"
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "constant": {
+                                          "type": "number"
+                                        },
+                                        "linear": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "number"
+                                          },
+                                          "minItems": 2,
+                                          "maxItems": 2
+                                        },
+                                        "easeIn": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "number"
+                                          },
+                                          "minItems": 2,
+                                          "maxItems": 2
+                                        },
+                                        "easeOut": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "number"
+                                          },
+                                          "minItems": 2,
+                                          "maxItems": 2
+                                        },
+                                        "spike": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "number"
+                                          },
+                                          "minItems": 3,
+                                          "maxItems": 3
+                                        },
+                                        "keys": {
+                                          "type": "array"
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    }
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "sizeOverLife"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "turbulence": {
+                          "type": "object",
+                          "properties": {
+                            "scale": {
+                              "type": "number",
+                              "description": null
+                            },
+                            "speed": {
+                              "type": "number",
+                              "description": null
+                            },
+                            "strength": {
+                              "type": "number",
+                              "description": null
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "turbulence"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "blend": {
+                "enum": [
+                  "Alpha",
+                  "Additive",
+                  "Premultiplied"
+                ]
+              },
+              "capacity": {
+                "type": "integer"
+              },
+              "lifetime": {
+                "oneOf": [
+                  {
+                    "type": "number",
+                    "description": "Fixed value"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[min, max], sampled per particle"
+                  }
+                ]
+              },
+              "material": {
+                "type": "string",
+                "description": "Material name"
+              },
+              "prewarm": {
+                "type": "number",
+                "description": null
+              },
+              "rate": {
+                "type": "number",
+                "description": null
+              },
+              "rotationRate": {
+                "oneOf": [
+                  {
+                    "type": "number",
+                    "description": "Fixed value"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[min, max], sampled per particle"
+                  }
+                ]
+              },
+              "shape": {
+                "oneOf": [
+                  {
+                    "const": "point"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "point": {},
+                      "cone": {
+                        "oneOf": [
+                          {
+                            "type": "number",
+                            "description": "Outer half-angle, degrees"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "angle": {
+                                "type": "number"
+                              },
+                              "inner": {
+                                "type": "number"
+                              },
+                              "radius": {
+                                "type": "number"
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "sphere": {
+                        "oneOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "radius": {
+                                "type": "number"
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "box": {
+                        "oneOf": [
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            },
+                            "minItems": 3,
+                            "maxItems": 3
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "size": {
+                                "type": "array"
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "speed": {
+                "oneOf": [
+                  {
+                    "type": "number",
+                    "description": "Fixed value"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[min, max], sampled per particle"
+                  }
+                ]
+              },
+              "startColor": {
+                "$ref": "#/$defs/color4"
+              },
+              "startRotation": {
+                "oneOf": [
+                  {
+                    "type": "number",
+                    "description": "Fixed value"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[min, max], sampled per particle"
+                  }
+                ]
+              },
+              "startSize": {
+                "oneOf": [
+                  {
+                    "type": "number",
+                    "description": "Fixed value"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[min, max], sampled per particle"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "mesh": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "Registered mesh name or shorthand like box(1,1,1)"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "box": {},
+                  "wedge": {},
+                  "sphere": {},
+                  "icosphere": {},
+                  "capsule": {},
+                  "cylinder": {},
+                  "pyramid": {},
+                  "ref": {
+                    "type": "string",
+                    "description": "Registered mesh name"
+                  },
+                  "uv": {
+                    "type": "string",
+                    "description": "\u0022stretched\u0022 or \u0022tiled(meters)\u0022"
+                  },
+                  "layer": {
+                    "enum": [
+                      "opaque",
+                      "transparent",
+                      "debug"
+                    ]
+                  },
+                  "layers": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ],
+                    "description": "Visibility layers, by name"
+                  },
+                  "group": {
+                    "type": "string",
+                    "description": "Draw group name"
+                  },
+                  "casts": {
+                    "oneOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "enum": [
+                          "auto",
+                          "on",
+                          "off"
+                        ]
+                      }
+                    ],
+                    "description": "Shadow casting; auto = cast when opaque"
+                  },
+                  "receives": {
+                    "oneOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "enum": [
+                          "auto",
+                          "on",
+                          "off"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          },
+          "light": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "directional",
+                  "point",
+                  "spot"
+                ]
+              },
+              "color": {
+                "$ref": "#/$defs/color3"
+              },
+              "intensity": {
+                "type": "number"
+              },
+              "dir": {
+                "$ref": "#/$defs/vec3"
+              },
+              "lookAt": {
+                "$ref": "#/$defs/vec3"
+              },
+              "range": {
+                "type": "number"
+              },
+              "cone": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "shadows": {
+                "oneOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              },
+              "layers": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          "camera": {
+            "type": "object",
+            "properties": {
+              "fov": {
+                "type": "number",
+                "description": "Vertical field of view, degrees"
+              },
+              "ortho": {
+                "type": "number",
+                "description": "Orthographic world height; \u003E 0 switches projection"
+              },
+              "near": {
+                "type": "number"
+              },
+              "far": {
+                "type": "number"
+              },
+              "priority": {
+                "type": "integer"
+              }
+            },
+            "additionalProperties": false
+          },
+          "body": {
+            "oneOf": [
+              {
+                "enum": [
+                  "static",
+                  "kinematic",
+                  "dynamic"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "static",
+                      "kinematic",
+                      "dynamic"
+                    ]
+                  },
+                  "mass": {
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          },
+          "block": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "pillar": {
+            "type": "object",
+            "properties": {
+              "h": {
+                "type": "number",
+                "description": null
+              },
+              "r": {
+                "type": "number",
+                "description": null
+              }
+            },
+            "additionalProperties": false
+          },
+          "ramp": {
+            "type": "object",
+            "properties": {
+              "facing": {
+                "enum": [
+                  "North",
+                  "East",
+                  "South",
+                  "West"
+                ]
+              },
+              "size": {
+                "$ref": "#/$defs/vec3"
+              }
+            },
+            "additionalProperties": false
+          },
+          "stairs": {
+            "type": "object",
+            "properties": {
+              "facing": {
+                "enum": [
+                  "North",
+                  "East",
+                  "South",
+                  "West"
+                ]
+              },
+              "steps": {
+                "type": "integer"
+              },
+              "w": {
+                "type": "number",
+                "description": null
+              }
+            },
+            "additionalProperties": false
+          },
+          "trigger": {
+            "type": "object",
+            "properties": {
+              "enter": {
+                "type": "string"
+              },
+              "exit": {
+                "type": "string"
+              },
+              "rearm": {
+                "type": "string"
+              },
+              "size": {
+                "$ref": "#/$defs/vec3"
+              }
+            },
+            "additionalProperties": false
+          },
+          "space": {
+            "type": "object",
+            "properties": {
+              "distance": {
+                "type": "number",
+                "description": null
+              },
+              "fog": {
+                "type": "number",
+                "description": null
+              },
+              "fov": {
+                "type": "number",
+                "description": null
+              },
+              "pivot": {
+                "type": "string"
+              },
+              "size": {
+                "$ref": "#/$defs/vec3"
+              }
+            },
+            "additionalProperties": false
+          },
+          "portalEnd": {
+            "type": "object",
+            "properties": {
+              "exitAt": {
+                "$ref": "#/$defs/vec3"
+              },
+              "exitFacing": {
+                "enum": [
+                  "North",
+                  "East",
+                  "South",
+                  "West"
+                ]
+              },
+              "facing": {
+                "enum": [
+                  "North",
+                  "East",
+                  "South",
+                  "West"
+                ]
+              },
+              "h": {
+                "type": "number",
+                "description": null
+              },
+              "w": {
+                "type": "number",
+                "description": null
+              }
+            },
+            "additionalProperties": false
+          },
+          "solid": {
+            "type": "boolean"
+          },
+          "mover": {
+            "type": "object",
+            "properties": {
+              "dwell": {
+                "type": "number",
+                "description": null
+              },
+              "mode": {
+                "enum": [
+                  "Shuttle",
+                  "Called"
+                ]
+              },
+              "on": {
+                "type": "string"
+              },
+              "speed": {
+                "type": "number",
+                "description": null
+              },
+              "to": {
+                "$ref": "#/$defs/vec3"
+              }
+            },
+            "additionalProperties": false
+          },
+          "interactable": {
+            "type": "object",
+            "properties": {
+              "at": {
+                "$ref": "#/$defs/vec3"
+              },
+              "emit": {
+                "type": "string"
+              },
+              "once": {
+                "type": "boolean"
+              },
+              "prompt": {
+                "type": "string"
+              },
+              "reach": {
+                "type": "number",
+                "description": null
+              }
+            },
+            "additionalProperties": false
+          },
+          "sequence": {
+            "type": "object",
+            "properties": {
+              "on": {
+                "type": "string"
+              },
+              "steps": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": [
+              "on",
+              "steps"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "view": {
+      "type": "object",
+      "properties": {
+        "environment": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "intensity": {
+              "type": "number"
+            },
+            "solid": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "$ref": "#/$defs/color3"
+                },
+                "texture": {
+                  "type": "string",
+                  "description": "Texture name"
+                }
+              },
+              "additionalProperties": false
+            },
+            "gradient": {
+              "type": "object",
+              "properties": {
+                "ground": {
+                  "$ref": "#/$defs/color3"
+                },
+                "horizon": {
+                  "$ref": "#/$defs/color3"
+                },
+                "sunColor": {
+                  "$ref": "#/$defs/color3"
+                },
+                "sunDirection": {
+                  "$ref": "#/$defs/color3"
+                },
+                "sunSize": {
+                  "type": "number",
+                  "description": null
+                },
+                "zenith": {
+                  "$ref": "#/$defs/color3"
+                },
+                "texture": {
+                  "type": "string",
+                  "description": "Texture name"
+                }
+              },
+              "additionalProperties": false
+            },
+            "hdri": {
+              "type": "object",
+              "properties": {
+                "rotation": {
+                  "type": "number",
+                  "description": null
+                },
+                "texture": {
+                  "type": "string",
+                  "description": "Texture name"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "film": {
+                    "type": "object",
+                    "properties": {
+                      "aberration": {
+                        "type": "number",
+                        "description": null
+                      },
+                      "vignette": {
+                        "type": "number",
+                        "description": null
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "space": {
+                    "enum": [
+                      "hdr",
+                      "ldr"
+                    ]
+                  }
+                },
+                "required": [
+                  "film"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "fog": {
+                    "type": "object",
+                    "properties": {
+                      "color": {
+                        "$ref": "#/$defs/color4"
+                      },
+                      "density": {
+                        "type": "number",
+                        "description": null
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "space": {
+                    "enum": [
+                      "hdr",
+                      "ldr"
+                    ]
+                  }
+                },
+                "required": [
+                  "fog"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "grade": {
+                    "type": "object",
+                    "properties": {
+                      "saturation": {
+                        "type": "number",
+                        "description": null
+                      },
+                      "warmth": {
+                        "type": "number",
+                        "description": null
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "space": {
+                    "enum": [
+                      "hdr",
+                      "ldr"
+                    ]
+                  }
+                },
+                "required": [
+                  "grade"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "bloom": {
+                    "type": "object",
+                    "properties": {
+                      "intensity": {
+                        "type": "number",
+                        "description": null
+                      },
+                      "radius": {
+                        "type": "number",
+                        "description": null
+                      },
+                      "threshold": {
+                        "type": "number",
+                        "description": null
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "space": {
+                    "enum": [
+                      "hdr",
+                      "ldr"
+                    ]
+                  }
+                },
+                "required": [
+                  "bloom"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entity"
+      }
+    }
+  },
+  "$defs": {
+    "vec3": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3,
+      "description": null
+    },
+    "color3": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      ]
+    },
+    "color4": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 4
+        }
+      ]
+    },
+    "rotation": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "Euler degrees [x, y, z]; z is the yaw around up"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "Raw quaternion [x, y, z, w]"
+        }
+      ]
+    },
+    "entity": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "at": {
+          "$ref": "#/$defs/vec3"
+        },
+        "rot": {
+          "$ref": "#/$defs/rotation"
+        },
+        "lookAt": {
+          "$ref": "#/$defs/vec3"
+        },
+        "scale": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": null
+            }
+          ]
+        },
+        "material": {
+          "type": "string"
+        },
+        "components": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entity"
+          }
+        },
+        "particles": {
+          "type": "object",
+          "properties": {
+            "behaviors": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "attractor": {
+                        "type": "object",
+                        "properties": {
+                          "point": {
+                            "$ref": "#/$defs/color3"
+                          },
+                          "strength": {
+                            "type": "number",
+                            "description": null
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "attractor"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "colorOverLife": {
+                        "oneOf": [
+                          {
+                            "oneOf": [
+                              {
+                                "type": "string",
+                                "description": "Constant colour"
+                              },
+                              {
+                                "type": "array",
+                                "description": "[[time, colour], ...]"
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "constant": {},
+                                  "fade": {},
+                                  "between": {
+                                    "type": "array"
+                                  },
+                                  "ramp": {
+                                    "type": "array"
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "gradient": {
+                                "oneOf": [
+                                  {
+                                    "type": "string",
+                                    "description": "Constant colour"
+                                  },
+                                  {
+                                    "type": "array",
+                                    "description": "[[time, colour], ...]"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "constant": {},
+                                      "fade": {},
+                                      "between": {
+                                        "type": "array"
+                                      },
+                                      "ramp": {
+                                        "type": "array"
+                                      }
+                                    },
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "colorOverLife"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "drag": {
+                        "oneOf": [
+                          {
+                            "type": "number",
+                            "description": null
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "coefficient": {
+                                "type": "number",
+                                "description": null
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "drag"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "gravity": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/$defs/color3"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "acceleration": {
+                                "$ref": "#/$defs/color3"
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "gravity"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "sizeOverLife": {
+                        "oneOf": [
+                          {
+                            "oneOf": [
+                              {
+                                "type": "number",
+                                "description": "Constant"
+                              },
+                              {
+                                "type": "array",
+                                "description": "[[time, value], ...]"
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "constant": {
+                                    "type": "number"
+                                  },
+                                  "linear": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number"
+                                    },
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                  },
+                                  "easeIn": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number"
+                                    },
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                  },
+                                  "easeOut": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number"
+                                    },
+                                    "minItems": 2,
+                                    "maxItems": 2
+                                  },
+                                  "spike": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number"
+                                    },
+                                    "minItems": 3,
+                                    "maxItems": 3
+                                  },
+                                  "keys": {
+                                    "type": "array"
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "curve": {
+                                "oneOf": [
+                                  {
+                                    "type": "number",
+                                    "description": "Constant"
+                                  },
+                                  {
+                                    "type": "array",
+                                    "description": "[[time, value], ...]"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "constant": {
+                                        "type": "number"
+                                      },
+                                      "linear": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "number"
+                                        },
+                                        "minItems": 2,
+                                        "maxItems": 2
+                                      },
+                                      "easeIn": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "number"
+                                        },
+                                        "minItems": 2,
+                                        "maxItems": 2
+                                      },
+                                      "easeOut": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "number"
+                                        },
+                                        "minItems": 2,
+                                        "maxItems": 2
+                                      },
+                                      "spike": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "number"
+                                        },
+                                        "minItems": 3,
+                                        "maxItems": 3
+                                      },
+                                      "keys": {
+                                        "type": "array"
+                                      }
+                                    },
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "sizeOverLife"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "turbulence": {
+                        "type": "object",
+                        "properties": {
+                          "scale": {
+                            "type": "number",
+                            "description": null
+                          },
+                          "speed": {
+                            "type": "number",
+                            "description": null
+                          },
+                          "strength": {
+                            "type": "number",
+                            "description": null
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "turbulence"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "blend": {
+              "enum": [
+                "Alpha",
+                "Additive",
+                "Premultiplied"
+              ]
+            },
+            "capacity": {
+              "type": "integer"
+            },
+            "lifetime": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": "Fixed value"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "[min, max], sampled per particle"
+                }
+              ]
+            },
+            "material": {
+              "type": "string",
+              "description": "Material name"
+            },
+            "prewarm": {
+              "type": "number",
+              "description": null
+            },
+            "rate": {
+              "type": "number",
+              "description": null
+            },
+            "rotationRate": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": "Fixed value"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "[min, max], sampled per particle"
+                }
+              ]
+            },
+            "shape": {
+              "oneOf": [
+                {
+                  "const": "point"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "point": {},
+                    "cone": {
+                      "oneOf": [
+                        {
+                          "type": "number",
+                          "description": "Outer half-angle, degrees"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "angle": {
+                              "type": "number"
+                            },
+                            "inner": {
+                              "type": "number"
+                            },
+                            "radius": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "sphere": {
+                      "oneOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "radius": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "box": {
+                      "oneOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "minItems": 3,
+                          "maxItems": 3
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "size": {
+                              "type": "array"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "speed": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": "Fixed value"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "[min, max], sampled per particle"
+                }
+              ]
+            },
+            "startColor": {
+              "$ref": "#/$defs/color4"
+            },
+            "startRotation": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": "Fixed value"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "[min, max], sampled per particle"
+                }
+              ]
+            },
+            "startSize": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": "Fixed value"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "[min, max], sampled per particle"
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "mesh": {
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Registered mesh name or shorthand like box(1,1,1)"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "box": {},
+                "wedge": {},
+                "sphere": {},
+                "icosphere": {},
+                "capsule": {},
+                "cylinder": {},
+                "pyramid": {},
+                "ref": {
+                  "type": "string",
+                  "description": "Registered mesh name"
+                },
+                "uv": {
+                  "type": "string",
+                  "description": "\u0022stretched\u0022 or \u0022tiled(meters)\u0022"
+                },
+                "layer": {
+                  "enum": [
+                    "opaque",
+                    "transparent",
+                    "debug"
+                  ]
+                },
+                "layers": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "description": "Visibility layers, by name"
+                },
+                "group": {
+                  "type": "string",
+                  "description": "Draw group name"
+                },
+                "casts": {
+                  "oneOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "enum": [
+                        "auto",
+                        "on",
+                        "off"
+                      ]
+                    }
+                  ],
+                  "description": "Shadow casting; auto = cast when opaque"
+                },
+                "receives": {
+                  "oneOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "enum": [
+                        "auto",
+                        "on",
+                        "off"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "light": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "enum": [
+                "directional",
+                "point",
+                "spot"
+              ]
+            },
+            "color": {
+              "$ref": "#/$defs/color3"
+            },
+            "intensity": {
+              "type": "number"
+            },
+            "dir": {
+              "$ref": "#/$defs/vec3"
+            },
+            "lookAt": {
+              "$ref": "#/$defs/vec3"
+            },
+            "range": {
+              "type": "number"
+            },
+            "cone": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "shadows": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object"
+                }
+              ]
+            },
+            "layers": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false
+        },
+        "camera": {
+          "type": "object",
+          "properties": {
+            "fov": {
+              "type": "number",
+              "description": "Vertical field of view, degrees"
+            },
+            "ortho": {
+              "type": "number",
+              "description": "Orthographic world height; \u003E 0 switches projection"
+            },
+            "near": {
+              "type": "number"
+            },
+            "far": {
+              "type": "number"
+            },
+            "priority": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        },
+        "body": {
+          "oneOf": [
+            {
+              "enum": [
+                "static",
+                "kinematic",
+                "dynamic"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "static",
+                    "kinematic",
+                    "dynamic"
+                  ]
+                },
+                "mass": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "block": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "pillar": {
+          "type": "object",
+          "properties": {
+            "h": {
+              "type": "number",
+              "description": null
+            },
+            "r": {
+              "type": "number",
+              "description": null
+            }
+          },
+          "additionalProperties": false
+        },
+        "ramp": {
+          "type": "object",
+          "properties": {
+            "facing": {
+              "enum": [
+                "North",
+                "East",
+                "South",
+                "West"
+              ]
+            },
+            "size": {
+              "$ref": "#/$defs/vec3"
+            }
+          },
+          "additionalProperties": false
+        },
+        "stairs": {
+          "type": "object",
+          "properties": {
+            "facing": {
+              "enum": [
+                "North",
+                "East",
+                "South",
+                "West"
+              ]
+            },
+            "steps": {
+              "type": "integer"
+            },
+            "w": {
+              "type": "number",
+              "description": null
+            }
+          },
+          "additionalProperties": false
+        },
+        "trigger": {
+          "type": "object",
+          "properties": {
+            "enter": {
+              "type": "string"
+            },
+            "exit": {
+              "type": "string"
+            },
+            "rearm": {
+              "type": "string"
+            },
+            "size": {
+              "$ref": "#/$defs/vec3"
+            }
+          },
+          "additionalProperties": false
+        },
+        "space": {
+          "type": "object",
+          "properties": {
+            "distance": {
+              "type": "number",
+              "description": null
+            },
+            "fog": {
+              "type": "number",
+              "description": null
+            },
+            "fov": {
+              "type": "number",
+              "description": null
+            },
+            "pivot": {
+              "type": "string"
+            },
+            "size": {
+              "$ref": "#/$defs/vec3"
+            }
+          },
+          "additionalProperties": false
+        },
+        "portalEnd": {
+          "type": "object",
+          "properties": {
+            "exitAt": {
+              "$ref": "#/$defs/vec3"
+            },
+            "exitFacing": {
+              "enum": [
+                "North",
+                "East",
+                "South",
+                "West"
+              ]
+            },
+            "facing": {
+              "enum": [
+                "North",
+                "East",
+                "South",
+                "West"
+              ]
+            },
+            "h": {
+              "type": "number",
+              "description": null
+            },
+            "w": {
+              "type": "number",
+              "description": null
+            }
+          },
+          "additionalProperties": false
+        },
+        "solid": {
+          "type": "boolean"
+        },
+        "mover": {
+          "type": "object",
+          "properties": {
+            "dwell": {
+              "type": "number",
+              "description": null
+            },
+            "mode": {
+              "enum": [
+                "Shuttle",
+                "Called"
+              ]
+            },
+            "on": {
+              "type": "string"
+            },
+            "speed": {
+              "type": "number",
+              "description": null
+            },
+            "to": {
+              "$ref": "#/$defs/vec3"
+            }
+          },
+          "additionalProperties": false
+        },
+        "interactable": {
+          "type": "object",
+          "properties": {
+            "at": {
+              "$ref": "#/$defs/vec3"
+            },
+            "emit": {
+              "type": "string"
+            },
+            "once": {
+              "type": "boolean"
+            },
+            "prompt": {
+              "type": "string"
+            },
+            "reach": {
+              "type": "number",
+              "description": null
+            }
+          },
+          "additionalProperties": false
+        },
+        "sequence": {
+          "type": "object",
+          "properties": {
+            "on": {
+              "type": "string"
+            },
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          },
+          "required": [
+            "on",
+            "steps"
+          ],
+          "additionalProperties": false
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]\u002B$"
+        },
+        "prefab": {
+          "type": "string"
+        },
+        "model": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "ref": {
+                  "type": "string"
+                },
+                "overrides": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "material": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "ref"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

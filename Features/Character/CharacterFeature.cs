@@ -1,5 +1,6 @@
 using AdventureGame.App;
 using AdventureGame.Level;
+using Quark.Kit.Scenes.Files;
 using Quark.Kit;
 using Quark.Kit.Components;
 
@@ -24,9 +25,9 @@ sealed class CharacterFeature : IGameFeature {
             new CharacterInterpolationSystem(physics), QuarkPhases.LateUpdate, Order.CharacterInterpolation);
         game.AddSystem<CharacterCapsuleAnimationSystem>(QuarkPhases.LateUpdate, Order.CharacterAnimation);
 
-        // The rig, where the level said to put it
+        // The rig, where the level said to put it, in the greybox the level is made of
         var spawn = game.Shared<LevelSpawn>().Point;
-        var materials = game.Shared<GreyboxMaterials>();
-        game.World.Setup(world => CharacterRig.Build(world, game, materials, spawn));
+        var material = game.Shared<SceneFileHandle>().Material("neutral");
+        game.World.Setup(world => CharacterRig.Build(world, game, material, spawn));
     }
 }

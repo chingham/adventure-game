@@ -8,7 +8,7 @@ static class Order {
     // Input: the flow decides what is live before anything reads it
     public const int Flow = 0;
     public const int CursorToggle = 10;
-    public const int LevelReload = 20;
+    public const int SequenceSweep = 20;
 
     // Simulation (fixed step): what carries the character moves first, the character last
     public const int MovingPlatform = 5;

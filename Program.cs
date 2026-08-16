@@ -19,6 +19,7 @@ Game.Create("Adventure Game", 1920, 1080, vsync: true)
     })
     .UseProfiling()
     .UseAssets()
+    .UseSceneFiles()
     .UseUi()
     .Setup(Features.InstallAll)
     .Run();

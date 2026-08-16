@@ -3,13 +3,14 @@ using AdventureGame.Level;
 using Quark.Ecs;
 using Quark.Kit;
 using Quark.Kit.Components;
+using Quark.Kit.Rendering;
 using Quark.Numerics;
 
 namespace AdventureGame.Features.Character;
 
 static class CharacterRig {
-    public static void Build(EntityCommands entityCommands, Game game, GreyboxMaterials greyboxMaterials, Vector3d spawn) {
-        var character = Character.Spawn(entityCommands, game.Rendering, game.Primitives, game.Assets, greyboxMaterials, spawn);
+    public static void Build(EntityCommands entityCommands, Game game, MaterialHandle material, Vector3d spawn) {
+        var character = Character.Spawn(entityCommands, game.Rendering, game.Primitives, game.Assets, material, spawn);
             
         // Spawn rigs and camera
         var followRig = FollowRigSystem.SpawnRig(entityCommands, character);

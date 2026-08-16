@@ -126,7 +126,7 @@ sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem
                     On = definition.On,
                     Source = signal.Source,
                     Pending = [..definition.Steps]
-                }).With(new LevelBrick());
+                });
             }
     }
 
