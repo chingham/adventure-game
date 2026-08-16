@@ -25,10 +25,10 @@ static class Character {
         GreyboxMaterials g,
         Vector3d spawn) {
         // Primitive
-        var restPose = Pose.At(new Vector3(0, 0, Constants.CapsuleRestHeight));
+        var restPose = Pose.At(new Vector3(0, 0, CharacterShape.CapsuleRestHeight));
         var capsule = primitives.Capsule(
-            Constants.CapsuleRadius,
-            Constants.CapsuleSegmentHeight,
+            CharacterShape.CapsuleRadius,
+            CharacterShape.CapsuleSegmentHeight,
             material: g.Neutral,
             pose: restPose);
         var box = primitives.Box(

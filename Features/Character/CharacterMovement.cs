@@ -57,7 +57,7 @@ struct CharacterMovement() {
     internal bool cornerCorrectUsed;
 }
 
-sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : ISystem {
+sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation, CharacterTuning tuning) : ISystem {
     public void Update(World world, EntityCommands commands, float deltaTime) {
 
         // Update characters
@@ -70,8 +70,18 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         }
     }
 
+    // Solver limits and epsilons: they guard the algorithm rather than describe the character, so
+    // they are not on the tuning sheet.
     const int MaximumDepenetrationPasses = 3;
     const int MaximumSlidePasses = 5;
+    const float MaxDepenetrationPerTick = 0.5f;
+    const float NudgeDistance = 0.14f;
+    const float SteepMinZ = 0.1f;
+    const float CrushTolerance = 0.05f;
+    const int CrushStuckTicks = 10;
+    const int StepUpGraceTicks = 3;
+    const float StepLedgeMargin = 0.05f;
+    const float StepLedgeMinRise = 0.05f;
 
     int slideIterations;
     int exhaustedPasses;
@@ -134,7 +144,7 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         
         // Collide and slide
         CollideAndSlide(ref movement, deltaTime);
-        movement.carryVelocity *= Utils.Exp2(-deltaTime / Constants.CarryHalfLife);
+        movement.carryVelocity *= Utils.Exp2(-deltaTime / tuning.CarryHalfLife);
         
         // Ground
         ProbeGround(world, entity, ref movement, deltaTime);
@@ -164,8 +174,8 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
     }
 
     static (QueryShape shape, Vector3d offset) GetQueryShape() {
-        var shape = new Capsule(Constants.CapsuleRadius, Constants.CapsuleSegmentHeight);
-        var offset = new Vector3d(0, 0, Constants.CapsuleRestHeight);
+        var shape = new Capsule(CharacterShape.CapsuleRadius, CharacterShape.CapsuleSegmentHeight);
+        var offset = new Vector3d(0, 0, CharacterShape.CapsuleRestHeight);
         return (shape, offset);
     }
 
@@ -184,7 +194,7 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         var layer = movement.CollisionMask;
         ref var position = ref movement.Position;
         ref var velocity = ref movement.Velocity;
-        var budget = (double)Constants.MaxDepenetrationPerTick;
+        var budget = (double)MaxDepenetrationPerTick;
 
         for (var i = 0; i < MaximumDepenetrationPasses; i++) {
             // Get overlap bodies
@@ -220,14 +230,14 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
                 }
 
                 // Move to depenetrate, within the tick budget
-                var push = Math.Min(contact.Depth + Constants.SkinWidth * 0.5f, budget);
+                var push = Math.Min(contact.Depth + CharacterShape.SkinWidth * 0.5f, budget);
                 if (push <= Utils.Epsilon) break;
                 budget -= push;
                 position += (Vector3d)contact.Normal * push;
 
                 // Pushed out along a walkable normal: something solid rose into us, and being pushed
                 // up IS being landed on. The downward probe cannot see it, we were already inside.
-                if (!depenetrationGrounded && contact.Normal.Z >= Constants.WalkableCos) {
+                if (!depenetrationGrounded && contact.Normal.Z >= tuning.WalkableCos) {
                     depenetrationGrounded = true;
                     depenetrationNormal = contact.Normal;
                     depenetrationEntity = contact.Entity;
@@ -251,7 +261,7 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         for (var a = 0; a < contacts.Length; a++) {
             for (var b = a + 1; b < contacts.Length; b++) {
                 if (Vector3d.Dot(contacts[a].Normal, contacts[b].Normal) > -0.5) continue;
-                if (contacts[a].Depth + contacts[b].Depth > Constants.CrushTolerance) return true;
+                if (contacts[a].Depth + contacts[b].Depth > CrushTolerance) return true;
             }
         }
         return false;
@@ -322,7 +332,7 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         
         var (shape, offset) = GetQueryShape();
         var sweepOffset = position + offset;
-        var sweepMotion = dir * (dist + Constants.SkinWidth);
+        var sweepMotion = dir * (dist + CharacterShape.SkinWidth);
         var sweepHit = simulation.Sweep(shape, (Vector3)sweepOffset, (Vector3)sweepMotion, out var hit, layer);
         if (!sweepHit) {
             // No hit, advance freely
@@ -338,12 +348,12 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         contacts.Add(new Contact(hit.Normal, hit.Position, hit.Entity, verticalPass));
 
         // Advance to contact (minus skin)
-        var advance = Math.Max(hit.Distance - Constants.SkinWidth, 0);
+        var advance = Math.Max(hit.Distance - CharacterShape.SkinWidth, 0);
         var leftover = motion - dir * advance;
         position += dir * advance;
         
         // Is the hit surface walkable ?
-        var walkable = hit.Normal.Z >= Constants.WalkableCos;
+        var walkable = hit.Normal.Z >= tuning.WalkableCos;
         if (walkable) {
             // On vertical pass, this is a landing, we can stop here
             if (verticalPass) return;
@@ -417,13 +427,13 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
 
             var candidate = Slide(
                 movement.Position,
-                tries[i] * Constants.NudgeDistance,
+                tries[i] * NudgeDistance,
                 0,
                 Vector3d.Zero,
                 movement.CollisionMask,
                 movement.Grounded,
                 verticalPass: false);
-            if ((candidate - movement.Position).Length() < Constants.NudgeDistance * 0.9) continue;
+            if ((candidate - movement.Position).Length() < NudgeDistance * 0.9) continue;
 
             var overlapOffset = offset + candidate + Vector3d.UnitZ * (movement.Velocity.Z * deltaTime);
             if (simulation.OverlapAny(shape, (Vector3)overlapOffset, movement.CollisionMask))
@@ -453,25 +463,25 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         var (shape, offset) = GetQueryShape();
 
         // How much can we lift
-        var sweepMotion = Vector3d.UnitZ * (Constants.StepUpHeight + Constants.SkinWidth);
+        var sweepMotion = Vector3d.UnitZ * (tuning.StepUpHeight + CharacterShape.SkinWidth);
         var blocked = simulation.Sweep(shape, (Vector3)(position + offset), (Vector3)sweepMotion, out var up, layer);
 
-        var lift = blocked ? Math.Max(up.Distance - Constants.SkinWidth, 0) : Constants.StepUpHeight;
+        var lift = blocked ? Math.Max(up.Distance - CharacterShape.SkinWidth, 0) : tuning.StepUpHeight;
         var raised = position + Vector3d.UnitZ * lift;
-        var drop = lift + Constants.SkinWidth * 2;
+        var drop = lift + CharacterShape.SkinWidth * 2;
 
         // Is there a real ledge behind, or a slope or wall we should be refusing? A ray reads the
         // surface we would end up standing on; the capsule would only ever catch the edge in front.
-        var probe = raised + into * (Constants.CapsuleRadius + Constants.StepLedgeMargin);
+        var probe = raised + into * (CharacterShape.CapsuleRadius + StepLedgeMargin);
         if (!simulation.Raycast((Vector3)probe, -Vector3.UnitZ, (float)drop, out var ledge, layer)) return false;
         if (!Walkable(false, ledge.Normal)) return false;
 
         // Reject when the ray came back down to our own floor: a wall too tall to climb would read as
         // a valid landing otherwise.
-        if (lift - ledge.Distance < Constants.StepLedgeMinRise) return false;
+        if (lift - ledge.Distance < StepLedgeMinRise) return false;
 
         // Can we carry this tick's motion up there
-        sweepMotion = fwd * (move + Constants.SkinWidth);
+        sweepMotion = fwd * (move + CharacterShape.SkinWidth);
         if (simulation.Sweep(shape, (Vector3)(raised + offset), (Vector3)sweepMotion, out _, layer)) return false;
 
         var advanced = raised + fwd * move;
@@ -479,7 +489,7 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         // Where do we land, step nose included
         sweepMotion = -Vector3d.UnitZ * drop;
         if (!simulation.Sweep(shape, (Vector3)(advanced + offset), (Vector3)sweepMotion, out var down, layer)) return false;
-        if (!ValidHit(down) || down.Normal.Z <= Constants.SteepMinZ) return false;
+        if (!ValidHit(down) || down.Normal.Z <= SteepMinZ) return false;
 
         // Did we really go up? Compare against the bare contact: the skin gap added back would read as
         // a rise of one skin even when we simply fell onto the floor we started from.
@@ -487,9 +497,9 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         if (contactZ - position.Z < Utils.Epsilon) return false;
 
         // Update position
-        position = new Vector3d(advanced.X, advanced.Y, contactZ + Constants.SkinWidth);
+        position = new Vector3d(advanced.X, advanced.Y, contactZ + CharacterShape.SkinWidth);
         stepUpsThisTick++;
-        stepUpGrace = Constants.StepUpGraceTicks;
+        stepUpGrace = StepUpGraceTicks;
         return true;
     }
     
@@ -508,10 +518,10 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
             var downhill = Utils.ProjectOnPlane(-Vector3d.UnitZ, movement.steepNormal);
             if (downhill.LengthSquared() > Utils.Epsilon) {
                 downhill = downhill.Normalized();
-                movement.Velocity.Z += downhill.Z * Constants.SlideAcceleration * deltaTime;
-                horizontal += Utils.FlattenXY(downhill) * Constants.SlideAcceleration * deltaTime;
+                movement.Velocity.Z += downhill.Z * tuning.SlideAcceleration * deltaTime;
+                horizontal += Utils.FlattenXY(downhill) * tuning.SlideAcceleration * deltaTime;
                 
-                target = target * Constants.SlideControl + Utils.FlattenXY(downhill) * (1 - Constants.SlideControl) * Constants.MaxSpeed;
+                target = target * tuning.SlideControl + Utils.FlattenXY(downhill) * (1 - tuning.SlideControl) * tuning.MaxSpeed;
             }
         }
         
@@ -521,11 +531,11 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
             : hl < Utils.Epsilon ? 1
             : Vector3d.Dot(intent.Direction, horizontal / hl);
         var rate = movement.Grounded
-            ? double.Lerp(Constants.MaxSpeed / Constants.TimeToMaxSpeed, Constants.MaxSpeed / Constants.TimeToStop,
+            ? double.Lerp(tuning.MaxSpeed / tuning.TimeToMaxSpeed, tuning.MaxSpeed / tuning.TimeToStop,
                 Utils.Clamp01(-dot))
             : movement.ActualHorizontalSpeed < 0.5
-                ? Constants.MaxSpeed / Constants.TimeToMaxSpeed
-                : Constants.MaxSpeed / Constants.AirTimeToMax;
+                ? tuning.MaxSpeed / tuning.TimeToMaxSpeed
+                : tuning.MaxSpeed / tuning.AirTimeToMax;
         
         horizontal = Utils.MoveTowards(horizontal, target, rate * deltaTime);
         movement.Velocity.X = horizontal.X;
@@ -539,7 +549,7 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
             velocity.Z = 0;
             
             var groundProbe = GroundProbeDistance(deltaTime);
-            groundClamp = Math.Min(Constants.StickToGround, groundProbe * 0.5f);
+            groundClamp = Math.Min(tuning.StickToGround, groundProbe * 0.5f);
             return;
         }
 
@@ -549,24 +559,24 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         var cutting = rising && movement.jumpCutArmed && !movement.jumpHeld;
         
         var g = rising
-            ? Constants.JumpRiseGravity * (cutting ? Constants.JumpCutGravityScale : 1)
-            : Constants.JumpRiseGravity * Constants.FallMultipler;
+            ? tuning.JumpRiseGravity * (cutting ? tuning.JumpCutGravityScale : 1)
+            : tuning.JumpRiseGravity * tuning.FallMultipler;
         
         // No apex when cut, we want it to land ASAP
-        if (rising && !cutting && velocity.Z < Constants.JumpApexThreshold) g *= Constants.JumpApexGravityScale;
+        if (rising && !cutting && velocity.Z < tuning.JumpApexThreshold) g *= tuning.JumpApexGravityScale;
 
-        velocity.Z = Math.Max(-Constants.TerminalVelocity, velocity.Z - g * deltaTime);
+        velocity.Z = Math.Max(-tuning.TerminalVelocity, velocity.Z - g * deltaTime);
     }
     void UpdateJump(World world, Entity entity, ref CharacterMovement movement, CharacterIntent intent, float deltaTime) {
         movement.jumpHeld = intent.JumpHeld;
         
         // Update timers
-        movement.coyoteTimer = movement.Grounded ? Constants.CoyoteTime : Math.Max(0, movement.coyoteTimer - deltaTime);
-        movement.bufferTimer = intent.JumpPressed ? Constants.JumpBufferTime : Math.Max(0, movement.bufferTimer - deltaTime);
+        movement.coyoteTimer = movement.Grounded ? tuning.CoyoteTime : Math.Max(0, movement.coyoteTimer - deltaTime);
+        movement.bufferTimer = intent.JumpPressed ? tuning.JumpBufferTime : Math.Max(0, movement.bufferTimer - deltaTime);
         
         // Trigger
         if (movement.bufferTimer > 0 && movement.coyoteTimer > 0) {
-            movement.Velocity.Z = Constants.JumpSpeed;
+            movement.Velocity.Z = tuning.JumpSpeed;
             movement.Grounded = false;
             movement.coyoteTimer = 0;
             movement.bufferTimer = 0;
@@ -588,14 +598,14 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         var targetYaw = Math.Atan2(intent.Direction.X, intent.Direction.Y);
         
         // Snap when stopped
-        if (movement.ActualHorizontalSpeed < Constants.TurnSnapBelowSpeed) {
+        if (movement.ActualHorizontalSpeed < tuning.TurnSnapBelowSpeed) {
             movement.Yaw = targetYaw;
             return;
         }
         
         // Degressive rotation
-        var speed01 = Utils.Clamp01(movement.ActualHorizontalSpeed / Constants.MaxSpeed);
-        var maxStep = Constants.TurnSpeed * double.Lerp(1, 0.45, speed01) * deltaTime;
+        var speed01 = Utils.Clamp01(movement.ActualHorizontalSpeed / tuning.MaxSpeed);
+        var maxStep = tuning.TurnSpeed * double.Lerp(1, 0.45, speed01) * deltaTime;
 
         var delta = Utils.WrapAngle(targetYaw - movement.Yaw);
         movement.Yaw = Utils.WrapAngle(movement.Yaw + double.Clamp(delta, -maxStep, maxStep));
@@ -632,11 +642,11 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         else if (velocity.Z <= 0) {
             // Sweep to catch ground below
             var layer = movement.CollisionMask;
-            var probe = wasGrounded ? GroundProbeDistance(deltaTime) : Constants.SkinWidth * 2;
+            var probe = wasGrounded ? GroundProbeDistance(deltaTime) : CharacterShape.SkinWidth * 2;
 
             var (shape, offset) = GetQueryShape();
             var sweepOffset = position + offset;
-            var sweepLen = probe + Constants.SkinWidth;
+            var sweepLen = probe + CharacterShape.SkinWidth;
             var sweepMotion = -Vector3d.UnitZ * sweepLen;
 
             Span<RigidBodyHit> sweepHits = stackalloc RigidBodyHit[8];
@@ -661,9 +671,9 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
 
                 var surface = candidate.Normal;
                 if (Walkable(wasGrounded, candidate.Normal)) {
-                    var origin = candidate.Position + Vector3d.UnitZ * Constants.SkinWidth;
-                    if (simulation.Raycast((Vector3)origin, -Vector3.UnitZ, Constants.CapsuleRadius, out var truth, layer)
-                        && truth.Normal.Z > Constants.SteepMinZ) {
+                    var origin = candidate.Position + Vector3d.UnitZ * CharacterShape.SkinWidth;
+                    if (simulation.Raycast((Vector3)origin, -Vector3.UnitZ, CharacterShape.CapsuleRadius, out var truth, layer)
+                        && truth.Normal.Z > SteepMinZ) {
                         surface = truth.Normal;
                     }
                 }
@@ -675,8 +685,8 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
                 }
 
                 if (!foundSteep
-                    && surface.Z > Constants.SteepMinZ
-                    && surface.Z < Constants.WalkableCos) {
+                    && surface.Z > SteepMinZ
+                    && surface.Z < tuning.WalkableCos) {
                     steep = candidate;
                     foundSteep = true;
                 }
@@ -688,7 +698,7 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
                 groundEntity = ground.Entity;
 
                 // Snap to ground when grounded
-                position -= Vector3d.UnitZ * Math.Max(ground.Distance - Constants.SkinWidth, 0);
+                position -= Vector3d.UnitZ * Math.Max(ground.Distance - CharacterShape.SkinWidth, 0);
 
                 if (!wasGrounded) {
                     OnLanded(world, entity, ref movement, -velocity.Z);
@@ -726,13 +736,13 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         var smoothFactor = 1 - Utils.Exp2(-deltaTime / 0.05f);
         groundNormalSmoothed = Vector3d.Lerp(groundNormalSmoothed, movement.GroundNormal, smoothFactor).Normalized();
     }
-    static double GroundProbeDistance(float deltaTime) {
+    double GroundProbeDistance(float deltaTime) {
         return Math.Max(
-            Constants.StepDownHeight,
-            1.5f * Constants.MaxSpeed * Math.Tan(Constants.WalkableAngle) * deltaTime + Constants.SkinWidth);
+            tuning.StepDownHeight,
+            1.5f * tuning.MaxSpeed * Math.Tan(tuning.WalkableAngle) * deltaTime + CharacterShape.SkinWidth);
     }
-    static bool Walkable(bool grounded, Vector3d n) {
-        return n.Z >= (grounded ? Constants.UnwalkableCos : Constants.WalkableCos);
+    bool Walkable(bool grounded, Vector3d n) {
+        return n.Z >= (grounded ? tuning.UnwalkableCos : tuning.WalkableCos);
     }
 
     void ApplyPlatformDelta(World world, ref CharacterMovement movement, float deltaTime) {
@@ -765,7 +775,7 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         movement.Yaw = Utils.WrapAngle(movement.Yaw + MovingPlatformYawDelta(ridingPlatform));
         
         movement.platformVelocity = achieved / deltaTime;
-        movement.platformMemory = Constants.CoyoteTime;
+        movement.platformMemory = tuning.CoyoteTime;
     }
     Vector3d SweepStop(Vector3d position, Vector3d motion, PhysicsLayer layer) {
         var d = motion.Length();
@@ -774,15 +784,15 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         var dir = motion / d;
         var (shape, offset) = GetQueryShape();
         var sweepOrigin = position + offset;
-        var sweepMotion = dir * (d + Constants.SkinWidth);
+        var sweepMotion = dir * (d + CharacterShape.SkinWidth);
         var sweepHit =
             simulation.Sweep(shape, (Vector3)sweepOrigin, (Vector3)sweepMotion, out var h, layer)
             && ValidHit(h);
 
-        return sweepHit ? position + dir * Math.Max(h.Distance - Constants.SkinWidth, 0) : position + motion;
+        return sweepHit ? position + dir * Math.Max(h.Distance - CharacterShape.SkinWidth, 0) : position + motion;
     }
     void CheckCrush() {
-        if (crushedThisTick || stuckTicks > Constants.CrushStuckTicks) {
+        if (crushedThisTick || stuckTicks > CrushStuckTicks) {
             OnCrushed();
         }
     }
@@ -800,7 +810,7 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
         var carryHorizontalSpeed = Utils.FlattenXY(movement.carryVelocity).Length();
         
         anim.Grounded = movement.Grounded;
-        anim.Speed01 = Utils.Clamp01((horizontalSpeed - carryHorizontalSpeed) / Constants.MaxSpeed);
+        anim.Speed01 = Utils.Clamp01((horizontalSpeed - carryHorizontalSpeed) / tuning.MaxSpeed);
         anim.VerticalSpeed = movement.Grounded ? 0 : movement.Velocity.Z;
         anim.TurnRate = movement.TurnRate;
         anim.SlopeAngle = Math.Acos(Math.Clamp(groundNormalSmoothed.Z, -1, 1));
@@ -828,8 +838,8 @@ sealed unsafe class CharacterMovementSystem(RigidBodySimulation simulation) : IS
 
     void OnJumpStarted(World world, Entity entity, ref CharacterMovement movement) {
         if (movement.platformMemory > 0) {
-            movement.carryVelocity = Utils.ClampLength(Utils.FlattenXY(movement.platformVelocity), Constants.MaxInheritedSpeed);
-            movement.Velocity.Z += Math.Clamp(movement.platformVelocity.Z, -Constants.MaxInheritedRise, Constants.MaxInheritedRise);
+            movement.carryVelocity = Utils.ClampLength(Utils.FlattenXY(movement.platformVelocity), tuning.MaxInheritedSpeed);
+            movement.Velocity.Z += Math.Clamp(movement.platformVelocity.Z, -tuning.MaxInheritedRise, tuning.MaxInheritedRise);
         }
         
         world.Events<CharacterEvents.Jumped>().Write(new CharacterEvents.Jumped(entity));

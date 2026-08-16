@@ -19,7 +19,7 @@ struct CharacterIntent() {
     public bool JumpHeld;
 }
 
-sealed class CharacterIntentSystem(IInput input) : ISystem {
+sealed class CharacterIntentSystem(IInput input, CharacterTuning tuning) : ISystem {
     public void Update(World world, EntityCommands commands, float deltaTime) {
 
         // Get input; Consume takes the press edge exactly once, whatever the fixed step does. A
@@ -43,7 +43,7 @@ sealed class CharacterIntentSystem(IInput input) : ISystem {
             if (len > Utils.Epsilon) dir /= len;
             
             intent.Direction = dir;
-            intent.Speed = Math.Min(len, 1) * Constants.MaxSpeed;
+            intent.Speed = Math.Min(len, 1) * tuning.MaxSpeed;
             intent.JumpPressed = jumpPressed;
             intent.JumpHeld = jumpHeld;
         }

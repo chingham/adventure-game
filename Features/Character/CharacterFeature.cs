@@ -7,6 +7,10 @@ namespace AdventureGame.Features.Character;
 
 // The player: what reads the input, what moves the body, and what draws it moving.
 sealed class CharacterFeature : IGameFeature {
+    public void Provide(Game game) {
+        game.Provide<CharacterTuning>();
+    }
+
     public void Install(Game game) {
         var physics = game.Physics.Phase;
 

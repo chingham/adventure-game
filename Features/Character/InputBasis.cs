@@ -18,7 +18,7 @@ struct InputBasis {
     internal bool Frozen;
 }
 
-sealed class InputBasisSystem(IInput input, DoorTuning tuning) : ISystem {
+sealed class InputBasisSystem(IInput input, CameraTuning tuning) : ISystem {
     readonly EventReader<CharacterEvents.Teleported> teleports = new();
 
     public void Update(World world, EntityCommands commands, float deltaTime) {

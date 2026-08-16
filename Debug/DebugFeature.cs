@@ -15,9 +15,9 @@ sealed class DebugFeature : IGameFeature {
         game.AddSystem<InteractionProbeSystem>(QuarkPhases.Gameplay, Order.Probe);
 
         // Panels
-        game.AddSystem<CharacterDebugPanel>(QuarkPhases.LateUpdate, Order.Panel);
-        game.AddSystem<DoorTuningPanel>(QuarkPhases.LateUpdate, Order.Panel);
-        game.AddSystem<FlagsPanel>(QuarkPhases.LateUpdate, Order.Panel);
+        game.AddSystem<CharacterPanel>(QuarkPhases.LateUpdate, Order.Panel);
+        game.AddSystem<CameraPanel>(QuarkPhases.LateUpdate, Order.Panel);
+        game.AddSystem<ProgressionPanel>(QuarkPhases.LateUpdate, Order.Panel);
 
         // Collider outlines, drawn with the frame
         game.AddSystem<DebugVolumeSystem>(QuarkPhases.RenderSubmit, Order.DebugVolumes);

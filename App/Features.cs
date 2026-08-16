@@ -20,8 +20,9 @@ namespace AdventureGame.App;
 /// in the app knows it exists.
 /// </summary>
 static class Features {
-    // Order is dependency order: a feature may only reach for what an earlier one provided. Execution
-    // order is a separate matter, and lives in Order.
+    // Order only decides what an Install pass may build on - the level before the character that
+    // spawns where it says. Services are all registered first, so they never depend on it. Execution
+    // order is a separate matter again, and lives in Order.
     static readonly IGameFeature[] All = [
         new PresentationFeature(),
         new FlowFeature(),
@@ -39,6 +40,9 @@ static class Features {
     ];
 
     public static void InstallAll(Game game) {
+        foreach (var feature in All)
+            feature.Provide(game);
+
         foreach (var feature in All)
             feature.Install(game);
     }

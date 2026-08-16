@@ -21,7 +21,7 @@ struct CharacterCapsuleAnimation {
     internal double lean;
 }
 
-class CharacterCapsuleAnimationSystem : ISystem {
+sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
     readonly EventReader<CharacterEvents.Jumped> jumpedReader = new();
     readonly EventReader<CharacterEvents.Landed> landedReader = new();
     
@@ -66,7 +66,7 @@ class CharacterCapsuleAnimationSystem : ISystem {
     static Clip Jump1() {
         var delay = 0.05f;
         var duration = 0.3f;
-        var pivot = new Vector3(0, 0, Constants.CapsuleRestHeight);
+        var pivot = new Vector3(0, 0, CharacterShape.CapsuleRestHeight);
 
         return Clip.Create()
             .Then(delay)
@@ -76,7 +76,7 @@ class CharacterCapsuleAnimationSystem : ISystem {
     static Clip Jump2() {
         var delay = 0.05f;
         var duration = 0.3f;
-        var pivot = new Vector3(0, 0, Constants.CapsuleRestHeight);
+        var pivot = new Vector3(0, 0, CharacterShape.CapsuleRestHeight);
         
         return Clip.Create()
             .Then(delay)
@@ -88,9 +88,9 @@ class CharacterCapsuleAnimationSystem : ISystem {
                     .Back(duration, Ease.InOutCubic),
                 TrackSpace.Offset));
     }
-    static Clip LandSquash(double impactSpeed) {
-        var strength = (float)Utils.Clamp01(impactSpeed / Constants.TerminalVelocity);
-        var scaleV = float.Lerp(1, Constants.LandMaxSquash, strength);
+    Clip LandSquash(double impactSpeed) {
+        var strength = (float)Utils.Clamp01(impactSpeed / tuning.TerminalVelocity);
+        var scaleV = float.Lerp(1, tuning.LandMaxSquash, strength);
         var scaleH = 1 / MathF.Sqrt(scaleV);
         var duration = float.Lerp(0.1f, 0.2f, strength);
         
@@ -110,8 +110,8 @@ class CharacterCapsuleAnimationSystem : ISystem {
             SizeScale = 0.6f
         });
     }
-    static Clip ImpactSmoke(double impactSpeed) {
-        var strength = (float)Utils.Clamp01(impactSpeed / Constants.TerminalVelocity);
+    Clip ImpactSmoke(double impactSpeed) {
+        var strength = (float)Utils.Clamp01(impactSpeed / tuning.TerminalVelocity);
         var count = (int)double.Lerp(5, 20, strength);
         var speed = (float)double.Lerp(0.5, 2, strength);
         var scale = (float)double.Lerp(0.6, 1.1, strength);
@@ -124,7 +124,7 @@ class CharacterCapsuleAnimationSystem : ISystem {
             SizeScale = scale
         });
     }
-    static Clip WalkSmoke(double speed01) {
+    Clip WalkSmoke(double speed01) {
         var count = (int)double.Lerp(2, 5, speed01);
         var speed = (float)double.Lerp(0.0, 0.2, speed01);
         
@@ -141,9 +141,9 @@ class CharacterCapsuleAnimationSystem : ISystem {
         ref var body = ref world.Get<RelativeTransform>(capsule.Body);
         
         // Continuous walk with bob phase driven by distance
-        //capsule.bobPhase += anim.Speed01 * Constants.MaxSpeed * deltaTime / Constants.StrideLength;
+        //capsule.bobPhase += anim.Speed01 * tuning.MaxSpeed * deltaTime / tuning.StrideLength;
         //var grounded = anim.State == CharacterMoveState.Grounded ? 1 : 0;
-        //var bob = (Math.Sin(capsule.bobPhase * Math.Tau) * 0.5 + 0.5) * Constants.BobHeight * anim.Speed01 * grounded;
+        //var bob = (Math.Sin(capsule.bobPhase * Math.Tau) * 0.5 + 0.5) * tuning.BobHeight * anim.Speed01 * grounded;
 
         // Continuous walk, hoping from position to position
         var rootXY = Utils.FlattenXY(root.LocalTransform.Position);
@@ -155,15 +155,15 @@ class CharacterCapsuleAnimationSystem : ISystem {
 
         capsule.hopLastTimer += deltaTime;
         
-        var due = lag >= Constants.HopStride || capsule.hopLastTimer >= Constants.HopMaxInterval;
-        var settled = capsule.hopTimer >= Constants.HopDuration;
-        var settle = lag > Constants.HopSettleLag && !moving;
+        var due = lag >= tuning.HopStride || capsule.hopLastTimer >= tuning.HopMaxInterval;
+        var settled = capsule.hopTimer >= tuning.HopDuration;
+        var settle = lag > tuning.HopSettleLag && !moving;
 
-        //if (settled && (lag >= Constants.HopStride || (lag > Constants.HopSettleLag && !moving))) {
+        //if (settled && (lag >= tuning.HopStride || (lag > tuning.HopSettleLag && !moving))) {
         if (settled
-            && capsule.hopLastTimer >= Constants.HopMinInterval
+            && capsule.hopLastTimer >= tuning.HopMinInterval
             && ((moving && due) || settle)) {
-            var lead = Utils.ClampLength(velocityXY * Constants.HopDuration, Constants.HopStride);
+            var lead = Utils.ClampLength(velocityXY * tuning.HopDuration, tuning.HopStride);
             capsule.hopFrom = capsule.hopTo;
             capsule.hopTo = rootXY + lead;
             capsule.hopTimer = 0;
@@ -178,15 +178,15 @@ class CharacterCapsuleAnimationSystem : ISystem {
         var arc = 0d;
         if (!settled) {
             capsule.hopTimer += deltaTime;
-            var span = Utils.Clamp01((capsule.hopTo - capsule.hopFrom).Length() / Constants.HopStride);
-            var t = Utils.Clamp01(capsule.hopTimer / Constants.HopDuration);
+            var span = Utils.Clamp01((capsule.hopTo - capsule.hopFrom).Length() / tuning.HopStride);
+            var t = Utils.Clamp01(capsule.hopTimer / tuning.HopDuration);
             visualXY = Vector3d.Lerp(capsule.hopFrom, capsule.hopTo, Utils.SmoothStep01(t));
-            arc = Math.Sin(t * Math.PI) * Constants.HopHeight * double.Lerp(0.35, 1, span);
+            arc = Math.Sin(t * Math.PI) * tuning.HopHeight * double.Lerp(0.35, 1, span);
         }
 
         if (anim.State != CharacterMoveState.Grounded) {
             capsule.hopTo = rootXY;
-            capsule.hopTimer = Constants.HopDuration;
+            capsule.hopTimer = tuning.HopDuration;
             visualXY = rootXY;
             arc = 0;
         }
@@ -198,13 +198,13 @@ class CharacterCapsuleAnimationSystem : ISystem {
         var position = new Vector3d(0, 0, arc);
         
         // Continuous fall stretch
-        var stretchV = 1 + Utils.Clamp01(-anim.VerticalSpeed / Constants.TerminalVelocity) * Constants.FallStretch;
+        var stretchV = 1 + Utils.Clamp01(-anim.VerticalSpeed / tuning.TerminalVelocity) * tuning.FallStretch;
         var stretchH = 1 / Math.Sqrt(stretchV);
         
         // Continuous lean in turns
-        var turn = Math.Clamp(anim.TurnRate / Constants.TurnSpeed, -1, 1);
-        var leanAngle = turn * Constants.LeanMaxAngle * anim.Speed01;
-        capsule.lean = Decay.ExpDecay(capsule.lean, leanAngle, Constants.LeanDecay, deltaTime);
+        var turn = Math.Clamp(anim.TurnRate / tuning.TurnSpeed, -1, 1);
+        var leanAngle = turn * tuning.LeanMaxAngle * anim.Speed01;
+        capsule.lean = Decay.ExpDecay(capsule.lean, leanAngle, tuning.LeanDecay, deltaTime);
         
         var leanRotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, (float)capsule.lean);
         

@@ -9,14 +9,16 @@ namespace AdventureGame.Presentation;
 // How the game looks before anything is in it: sky, post chain, type. The fog handle is provided
 // rather than kept, since SpaceSystem is what drives it from one room to the next.
 sealed class PresentationFeature : IGameFeature {
-    public void Install(Game game) {
+    public void Provide(Game game) {
         Environment(game);
         PostProcess(game);
 
         game.Provide(Fonts.Build(game));
+        game.Provide<Toasts>();
+    }
 
-        var toasts = game.Provide<Toasts>();
-        game.AddSystem(new ToastPanel(toasts), QuarkPhases.LateUpdate, Order.Panel);
+    public void Install(Game game) {
+        game.AddSystem<ToastPanel>(QuarkPhases.LateUpdate, Order.Panel);
     }
 
     // Sky

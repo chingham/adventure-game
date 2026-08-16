@@ -1,10 +1,8 @@
 using AdventureGame.Common;
-using ImGuiNET;
 using Quark.Ecs;
 using Quark.Kit;
 using Quark.Kit.Components;
 using Quark.Numerics;
-using Quark.Platform.Input;
 
 namespace AdventureGame.Features.Camera;
 
@@ -59,22 +57,16 @@ struct CameraDirector {
     }
 }
 
-class CameraDirectorSystem(IInput input) : ISystem {
+class CameraDirectorSystem : ISystem {
     const double DecayValue = 8;
-    
+
     public void Update(World world, EntityCommands commands, float deltaTime) {
-        // Input
-        //var toggle = input.Button(Controls.ToggleView);
-        
         foreach (var e in world.Query<CameraDirector, RelativeTransform, CameraComponent>()) {
             ref var director = ref e.Component1;
             ref var transform = ref e.Component2;
             ref var camera = ref e.Component3;
             
             // The space picks the base shot, the toggle inverts it
-            //if (toggle == ButtonState.JustPressed) {
-            //    director.Flipped = !director.Flipped;
-            //}
             director.Target = director.Flipped ? 1 - director.InSpace : director.InSpace;
 
             // Update with decay
@@ -97,19 +89,6 @@ class CameraDirectorSystem(IInput input) : ISystem {
             
             // Update director yaw
             director.Yaw = rig.Yaw;
-            
-            //--- IMGUI ---//
-            if (!ImGui.Begin("Camera Director")) {
-                ImGui.End();
-                return;
-            }
-
-            ImGui.Text($"Actual Target: {director.ActualTarget:F2}");
-            ImGui.Text($"Approach: {director.Approach:F2}");
-        
-            ImGui.End();
-
-            break;
         }
     }
 

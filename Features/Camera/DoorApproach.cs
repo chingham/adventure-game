@@ -1,7 +1,6 @@
 using AdventureGame.Common;
 using AdventureGame.Features.Character;
 using AdventureGame.Features.Portals;
-using ImGuiNET;
 using Quark.Ecs;
 using Quark.Kit.Components;
 using Quark.Numerics;
@@ -15,16 +14,7 @@ namespace AdventureGame.Features.Camera;
 // At full approach the doorway rig frames only the few metres around the door, which are duplicated
 // on both sides, so the jump itself falls outside the frame. The rule that keeps a cut invisible:
 // 2 * Distance * tan(fov / 2) must stay under the width of that duplicated ground.
-sealed class DoorApproachSystem : ISystem {
-    // Metres before the door where the transition starts, and how far past the opening the falloff
-    // fades out sideways. The plateau is fully engaged: the trigger always fires inside it, so the
-    // cut only ever happens under a fully committed doorway shot - that is what hides the base swap.
-    float ApproachDepth = 8f;
-    float DoorPlateau = 0.5f;
-    float LateralFalloff = 4.0f;
-    float VerticalReach = 3f;
-    float FocusHeight = 1.3f;
-
+sealed class DoorApproachSystem(CameraTuning tuning) : ISystem {
     readonly EventReader<CharacterEvents.Teleported> teleports = new();
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
@@ -48,21 +38,8 @@ sealed class DoorApproachSystem : ISystem {
             director.Approach = Utils.SmoothStep01(closeness);
             follow.DoorWeight = director.Approach;
             follow.DoorYaw = doorYaw;
-            world.Get<CameraRig>(director.DoorRig).Pivot = position + new Vector3d(0, 0, FocusHeight);
+            world.Get<CameraRig>(director.DoorRig).Pivot = position + new Vector3d(0, 0, tuning.FocusHeight);
         }
-        
-        if (!ImGui.Begin("Door Approach")) {
-            ImGui.End();
-            return;
-        }
-
-        ImGui.SliderFloat("ApproachDepth", ref ApproachDepth, 0, 20);
-        ImGui.SliderFloat("DoorPlateau", ref DoorPlateau, 0, 20);
-        ImGui.SliderFloat("LateralFalloff", ref LateralFalloff, 0, 20);
-        ImGui.SliderFloat("VerticalReach", ref VerticalReach, 0, 20);
-        ImGui.SliderFloat("FocusHeight", ref FocusHeight, 0, 20);
-
-        ImGui.End();
     }
 
     // On a crossing, adopt the base shot the destination sits in and turn the fixed rigs by the same
@@ -94,14 +71,14 @@ sealed class DoorApproachSystem : ISystem {
         foreach (var row in world.Query<Portal>()) {
             var portal = row.Component1;
             var toDoor = position - portal.Center;
-            if (Math.Abs(toDoor.Z) > VerticalReach)
+            if (Math.Abs(toDoor.Z) > tuning.VerticalReach)
                 continue;
 
             var along = Vector3d.Dot(toDoor, portal.Through);
             var lateral = Utils.FlattenXY(toDoor - portal.Through * along).Length();
 
-            var axial = 1 - Math.Max(0, Math.Abs(along) - DoorPlateau) / (ApproachDepth - DoorPlateau);
-            var sideways = 1 - Math.Max(0, lateral - portal.HalfWidth) / LateralFalloff;
+            var axial = 1 - Math.Max(0, Math.Abs(along) - tuning.DoorPlateau) / (tuning.ApproachDepth - tuning.DoorPlateau);
+            var sideways = 1 - Math.Max(0, lateral - portal.HalfWidth) / tuning.LateralFalloff;
             var closeness = Utils.Clamp01(axial) * Utils.Clamp01(sideways);
 
             if (closeness <= closest)

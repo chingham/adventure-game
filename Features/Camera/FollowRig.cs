@@ -34,7 +34,8 @@ struct FollowRig() {
     internal double lookIdleTime;
 }
 
-sealed class FollowRigSystem(IInput input, RigidBodySimulation simulation, DoorTuning tuning) : ISystem {
+sealed class FollowRigSystem(
+    IInput input, RigidBodySimulation simulation, CameraTuning tuning, CharacterTuning character) : ISystem {
     const double ZoomStep = 1.0;
     const double MinPitch = -0.35, MaxPitch = 1.25;
     const double MinDistance = 3.5, MaxDistance = 16.0;
@@ -101,19 +102,19 @@ sealed class FollowRigSystem(IInput input, RigidBodySimulation simulation, DoorT
                 // Lazy follow, unless a doorway is holding the framing: both write Yaw, and near a
                 // door the doorway is the one that knows where the room is
                 if (cam.DoorWeight <= 0
-                    && cam.lookIdleTime > Constants.CameraRecenterGrace
-                    && movement.ActualHorizontalSpeed > Constants.CameraRecenterMinSpeed) {
+                    && cam.lookIdleTime > tuning.RecenterGrace
+                    && movement.ActualHorizontalSpeed > tuning.RecenterMinSpeed) {
                     var moveYaw = Math.Atan2(movement.Velocity.X, movement.Velocity.Y);
                     var delta = Utils.WrapAngle(moveYaw - cam.Yaw);
                     
                     // Don't fight player walking away from or toward the camera
                     var alignment = Utils.Clamp01(Math.Cos(delta) + 0.99);
-                    var speed01 = Utils.Clamp01(movement.ActualHorizontalSpeed / Constants.MaxSpeed);
+                    var speed01 = Utils.Clamp01(movement.ActualHorizontalSpeed / character.MaxSpeed);
 
                     var error = Math.Abs(delta);
-                    var angleGate = Utils.SmoothStep01((error - Constants.CameraRecenterDeadzone) / Constants.CameraRecenterRamp);
+                    var angleGate = Utils.SmoothStep01((error - tuning.RecenterDeadzone) / tuning.RecenterRamp);
                     
-                    var strength = Constants.CameraRecenterDecay * alignment * speed01 * angleGate;
+                    var strength = tuning.RecenterDecay * alignment * speed01 * angleGate;
 
                     cam.Yaw += delta * (1 - Utils.Exp2(-deltaTime * strength));
                     cam.Pitch = Decay.ExpDecay(cam.Pitch, cam.PreferredPitch, strength * 0.5, deltaTime);
@@ -191,7 +192,7 @@ sealed class FollowRigSystem(IInput input, RigidBodySimulation simulation, DoorT
         }
 
         // Recompute lead
-        var lead = Utils.ClampLength(Utils.FlattenXY(targetVelocity) * cam.LeadTime, Constants.CameraMaxLead);
+        var lead = Utils.ClampLength(Utils.FlattenXY(targetVelocity) * cam.LeadTime, tuning.MaxLead);
         rig.Lead = Decay.ExpDecay(rig.Lead, lead, 2, deltaTime);
     }
     void UpdateOcclusionDistance(ref FollowRig cam, ref CameraRig rig, double distance, float deltaTime) {
@@ -212,17 +213,17 @@ sealed class FollowRigSystem(IInput input, RigidBodySimulation simulation, DoorT
         var motion = position - origin;
         var hit = simulation.Sweep(sphere, (Vector3)origin, (Vector3)motion, out var h, Layers.Environment);
         if (hit && h.Normal.LengthSquared() > 0) {
-            var targetDistance = Math.Max(h.Distance - 0.3, Constants.CameraMinDistance);
+            var targetDistance = Math.Max(h.Distance - 0.3, tuning.MinDistance);
             
             // If we need to move closer, do it quickly
             var decay = targetDistance < cam.actualDistance
-                ? Constants.CameraOcclusionDecay
-                : Constants.CameraDeocclusionDecay;
+                ? tuning.OcclusionDecay
+                : tuning.DeocclusionDecay;
             
             cam.actualDistance = Decay.ExpDecay(cam.actualDistance, targetDistance, decay, deltaTime);
         }
         else {
-            cam.actualDistance = Decay.ExpDecay(cam.actualDistance, distance, Constants.CameraRecenterDecay, deltaTime);
+            cam.actualDistance = Decay.ExpDecay(cam.actualDistance, distance, tuning.RecenterDecay, deltaTime);
         }
     }
 }
