@@ -10,7 +10,7 @@ namespace AdventureGame.Features.Menu;
 /// The inventory panel of the mockup: the body colorizes the blurred scene rather than covering it, and
 /// the frame is a live shader. Only the HDR glow is still missing.
 /// </summary>
-sealed class MenuPanel(UiModule ui, GameFlow flow, Fonts fonts) : IUiRecipe {
+sealed class MenuPanel(GameFlow flow, Fonts fonts) : IUiRecipe {
     // Palette
     static readonly Color Backdrop = Color.FromRgba(0x00000AC0);
 

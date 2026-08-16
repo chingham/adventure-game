@@ -57,8 +57,6 @@ sealed class CharacterTuning {
     public float CarryHalfLife = 0.6f;
 
     // Animation
-    public float StrideLength = 1.2f;
-    public float BobHeight = 0.3f;
     public float HopStride = 0.5f;
     public float HopSettleLag = 0.03f;
     public float HopDuration = 0.15f;

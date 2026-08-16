@@ -8,6 +8,6 @@ namespace AdventureGame.Features.Menu;
 
 sealed class MenuFeature : IGameFeature {
     public void Install(Game game) {
-        game.Ui.Add(new MenuPanel(game.Ui, game.Shared<GameFlow>(), game.Shared<Fonts>()));
+        game.Ui.Add(new MenuPanel(game.Shared<GameFlow>(), game.Shared<Fonts>()));
     }
 }

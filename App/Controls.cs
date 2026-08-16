@@ -10,7 +10,6 @@ static class Controls {
     // Camera
     public static readonly Delta2Action Look = new("look");
     public static readonly Delta1Action Zoom = new("zoom");
-    //public static readonly ButtonAction ToggleView = new("toggle_view");
 
     // Character
     public static readonly Axis2Action Move = new("move");
@@ -39,9 +38,6 @@ static class Controls {
             g.Delta(Zoom)
                 .MouseWheel()
                 .Pad(PadButton.DPadDown, PadButton.DPadUp, rate: 8f);
-            //g.Button(ToggleView)
-            //    .Key(InputKey.V)
-            //    .Pad(PadButton.North);
 
             // Character
             g.Axis(Move)

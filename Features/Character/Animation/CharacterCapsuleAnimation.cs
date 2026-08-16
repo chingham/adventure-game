@@ -12,7 +12,6 @@ namespace AdventureGame.Features.Character;
 struct CharacterCapsuleAnimation {
     public Entity Body;
     
-    //internal double bobPhase;
     internal Vector3d lastRootXY;
     internal Vector3d hopFrom;
     internal Vector3d hopTo;
@@ -140,11 +139,6 @@ sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
         
         ref var body = ref world.Get<RelativeTransform>(capsule.Body);
         
-        // Continuous walk with bob phase driven by distance
-        //capsule.bobPhase += anim.Speed01 * tuning.MaxSpeed * deltaTime / tuning.StrideLength;
-        //var grounded = anim.State == CharacterMoveState.Grounded ? 1 : 0;
-        //var bob = (Math.Sin(capsule.bobPhase * Math.Tau) * 0.5 + 0.5) * tuning.BobHeight * anim.Speed01 * grounded;
-
         // Continuous walk, hoping from position to position
         var rootXY = Utils.FlattenXY(root.LocalTransform.Position);
         var lag = (rootXY - capsule.hopTo).Length();
@@ -159,7 +153,6 @@ sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
         var settled = capsule.hopTimer >= tuning.HopDuration;
         var settle = lag > tuning.HopSettleLag && !moving;
 
-        //if (settled && (lag >= tuning.HopStride || (lag > tuning.HopSettleLag && !moving))) {
         if (settled
             && capsule.hopLastTimer >= tuning.HopMinInterval
             && ((moving && due) || settle)) {
