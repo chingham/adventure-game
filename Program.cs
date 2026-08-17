@@ -7,7 +7,7 @@ using Quark.Kit.Ui;
 
 Console.WriteLine("F3: Show hidden volumes   F5: Reload level");
 
-Game.Create("Adventure Game", 1920, 1080, vsync: true)
+Game.Create("Adventure Game", 1920, 1080, vsync: false)
     .UseInput(Controls.Bind)
     .UseDefaultRendering(rendering => {
         //rendering.MsaaSampleCount = 1;
