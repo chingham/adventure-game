@@ -16,7 +16,7 @@ sealed record LevelSpawn(Vector3d Point);
 // The greybox kit and the level authored out of it. The file owns everything it describes: saving it
 // re-applies at the next frame boundary, and an invalid save is rejected with the loaded level intact.
 sealed class LevelFeature : IGameFeature {
-    const string ScenePath = "Data/level.scene.json";
+    const string ScenePath = "Data/level.scene.jsonc";
     const string SchemaPath = "Data/level.schema.json";
 
     // World size the greybox textures span: their inner grid is one metre per cell.

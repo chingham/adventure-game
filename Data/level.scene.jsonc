@@ -1,0 +1,360 @@
+{
+    "$schema": "level.schema.json",
+
+    // The greybox kit: one texture per role, an inner grid of one metre per cell
+    "textures": {
+        "greyGrid": { "path": "Data/Textures/greybox-unit-darkgray.png" },
+        "whiteGrid": { "path": "Data/Textures/greybox-unit-white.png" },
+        "redGrid": { "path": "Data/Textures/greybox-unit-red.png" },
+        "yellowGrid": { "path": "Data/Textures/greybox-unit-yellow.png" },
+    },
+    "materials": {
+        "environment": { "baseColorTexture": "greyGrid", "roughness": 0.9 },
+        "neutral": { "baseColorTexture": "whiteGrid", "roughness": 0.8 },
+        "danger": { "baseColorTexture": "redGrid", "roughness": 0.8 },
+        "interactive": { "baseColorTexture": "yellowGrid", "roughness": 0.7 },
+    },
+
+    // The look nothing drives. What a zone changes - fog, grading - is authored on the zones below
+    // instead, since a system has to write those every frame.
+    "view": {
+        "environment": { "gradient": { "horizon": "#6E6493", "zenith": "#1B2440", "ground": "#0E0F15" } },
+        "effects": [
+            { "bloom": { "threshold": 1.2, "radius": 1.3, "intensity": 0.22 } },
+            { "film": { "vignette": 0.3 }, "space": "ldr" },
+        ],
+    },
+
+    "entities": [
+        // Where the player starts, read once at load
+        { "id": "spawn", "at": [0, -6, -0.5], "rot": [0, 0, 0] },
+
+        // Sun and ground
+        {
+            "id": "sun",
+            "light": { "type": "directional", "dir": [-0.4, -0.35, -0.85], "intensity": 1.5, "shadows": true },
+        },
+        { "id": "terrain", "at": [0, -14, 0], "material": "danger", "mesh": "terrain", "solid": true },
+
+        // The open air: aspects with no volume, in force wherever no zone says otherwise
+        {
+            "id": "world",
+            "camera": { "iso": false, "distance": 90, "fov": 0.4 },
+            "fog": { "density": 0.02, "color": "#0E0F15" },
+            "grade": { "saturation": 0.9, "warmth": 0.1 },
+            "rain": { "intensity": 0, "tilt": 8 },
+        },
+        // Arena
+        { "id": "arena-1", "at": [-300, -300, -1], "block": [600, 600, 1.0] },
+
+        // Ramp gallery
+        { "id": "ramp-gallery-1", "at": [-14, 20, 0], "block": [8, 4, 2] },
+        { "id": "ramp-gallery-2", "at": [-14, 12, 0], "block": [4, 8, 1] },
+        {
+            "id": "ramp-gallery-3",
+            "at": [-14, 8, 0],
+            "material": "danger",
+            "ramp": { "size": [4, 4, 1], "facing": "north" },
+        },
+        { "id": "ramp-gallery-4", "at": [-8, 12, 0], "block": [4, 4, 1.5] },
+        {
+            "id": "ramp-gallery-5",
+            "at": [-8, 9, 0],
+            "material": "danger",
+            "ramp": { "size": [4, 3, 1.5], "facing": "north" },
+        },
+        { "id": "ramp-gallery-6", "at": [-4, 12, 0], "block": [2, 4, 1.5] },
+        {
+            "id": "ramp-gallery-7",
+            "at": [-4, 12, 1.5],
+            "material": "danger",
+            "ramp": { "size": [4, 2, 1], "facing": "east" },
+        },
+        { "id": "ramp-gallery-8", "at": [-2, 12, 0], "block": [4, 8, 2.5] },
+        {
+            "id": "ramp-gallery-9",
+            "at": [-2, 9.5, 0],
+            "material": "danger",
+            "ramp": { "size": [4, 2.5, 2.5], "facing": "north" },
+        },
+        { "id": "ramp-gallery-10", "at": [4, 12, 0], "block": [4, 4, 3] },
+        {
+            "id": "ramp-gallery-11",
+            "at": [4, 10.5, 0],
+            "material": "danger",
+            "ramp": { "size": [4, 1.5, 3], "facing": "north" },
+        },
+
+        // Tower
+        { "id": "tower-1", "at": [2, 24, 0], "block": [4, 4, 10] },
+        { "id": "tower-2", "at": [-2, 20, 0], "block": [4, 4, 3] },
+        { "id": "tower-3", "at": [2, 20, 0], "block": [4, 4, 3] },
+        { "id": "tower-4", "at": [2, 20, 3], "material": "danger", "stairs": { "steps": 8, "w": 4, "facing": "east" } },
+        { "id": "tower-5", "at": [6, 20, 3], "block": [4, 4, 2] },
+        {
+            "id": "tower-6",
+            "at": [6, 24, 5],
+            "material": "danger",
+            "stairs": { "steps": 8, "w": 4, "facing": "north" },
+        },
+        { "id": "tower-7", "at": [6, 28, 5], "block": [4, 4, 2] },
+        { "id": "tower-8", "at": [2, 28, 7], "material": "danger", "stairs": { "steps": 8, "w": 4, "facing": "west" } },
+        { "id": "tower-9", "at": [-2, 24, 7], "block": [4, 8, 2] },
+        { "id": "tower-10", "at": [0, 24, 9], "material": "danger", "ramp": { "size": [2, 2, 1], "facing": "east" } },
+        { "id": "tower-11", "at": [2, 20, 8], "block": [4, 4, 2] },
+        { "id": "tower-12", "at": [6, 20, 9], "block": [4, 4, 1] },
+
+        // Callable lifts
+        { "id": "tower-pad", "name": "tower-pad", "at": [7, 21, 10], "material": "interactive", "block": [2, 2, 0.2] },
+        {
+            "id": "callable-lifts-1",
+            "at": [7, 21, 10.2],
+            "trigger": { "size": [2, 2, 1], "enter": "tower-press", "rearm": "tower-press.done" },
+        },
+        {
+            "id": "lift1",
+            "name": "lift1",
+            "at": [10, 39, 11.75],
+            "material": "danger",
+            "block": [4, 4, 0.25],
+            "mover": { "to": [12, 22, 9.875], "mode": "called", "on": "tower-call", "speed": 6, "dwell": 2 },
+        },
+        { "id": "callable-lifts-2", "at": [6, 43, 11], "block": [8, 8, 1] },
+
+        { "id": "lift-pad", "name": "lift-pad", "at": [-1, 25, 0], "material": "interactive", "block": [2, 2, 0.2] },
+        {
+            "id": "callable-lifts-3",
+            "at": [-1, 25, 0.2],
+            "trigger": { "size": [2, 2, 1], "enter": "lift-press", "rearm": "lift-press.done" },
+        },
+        {
+            "id": "lift2",
+            "name": "lift2",
+            "at": [-6, 28, 8.75],
+            "material": "danger",
+            "block": [4, 4, 0.25],
+            "mover": { "to": [-4, 30, 0.125], "mode": "called", "on": "lift-call", "speed": 6, "dwell": 2 },
+        },
+
+        {
+            "id": "callable-lifts-4",
+            "at": [1.5, 25, 0],
+            "material": "interactive",
+            "pillar": { "r": 0.25, "h": 1.2 },
+            "interactable": {
+                "at": [1.75, 25.25, 1.2],
+                "prompt": "Actionner le levier",
+                "emit": "lift-call",
+                "reach": 2,
+            },
+        },
+
+        // Staircase
+        {
+            "id": "staircase-1",
+            "at": [-20, 2, 0],
+            "material": "danger",
+            "stairs": { "steps": 8, "w": 4, "facing": "north" },
+        },
+        { "id": "staircase-2", "at": [-20, 6, 0], "block": [4, 4, 2] },
+
+        // Pyramid
+        { "id": "pyramid-1", "at": [12, 12, 0], "block": [12, 12, 1] },
+        { "id": "pyramid-2", "at": [14, 16, 1], "block": [8, 6, 1] },
+        { "id": "pyramid-3", "at": [18, 18, 2], "block": [2, 2, 1] },
+        { "id": "pyramid-4", "at": [10, 14, 0], "material": "danger", "ramp": { "size": [2, 2, 1], "facing": "east" } },
+        {
+            "id": "pyramid-5",
+            "at": [16, 14, 1],
+            "material": "danger",
+            "ramp": { "size": [2, 2, 1], "facing": "north" },
+        },
+        { "id": "pyramid-6", "at": [16, 18, 2], "material": "danger", "ramp": { "size": [2, 2, 1], "facing": "east" } },
+
+        // Jump platforms
+        { "id": "jump-platforms-1", "at": [10, -3, 0], "block": [3, 3, 1] },
+        { "id": "jump-platforms-2", "at": [10, 1, 0], "block": [3, 3, 2] },
+        { "id": "jump-platforms-3", "at": [17, 1, 0], "block": [3, 3, 2] },
+        { "id": "jump-platforms-4", "at": [13, 1, 1], "block": [4, 3, 1] },
+        { "id": "jump-platforms-5", "at": [10, 5, 0], "block": [3, 3, 3] },
+
+        // Obstacles
+        { "id": "obstacles-1", "at": [2, 0, 0], "pillar": { "r": 0.5, "h": 2.5 } },
+        { "id": "obstacles-2", "at": [-3, -4, 0], "pillar": { "r": 0.5, "h": 2.5 } },
+        { "id": "obstacles-3", "at": [4, -9, 0], "pillar": { "r": 0.5, "h": 2.3 } },
+
+        // Moving platforms
+        {
+            "id": "shuttle",
+            "name": "shuttle",
+            "at": [13.5, 8, 0.375],
+            "material": "danger",
+            "block": [3, 3, 0.25],
+            "mover": { "to": [15, -11.25, 0.5], "mode": "shuttle", "speed": 6, "dwell": 1 },
+        },
+        {
+            "id": "elevator",
+            "name": "elevator",
+            "at": [13.25, -18.25, 0.375],
+            "material": "danger",
+            "block": [3, 3, 0.25],
+            "mover": { "to": [14.75, -16.75, 12], "mode": "shuttle", "speed": 6, "dwell": 1 },
+        },
+
+        // Balance beam on two pillars
+        { "id": "balance-beam-on-1", "at": [-16, -6, 0], "pillar": { "r": 0.5, "h": 2 } },
+        { "id": "balance-beam-on-2", "at": [-16, 2, 0], "pillar": { "r": 0.5, "h": 2 } },
+        { "id": "balance-beam-on-3", "at": [-16, -7, 2], "material": "interactive", "block": [1, 10, 0.25] },
+
+        //---
+
+        // Shop: Exterior
+        { "id": "shop-exterior-1", "at": [-11, 0, 0], "block": [3, 1, 3] },
+        { "id": "shop-exterior-2", "at": [-6, 0, 0], "block": [3, 1, 3] },
+        { "id": "shop-exterior-3", "at": [-4, 1, 0], "block": [1, 3, 3] },
+        { "id": "shop-exterior-4", "at": [-11, 1, 0], "block": [1, 3, 3] },
+        { "id": "shop-exterior-5", "at": [-11, 4, 0], "block": [8, 1, 3] },
+        { "id": "shop-exterior-6", "at": [-11, 0, 3], "block": [8, 5, 1] },
+        {
+            "id": "shop-exterior-portal-a",
+            "at": [-8, 0, 0],
+            "portalEnd": { "w": 2, "h": 2.5, "facing": "south", "exitAt": [9998, -5, 0], "exitFacing": "north" },
+        },
+        {
+            "id": "shop-exterior-portal-b",
+            "at": [9998, -5, 0],
+            "portalEnd": { "w": 2, "h": 2.5, "facing": "north", "exitAt": [-8, 0, 0], "exitFacing": "south" },
+        },
+
+        // The doorstep announces itself on the bus, and nothing listens yet
+        {
+            "id": "shop-doorstep",
+            "name": "shop-doorstep",
+            "at": [-8, -1.5, 0],
+            "trigger": { "size": [2, 1.5, 2.5], "enter": "shop-doorstep", "exit": "shop-doorstep.left" },
+        },
+
+        // Shop: Interior
+        {
+            "id": "shop1",
+            "name": "shop1",
+            "at": [9991, -6, -1],
+            "volume": [16, 20, 6],
+            "camera": { "iso": true, "distance": 60, "fov": 0.3, "pivot": "center" },
+            "fog": { "density": 0, "color": "#0E0F15" },
+            "grade": { "saturation": 0.8, "warmth": -0.05 },
+            "rain": { "intensity": 0 },
+        },
+
+        { "id": "shop-interior-1", "at": [9994, -4, -1], "block": [12, 12, 1] },
+        { "id": "shop-interior-2", "at": [9997, -8, -1], "block": [4, 4, 1] },
+        { "id": "shop-interior-3", "at": [9993, -5, 3], "block": [14, 1, 1] },
+        { "id": "shop-interior-4", "at": [9994, 8, 0], "block": [5, 1, 3] },
+        { "id": "shop-interior-5", "at": [10001, 8, 0], "block": [5, 1, 3] },
+        {
+            "id": "shop-door-panel",
+            "name": "shop-door-panel",
+            "at": [9999, 8, 0],
+            "material": "danger",
+            "block": [2, 1, 3],
+            "interactable": { "at": [10000, 8, 1.2], "prompt": "Ouvrir la porte", "emit": "shop-door", "reach": 1.8 },
+        },
+        { "id": "shop-interior-6", "at": [9993, -5, 0], "block": [1, 14, 3] },
+        { "id": "shop-interior-7", "at": [10006, -5, 0], "block": [1, 14, 3] },
+        { "id": "shop-interior-8", "at": [9994, -5, 0], "block": [4, 1, 3] },
+        { "id": "shop-interior-9", "at": [10000, -5, 0], "block": [6, 1, 3] },
+        { "id": "shop-interior-10", "at": [9996, 4, 0], "material": "interactive", "block": [8, 2, 1] },
+        { "id": "shop-interior-11", "at": [9995, -2, 0], "pillar": { "r": 0.5, "h": 3 } },
+        { "id": "shop-interior-12", "at": [10004, -2, 0], "pillar": { "r": 0.5, "h": 3 } },
+
+        // Shop: Chest
+        {
+            "id": "chest",
+            "name": "chest",
+            "at": [9998, 0, 0],
+            "material": "interactive",
+            "block": [1, 1, 0.8],
+            "interactable": {
+                "at": [9998.5, 0.5, 0.8],
+                "prompt": "Fouiller le coffre",
+                "emit": "chest-shop",
+                "once": true,
+            },
+        },
+
+        // Shop: Back room, behind the locked door
+        { "id": "shop-back-room-1", "at": [9998, 9, -1], "block": [4, 4, 1] },
+        { "id": "shop-back-room-2", "at": [9997, 9, 0], "block": [1, 5, 3] },
+        { "id": "shop-back-room-3", "at": [10002, 9, 0], "block": [1, 5, 3] },
+        { "id": "shop-back-room-4", "at": [9997, 13, 0], "block": [6, 1, 3] },
+        { "id": "shop-back-room-5", "at": [9999.5, 11, 0], "material": "interactive", "block": [1, 1, 1] },
+
+        // Rules: hearing a signal runs these steps
+        // A pressure pad is a sensor, a sink and a call: the sequence is what ties the three together.
+        // Emitting after the sink means what it then waits for cannot have been said already.
+        {
+            "id": "seq-tower-press",
+            "sequence": {
+                "on": "tower-press",
+                "steps": [
+                    { "move": { "id": "tower-pad", "by": [0, 0, -0.15], "s": 0.12 } },
+                    { "emit": "tower-call" },
+                    { "waitSignal": "tower-call.done" },
+                    { "move": { "id": "tower-pad", "by": [0, 0, 0.15], "s": 0.12 } },
+                ],
+            },
+        },
+
+        {
+            "id": "seq-lift-press",
+            "sequence": {
+                "on": "lift-press",
+                "steps": [
+                    { "move": { "id": "lift-pad", "by": [0, 0, -0.15], "s": 0.12 } },
+                    { "emit": "lift-call" },
+                    { "waitSignal": "lift-call.done" },
+                    { "move": { "id": "lift-pad", "by": [0, 0, 0.15], "s": 0.12 } },
+                ],
+            },
+        },
+
+        {
+            "id": "seq-chest-shop",
+            "sequence": {
+                "on": "chest-shop",
+                "steps": [
+                    { "gate": {} },
+                    { "face": {} },
+                    { "wait": 0.5 },
+                    { "set": "shop-key" },
+                    { "toast": "Clé du magasin obtenue" },
+                    { "wait": 0.4 },
+                    { "release": {} },
+                ],
+            },
+        },
+
+        {
+            "id": "seq-shop-door",
+            "sequence": {
+                "on": "shop-door",
+                "steps": [
+                    { "face": {} },
+                    {
+                        "if": {
+                            "flag": "shop-key",
+                            "then": [
+                                { "gate": {} },
+                                { "toast": "La porte s'ouvre" },
+                                { "disable": "shop-door-panel" },
+                                { "move": { "id": "shop-door-panel", "by": [0, 0, -3.1], "s": 1.4 } },
+                                { "release": {} },
+                            ],
+                            "else": [{ "toast": "C'est verrouillé." }],
+                        },
+                    },
+                ],
+            },
+        },
+    ],
+}
