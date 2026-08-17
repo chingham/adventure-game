@@ -13,59 +13,10 @@ using Quark.Platform.Input;
 
 namespace AdventureGame.Features.Sequences;
 
-// One step of a sequence. The verb picks which fields matter, and branches carry nested lists - so a
-// step is plain immutable data, shared by every runner and readable straight from the level file.
-// Adding a verb means one case in Run and one line in Validate, nothing else.
-sealed record Step {
-    public string Do { get; init; } = "";
-    public float S { get; init; }            // seconds, for wait and move
-    public string? Signal { get; init; }
-    public string? Flag { get; init; }
-    public string? Id { get; init; }
-    public string? Text { get; init; }
-    public float[]? By { get; init; }        // move offset
-    public Step[]? Then { get; init; }
-    public Step[]? Else { get; init; }
-
-    public string? Validate() => Do.ToLowerInvariant() switch {
-        "wait" => S > 0 ? null : "wait needs a positive s",
-        "emit" or "waitsignal" => Signal is not null ? null : $"{Do} needs signal",
-        "if" => Flag is null ? "if needs flag" : Branch(Then) ?? Branch(Else),
-        "gate" or "release" => null,
-        "face" => null,
-        "set" or "clear" => Flag is not null ? null : $"{Do} needs flag",
-        "enable" or "disable" => Id is not null ? null : $"{Do} needs id",
-        "toast" => Text is not null ? null : "toast needs text",
-        "move" => Id is null ? "move needs id"
-            : By is not { Length: 3 } ? "move needs by [x, y, z]"
-            : S > 0 ? null : "move needs a positive s",
-        _ => $"unknown step '{Do}'"
-    };
-
-    static string? Branch(Step[]? steps) {
-        foreach (var step in steps ?? [])
-            if (step.Validate() is { } error)
-                return error;
-        return null;
-    }
-
-    // Objects this step and its branches point at, so the file can check they resolve.
-    public IEnumerable<string> References() {
-        if (Id is { } id && Do.ToLowerInvariant() is "enable" or "disable" or "move")
-            yield return id;
-        foreach (var step in Then ?? [])
-            foreach (var reference in step.References())
-                yield return reference;
-        foreach (var step in Else ?? [])
-            foreach (var reference in step.References())
-                yield return reference;
-    }
-}
-
 // A rule with no place in the world: hearing `On` runs these steps.
 struct SequenceDefinition {
     public string On;
-    public Step[] Steps;
+    public IStep[] Steps;
 }
 
 // A sequence in flight. `Pending` is what is left to run, so a branch just splices its steps to the
@@ -73,7 +24,7 @@ struct SequenceDefinition {
 struct SequenceRunner {
     public string On;
     public Entity Source;          // whatever emitted the signal, for `face` and for the report back
-    public List<Step> Pending;
+    public List<IStep> Pending;
     public int Gates;              // holds on the player this runner is responsible for
 
     internal double timer;
@@ -162,61 +113,64 @@ sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem
         }
     }
 
-    StepOutcome Run(World world, ref SequenceRunner runner, Step step, float deltaTime) {
-        switch (step.Do.ToLowerInvariant()) {
-            case "wait":
+    StepOutcome Run(World world, ref SequenceRunner runner, IStep step, float deltaTime) {
+        switch (step) {
+            case Wait wait:
                 runner.timer += deltaTime;
-                if (runner.timer < step.S)
+                if (runner.timer < wait.S)
                     return StepOutcome.Holding;
                 runner.timer = 0;
                 return StepOutcome.Done;
 
-            case "emit":
-                world.Events<Signal>().Write(new Signal(step.Signal!, runner.Source));
+            case Emit emit:
+                world.Events<Signal>().Write(new Signal(emit.Signal, runner.Source));
                 return StepOutcome.Done;
 
-            case "waitsignal":
-                return heard.Any(s => s.Name == step.Signal) ? StepOutcome.Done : StepOutcome.Holding;
+            case WaitSignal wait:
+                return heard.Any(s => s.Name == wait.Signal) ? StepOutcome.Done : StepOutcome.Holding;
 
-            case "if": {
-                var branch = flags.Has(step.Flag!) ? step.Then : step.Else;
+            case If branch: {
+                var taken = flags.Has(branch.Flag) ? branch.Then : branch.Else;
                 runner.Pending.RemoveAt(0);
-                if (branch is { Length: > 0 })
-                    runner.Pending.InsertRange(0, branch);
+                if (taken is { Length: > 0 })
+                    runner.Pending.InsertRange(0, taken);
                 return StepOutcome.Rewrote;
             }
 
-            case "gate":
+            case Gate:
                 runner.Gates++;
                 return StepOutcome.Done;
 
-            case "release":
+            case Release:
                 runner.Gates = Math.Max(0, runner.Gates - 1);
                 return StepOutcome.Done;
 
-            case "face":
-                Face(world, Target(world, step.Id, runner.Source));
+            case Face face:
+                LookAt(world, Target(world, face.Id, runner.Source));
                 return StepOutcome.Done;
 
-            case "set":
-                flags.Set(step.Flag!);
+            case SetFlag set:
+                flags.Set(set.Flag);
                 return StepOutcome.Done;
 
-            case "clear":
-                flags.Clear(step.Flag!);
+            case ClearFlag clear:
+                flags.Clear(clear.Flag);
                 return StepOutcome.Done;
 
-            case "enable":
-            case "disable":
-                Switch(world, Target(world, step.Id, Entity.Null), step.Do.ToLowerInvariant() == "enable");
+            case Enable enable:
+                Switch(world, Target(world, enable.Id, Entity.Null), enabled: true);
                 return StepOutcome.Done;
 
-            case "toast":
-                toasts.Show(step.Text!);
+            case Disable disable:
+                Switch(world, Target(world, disable.Id, Entity.Null), enabled: false);
                 return StepOutcome.Done;
 
-            case "move":
-                return Move(world, ref runner, step, deltaTime);
+            case Toast toast:
+                toasts.Show(toast.Text);
+                return StepOutcome.Done;
+
+            case Move move:
+                return Slide(world, ref runner, move, deltaTime);
 
             default:
                 return StepOutcome.Done;
@@ -227,7 +181,7 @@ sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem
 
     // Slides an object by an offset, eased. Written straight to the transform: the body sync reads it
     // on the next tick, so a static slab carries its collider along.
-    StepOutcome Move(World world, ref SequenceRunner runner, Step step, float deltaTime) {
+    StepOutcome Slide(World world, ref SequenceRunner runner, Move step, float deltaTime) {
         var target = Target(world, step.Id, Entity.Null);
         if (target.IsNull || !world.Has<RelativeTransform>(target))
             return StepOutcome.Done;
@@ -241,8 +195,7 @@ sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem
 
         runner.timer += deltaTime;
         var progress = Ease.Smooth.Evaluate((float)(runner.timer / step.S));
-        var by = new Vector3d(step.By![0], step.By[1], step.By[2]);
-        transform.LocalTransform.Position = runner.moveFrom + by * progress;
+        transform.LocalTransform.Position = runner.moveFrom + step.By * progress;
 
         if (runner.timer < step.S)
             return StepOutcome.Holding;
@@ -252,7 +205,7 @@ sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem
         return StepOutcome.Done;
     }
 
-    static void Face(World world, Entity target) {
+    static void LookAt(World world, Entity target) {
         if (target.IsNull || !world.Has<RelativeTransform>(target))
             return;
 

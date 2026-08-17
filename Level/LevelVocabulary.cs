@@ -37,6 +37,7 @@ sealed partial class LevelVocabulary {
             .Verb("stairs", level.Stairs, Shape, payloadType: typeof(StairsPayload))
             .Verb("trigger", level.Trigger, Shape, payloadType: typeof(TriggerPayload))
             .Verb("space", level.Space, Shape, payloadType: typeof(SpacePayload))
+            .Verb("fog", level.Fog, Shape, payloadType: typeof(FogPayload))
             .Verb("portalEnd", level.PortalEnd, Shape, payloadType: typeof(PortalEndPayload))
 
             // Bodies, for a shape the file did not build itself
@@ -44,8 +45,7 @@ sealed partial class LevelVocabulary {
 
             // Riders
             .Verb("mover", level.Mover, Rider, payloadType: typeof(MoverPayload))
-            .Verb("interactable", level.Interactable, Rider, payloadType: typeof(InteractablePayload))
-            .Verb("sequence", level.Sequence, Rider, schema: SequenceSchema);
+            .Verb("interactable", level.Interactable, Rider, payloadType: typeof(InteractablePayload));
     }
 
     const string SizeSchema = """

@@ -10,11 +10,11 @@ sealed class Toasts {
     public const double Life = 3;
     public const double Fade = 0.6;
 
-    readonly List<Toast> lines = [];
+    readonly List<ToastLine> lines = [];
 
-    public void Show(string text) => lines.Add(new Toast(text, Life));
+    public void Show(string text) => lines.Add(new ToastLine(text, Life));
 
-    public IReadOnlyList<Toast> Lines => lines;
+    public IReadOnlyList<ToastLine> Lines => lines;
 
     public void Age(double seconds) {
         for (var i = lines.Count - 1; i >= 0; i--) {
@@ -27,7 +27,7 @@ sealed class Toasts {
     }
 }
 
-readonly record struct Toast(string Text, double Left);
+readonly record struct ToastLine(string Text, double Left);
 
 sealed class ToastPanel(Toasts toasts) : ISystem {
     const float LineHeight = 26;

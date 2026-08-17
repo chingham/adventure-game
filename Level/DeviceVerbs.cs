@@ -3,8 +3,8 @@ using AdventureGame.Features.Camera;
 using AdventureGame.Features.Interaction;
 using AdventureGame.Features.Platforms;
 using AdventureGame.Features.Portals;
-using AdventureGame.Features.Sequences;
 using Quark.Kit.Scenes.Files;
+using System.Numerics;
 using Quark.Numerics;
 using Quark.Physics.Dimension3D;
 using Quark.Physics.Dimension3D.Shapes;
@@ -62,6 +62,17 @@ partial class LevelVocabulary {
             CenterPivot = p.Pivot == "center",
             Fog = p.Fog
         });
+    }
+
+    sealed class FogPayload {
+        public double Density { get; set; } = 0.02;
+        public Vector4 Color { get; set; } = new(0.05f, 0.06f, 0.08f, 1);
+    }
+
+    // The open-air fog, on an entity with no volume: it is the level's default, not a place in it.
+    void Fog(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
+        var p = ctx.Get<FogPayload>(json, ctx.Location);
+        entity.Add(new WorldFog { Density = p.Density, Color = p.Color });
     }
 
     // Doorways
@@ -157,41 +168,5 @@ partial class LevelVocabulary {
             Reach = p.Reach,
             Once = p.Once
         });
-    }
-
-    // Rules
-
-    // The steps are still read by System.Text.Json: they are a closed shape today, and turning them
-    // into scene-file variants is its own change.
-    static readonly JsonSerializerOptions StepOptions = new() {
-        PropertyNameCaseInsensitive = true,
-        ReadCommentHandling = JsonCommentHandling.Skip,
-        AllowTrailingCommas = true
-    };
-
-    sealed record SequencePayload(string? On, Step[]? Steps);
-
-    const string SequenceSchema = """
-        { "type": "object",
-          "properties": {
-            "on": { "type": "string" },
-            "steps": { "type": "array", "items": { "type": "object" } } },
-          "required": ["on", "steps"],
-          "additionalProperties": false }
-        """;
-
-    void Sequence(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
-        var p = json.Deserialize<SequencePayload>(StepOptions);
-
-        if (p is not { On.Length: > 0 })
-            throw ctx.Error(ctx.Location, "A sequence needs 'on'.");
-        if (p.Steps is not { Length: > 0 })
-            throw ctx.Error(ctx.Location, "A sequence needs 'steps'.");
-
-        foreach (var step in p.Steps)
-            if (step.Validate() is { } error)
-                throw ctx.Error(ctx.Location, error);
-
-        entity.Add(new SequenceDefinition { On = p.On, Steps = p.Steps });
     }
 }

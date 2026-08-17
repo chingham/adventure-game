@@ -1,6 +1,7 @@
 using Quark.Ecs;
 using Quark.Kit.Components;
 using Quark.Kit.Rendering.PostEffects;
+using System.Numerics;
 using Quark.Numerics;
 
 namespace AdventureGame.Features.Camera;
@@ -34,6 +35,13 @@ struct Space {
         p.Z >= Min.Z && p.Z <= Max.Z;
 }
 
+// The fog outside every Space: the open-air mood of the level, authored once. A Space overrides the
+// density inside it; this is what it goes back to.
+struct WorldFog {
+    public double Density;
+    public Vector4 Color;
+}
+
 // Drives the ambience of wherever the character stands: the isometric framing and the fog of the
 // space he is in. DoorApproachSystem owns the doorway rig and leaves this one alone.
 sealed class SpaceSystem(EffectHandle<DepthFogEffect> fog) : ISystem {
@@ -54,10 +62,12 @@ sealed class SpaceSystem(EffectHandle<DepthFogEffect> fog) : ISystem {
     // sweep the world. Adjacent spaces stay under it and still blend.
     const double JumpDistance = 50;
 
-    // The density authored on the effect is the open-world one, read once rather than restated here.
-    readonly double openFog = fog.Value.Density;
+    // Where the open-world fog stands when the level names none of its own
+    readonly double fallbackDensity = fog.Value.Density;
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
+        var weather = Weather(world);
+
         foreach (var row in world.Query<CameraDirector>()) {
             ref var director = ref row.Component1;
 
@@ -88,10 +98,19 @@ sealed class SpaceSystem(EffectHandle<DepthFogEffect> fog) : ISystem {
 
             // Approach is a frame old here - imperceptible on something this smooth.
             var fogRate = double.Lerp(FogDecayRate, FogDoorwayDecayRate, director.Approach);
+            var density = space?.Fog ?? weather?.Density ?? fallbackDensity;
             fog.Value = fog.Value with {
-                Density = (float)Quark.Kit.Decay.ExpDecay(fog.Value.Density, space?.Fog ?? openFog, fogRate, deltaTime)
+                Color = weather?.Color ?? fog.Value.Color,
+                Density = (float)Quark.Kit.Decay.ExpDecay(fog.Value.Density, density, fogRate, deltaTime)
             };
         }
+    }
+
+    // The level's own fog, if it authored one
+    static WorldFog? Weather(World world) {
+        foreach (var row in world.Query<WorldFog>())
+            return row.Component1;
+        return null;
     }
 
     // The space holding a point, smallest first so a nook inside a hall wins over the hall.

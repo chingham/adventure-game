@@ -34,6 +34,9 @@
     { "id": "sun", "light": { "type": "directional", "dir": [-0.4, -0.35, -0.85],
                               "intensity": 1.5, "shadows": true } },
     { "id": "terrain", "at": [0, -14, 0], "material": "danger", "mesh": "terrain", "solid": true },
+
+    // The open-air fog. A space overrides the density indoors; this is what it comes back to.
+    { "id": "weather", "fog": { "density": 0.02, "color": "#0E0F15" } },
     // Arena
     { "id": "arena-1", "at": [-300, -300, -1], "block": [600, 600, 1.0] },
 
@@ -169,47 +172,44 @@
     // Rules: hearing a signal runs these steps
     // A pressure pad is a sensor, a sink and a call: the sequence is what ties the three together.
     // Emitting after the sink means what it then waits for cannot have been said already.
-    { "id": "seq-tower-press", "sequence":
-      { "on": "tower-press", "steps": [
-        { "do": "move", "id": "tower-pad", "by": [0, 0, -0.15], "s": 0.12 },
-        { "do": "emit", "signal": "tower-call" },
-        { "do": "waitSignal", "signal": "tower-call.done" },
-        { "do": "move", "id": "tower-pad", "by": [0, 0, 0.15], "s": 0.12 }
-      ] } },
+    { "id": "seq-tower-press", "sequence": { "on": "tower-press", "steps": [
+      { "move": { "id": "tower-pad", "by": [0, 0, -0.15], "s": 0.12 } },
+      { "emit": "tower-call" },
+      { "waitSignal": "tower-call.done" },
+      { "move": { "id": "tower-pad", "by": [0, 0, 0.15], "s": 0.12 } }
+    ] } },
 
-    { "id": "seq-lift-press", "sequence":
-      { "on": "lift-press", "steps": [
-        { "do": "move", "id": "lift-pad", "by": [0, 0, -0.15], "s": 0.12 },
-        { "do": "emit", "signal": "lift-call" },
-        { "do": "waitSignal", "signal": "lift-call.done" },
-        { "do": "move", "id": "lift-pad", "by": [0, 0, 0.15], "s": 0.12 }
-      ] } },
+    { "id": "seq-lift-press", "sequence": { "on": "lift-press", "steps": [
+      { "move": { "id": "lift-pad", "by": [0, 0, -0.15], "s": 0.12 } },
+      { "emit": "lift-call" },
+      { "waitSignal": "lift-call.done" },
+      { "move": { "id": "lift-pad", "by": [0, 0, 0.15], "s": 0.12 } }
+    ] } },
 
-    { "id": "seq-chest-shop", "sequence":
-      { "on": "chest-shop", "steps": [
-        { "do": "gate" },
-        { "do": "face" },
-        { "do": "wait", "s": 0.5 },
-        { "do": "set", "flag": "shop-key" },
-        { "do": "toast", "text": "Clé du magasin obtenue" },
-        { "do": "wait", "s": 0.4 },
-        { "do": "release" }
-      ] } },
+    { "id": "seq-chest-shop", "sequence": { "on": "chest-shop", "steps": [
+      { "gate": {} },
+      { "face": {} },
+      { "wait": 0.5 },
+      { "set": "shop-key" },
+      { "toast": "Clé du magasin obtenue" },
+      { "wait": 0.4 },
+      { "release": {} }
+    ] } },
 
-    { "id": "seq-shop-door", "sequence":
-      { "on": "shop-door", "steps": [
-        { "do": "face" },
-        { "do": "if", "flag": "shop-key",
+    { "id": "seq-shop-door", "sequence": { "on": "shop-door", "steps": [
+      { "face": {} },
+      { "if": {
+          "flag": "shop-key",
           "then": [
-            { "do": "gate" },
-            { "do": "toast", "text": "La porte s'ouvre" },
-            { "do": "disable", "id": "shop-door-panel" },
-            { "do": "move", "id": "shop-door-panel", "by": [0, 0, -3.1], "s": 1.4 },
-            { "do": "release" }
+            { "gate": {} },
+            { "toast": "La porte s'ouvre" },
+            { "disable": "shop-door-panel" },
+            { "move": { "id": "shop-door-panel", "by": [0, 0, -3.1], "s": 1.4 } },
+            { "release": {} }
           ],
           "else": [
-            { "do": "toast", "text": "C'est verrouillé." }
-          ] }
-      ] } },
+            { "toast": "C'est verrouillé." }
+          ] } }
+    ] } }
   ]
 }
