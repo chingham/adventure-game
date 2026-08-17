@@ -324,6 +324,12 @@
           "particles": {
             "type": "object",
             "properties": {
+              "align": {
+                "enum": [
+                  "Camera",
+                  "Velocity"
+                ]
+              },
               "behaviors": {
                 "type": "array",
                 "items": {
@@ -644,53 +650,7 @@
               "capacity": {
                 "type": "integer"
               },
-              "lifetime": {
-                "oneOf": [
-                  {
-                    "type": "number",
-                    "description": "Fixed value"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "number"
-                    },
-                    "minItems": 2,
-                    "maxItems": 2,
-                    "description": "[min, max], sampled per particle"
-                  }
-                ]
-              },
-              "material": {
-                "type": "string",
-                "description": "Material name"
-              },
-              "prewarm": {
-                "type": "number",
-                "description": null
-              },
-              "rate": {
-                "type": "number",
-                "description": null
-              },
-              "rotationRate": {
-                "oneOf": [
-                  {
-                    "type": "number",
-                    "description": "Fixed value"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "number"
-                    },
-                    "minItems": 2,
-                    "maxItems": 2,
-                    "description": "[min, max], sampled per particle"
-                  }
-                ]
-              },
-              "shape": {
+              "emission": {
                 "oneOf": [
                   {
                     "const": "point"
@@ -699,22 +659,41 @@
                     "type": "object",
                     "properties": {
                       "point": {},
-                      "cone": {
+                      "circle": {
                         "oneOf": [
                           {
                             "type": "number",
-                            "description": "Outer half-angle, degrees"
+                            "description": "Radius"
                           },
                           {
                             "type": "object",
                             "properties": {
-                              "angle": {
+                              "radius": {
                                 "type": "number"
-                              },
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "ring": {
+                        "oneOf": [
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            },
+                            "minItems": 2,
+                            "maxItems": 2,
+                            "description": "[inner, outer] radius"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
                               "inner": {
                                 "type": "number"
                               },
-                              "radius": {
+                              "outer": {
                                 "type": "number"
                               }
                             },
@@ -764,7 +743,70 @@
                   }
                 ]
               },
+              "lifetime": {
+                "oneOf": [
+                  {
+                    "type": "number",
+                    "description": "Fixed value"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[min, max], sampled per particle"
+                  }
+                ]
+              },
+              "material": {
+                "type": "string",
+                "description": "Material name"
+              },
+              "prewarm": {
+                "type": "number",
+                "description": null
+              },
+              "rate": {
+                "type": "number",
+                "description": null
+              },
+              "rotationRate": {
+                "oneOf": [
+                  {
+                    "type": "number",
+                    "description": "Fixed value"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[min, max], sampled per particle"
+                  }
+                ]
+              },
               "speed": {
+                "oneOf": [
+                  {
+                    "type": "number",
+                    "description": "Fixed value"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[min, max], sampled per particle"
+                  }
+                ]
+              },
+              "spread": {
                 "oneOf": [
                   {
                     "type": "number",
@@ -805,7 +847,7 @@
                 "oneOf": [
                   {
                     "type": "number",
-                    "description": "Fixed value"
+                    "description": "Fixed square size"
                   },
                   {
                     "type": "array",
@@ -814,7 +856,21 @@
                     },
                     "minItems": 2,
                     "maxItems": 2,
-                    "description": "[min, max], sampled per particle"
+                    "description": "[min, max] square sizes, sampled per particle"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "minItems": 2,
+                      "maxItems": 2
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "[[w, h], [w, h]] min and max, sampled per particle"
                   }
                 ]
               }
@@ -2469,6 +2525,12 @@
         "particles": {
           "type": "object",
           "properties": {
+            "align": {
+              "enum": [
+                "Camera",
+                "Velocity"
+              ]
+            },
             "behaviors": {
               "type": "array",
               "items": {
@@ -2789,53 +2851,7 @@
             "capacity": {
               "type": "integer"
             },
-            "lifetime": {
-              "oneOf": [
-                {
-                  "type": "number",
-                  "description": "Fixed value"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "number"
-                  },
-                  "minItems": 2,
-                  "maxItems": 2,
-                  "description": "[min, max], sampled per particle"
-                }
-              ]
-            },
-            "material": {
-              "type": "string",
-              "description": "Material name"
-            },
-            "prewarm": {
-              "type": "number",
-              "description": null
-            },
-            "rate": {
-              "type": "number",
-              "description": null
-            },
-            "rotationRate": {
-              "oneOf": [
-                {
-                  "type": "number",
-                  "description": "Fixed value"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "number"
-                  },
-                  "minItems": 2,
-                  "maxItems": 2,
-                  "description": "[min, max], sampled per particle"
-                }
-              ]
-            },
-            "shape": {
+            "emission": {
               "oneOf": [
                 {
                   "const": "point"
@@ -2844,22 +2860,41 @@
                   "type": "object",
                   "properties": {
                     "point": {},
-                    "cone": {
+                    "circle": {
                       "oneOf": [
                         {
                           "type": "number",
-                          "description": "Outer half-angle, degrees"
+                          "description": "Radius"
                         },
                         {
                           "type": "object",
                           "properties": {
-                            "angle": {
+                            "radius": {
                               "type": "number"
-                            },
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "ring": {
+                      "oneOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "minItems": 2,
+                          "maxItems": 2,
+                          "description": "[inner, outer] radius"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
                             "inner": {
                               "type": "number"
                             },
-                            "radius": {
+                            "outer": {
                               "type": "number"
                             }
                           },
@@ -2909,7 +2944,70 @@
                 }
               ]
             },
+            "lifetime": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": "Fixed value"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "[min, max], sampled per particle"
+                }
+              ]
+            },
+            "material": {
+              "type": "string",
+              "description": "Material name"
+            },
+            "prewarm": {
+              "type": "number",
+              "description": null
+            },
+            "rate": {
+              "type": "number",
+              "description": null
+            },
+            "rotationRate": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": "Fixed value"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "[min, max], sampled per particle"
+                }
+              ]
+            },
             "speed": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": "Fixed value"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "[min, max], sampled per particle"
+                }
+              ]
+            },
+            "spread": {
               "oneOf": [
                 {
                   "type": "number",
@@ -2950,7 +3048,7 @@
               "oneOf": [
                 {
                   "type": "number",
-                  "description": "Fixed value"
+                  "description": "Fixed square size"
                 },
                 {
                   "type": "array",
@@ -2959,7 +3057,21 @@
                   },
                   "minItems": 2,
                   "maxItems": 2,
-                  "description": "[min, max], sampled per particle"
+                  "description": "[min, max] square sizes, sampled per particle"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "[[w, h], [w, h]] min and max, sampled per particle"
                 }
               ]
             }

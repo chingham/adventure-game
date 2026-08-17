@@ -57,7 +57,8 @@ static class Character {
                 StartSize = (0.4f, 0.8f),
                 StartColor = Color.Rgba(1f, 1f, 1f, 0.5f),
                 StartRotation = (0f, MathF.PI * 2f),
-                Shape = EmitShape.ConeBand(80, 95, 0.4f),
+                Emission = EmitShape.Circle(0.4f),
+                Spread = (80, 95),
                 Blend = BlendMode.Alpha,
                 Material = smokeMaterial,
                 Behaviors = [

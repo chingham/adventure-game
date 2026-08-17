@@ -104,7 +104,8 @@ sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
     }
     static Clip JumpSmoke() {
         return Clip.Create().Burst(7, overrides: new BurstOverrides {
-            Shape = EmitShape.Cone(1, 0.1f),
+            Emission = EmitShape.Circle(0.1f),
+            Spread = 1,
             SpeedScale = 1.2f,
             SizeScale = 0.6f
         });
@@ -118,7 +119,8 @@ sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
         var emitUpperAngle = (float)double.Lerp(80, 70, strength);
         
         return Clip.Create().Burst(count, overrides: new BurstOverrides {
-            Shape = EmitShape.ConeBand(emitUpperAngle, 95, emitRadius),
+            Emission = EmitShape.Circle(emitRadius),
+            Spread = (emitUpperAngle, 95),
             SpeedScale = speed,
             SizeScale = scale
         });
@@ -128,7 +130,8 @@ sealed class CharacterCapsuleAnimationSystem(CharacterTuning tuning) : ISystem {
         var speed = (float)double.Lerp(0.0, 0.2, speed01);
         
         return Clip.Create().Burst(count, overrides: new BurstOverrides {
-            Shape = EmitShape.Cone(20, 0.1f),
+            Emission = EmitShape.Circle(0.1f),
+            Spread = 20,
             SpeedScale = speed, 
             SizeScale = 0.3f
         });
