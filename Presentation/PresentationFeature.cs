@@ -9,9 +9,12 @@ namespace AdventureGame.Presentation;
 // and the rest of the chain are authored in the level file.
 sealed class PresentationFeature : IGameFeature {
     public void Provide(Game game) {
-        // Driven room by room by SpaceSystem, so it is provided rather than authored
+        // Driven zone by zone rather than authored: a system needs a handle to write every frame, and
+        // the file supplies the values through its aspects instead. Grading lands after the tonemap.
         game.Provide(game.Rendering.AddPostEffect(
             new DepthFogEffect { Color = Color.FromHex("0E0F15"), Density = 0.02f }));
+        game.Provide(game.Rendering.AddPostEffect(
+            new GradeEffect { Saturation = 1, Warmth = 0 }, PostEffectSpace.Ldr));
 
         game.Provide(Fonts.Build(game));
         game.Provide<Toasts>();

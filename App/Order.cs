@@ -23,7 +23,7 @@ static class Order {
     public const int Probe = -17;
     public const int PlatformCall = -10;
     public const int Portal = -10;
-    public const int Space = -7;
+    public const int Zones = -7;
     public const int DoorApproach = -6;
     public const int FollowRig = -5;
     public const int CameraDirector = -4;

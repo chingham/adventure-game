@@ -38,30 +38,73 @@ partial class LevelVocabulary {
         entity.Add(new Trigger { Enter = p.Enter, Exit = p.Exit, Rearm = p.Rearm });
     }
 
-    sealed class SpacePayload {
-        public Vector3d Size { get; set; }
+    // Zones
+    //
+    // A volume is a box and nothing else; the aspects riding it say what changes inside. An aspect
+    // authored without a volume is the level's own - the open air.
+
+    // volume: [w, d, h] - no mesh, no body, only a place
+    void VolumeVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
+        var size = SceneJson.Vec3d(json, ctx.Location);
+        var min = ctx.Entity.Position;
+
+        entity.At(min + size * 0.5);
+        entity.Add(new Volume { Min = min, Max = min + size });
+    }
+
+    sealed class CameraPayload {
+        public bool Iso { get; set; }
         public double Distance { get; set; } = 90;
         public double Fov { get; set; } = 0.4;
         public string? Pivot { get; set; }
-        public double? Fog { get; set; }
     }
 
-    // A camera volume has no body at all - it is read by a query on the character's position.
-    void Space(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
-        var p = ctx.Get<SpacePayload>(json, ctx.Location);
+    void CameraVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
+        var p = ctx.Get<CameraPayload>(json, ctx.Location);
         if (p.Pivot is not (null or "follow" or "center"))
             throw ctx.Error(ctx.Location, $"Unknown pivot '{p.Pivot}'. Valid: follow, center.");
 
-        var min = ctx.Entity.Position;
-        entity.At(min + p.Size * 0.5);
-        entity.Add(new Space {
-            Min = min,
-            Max = min + p.Size,
+        entity.Add(new CameraZone {
+            Iso = p.Iso,
             Distance = p.Distance,
             FieldOfView = p.Fov,
-            CenterPivot = p.Pivot == "center",
-            Fog = p.Fog
+            CenterPivot = p.Pivot == "center"
         });
+    }
+
+    sealed class GradePayload {
+        public double Saturation { get; set; } = 1;
+        public double Warmth { get; set; }
+    }
+
+    void GradeVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
+        var p = ctx.Get<GradePayload>(json, ctx.Location);
+        entity.Add(new GradeZone { Saturation = p.Saturation, Warmth = p.Warmth });
+    }
+
+    sealed class RainPayload {
+        public double Intensity { get; set; }
+        public double Tilt { get; set; } = 8;
+    }
+
+    void RainVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
+        var p = ctx.Get<RainPayload>(json, ctx.Location);
+        if (p.Intensity is < 0 or > 1)
+            throw ctx.Error(ctx.Location, "Rain intensity runs from 0 to 1.");
+
+        entity.Add(new RainZone { Intensity = p.Intensity, Tilt = p.Tilt });
+    }
+
+    sealed class ShroudPayload {
+        public double Edge { get; set; } = 1;
+        public Vector4 Color { get; set; }
+    }
+
+    // Authored ahead of what draws it: the volume and its softness are level data, and pinning them now
+    // means the day the effect exists no level file has to change.
+    void ShroudVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
+        var p = ctx.Get<ShroudPayload>(json, ctx.Location);
+        entity.Add(new Shroud { Edge = p.Edge, Color = p.Color });
     }
 
     sealed class FogPayload {
@@ -69,10 +112,9 @@ partial class LevelVocabulary {
         public Vector4 Color { get; set; } = new(0.05f, 0.06f, 0.08f, 1);
     }
 
-    // The open-air fog, on an entity with no volume: it is the level's default, not a place in it.
-    void Fog(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
+    void FogVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
         var p = ctx.Get<FogPayload>(json, ctx.Location);
-        entity.Add(new WorldFog { Density = p.Density, Color = p.Color });
+        entity.Add(new FogZone { Density = p.Density, Color = p.Color });
     }
 
     // Doorways

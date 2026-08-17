@@ -11,7 +11,10 @@ sealed class CameraFeature : IGameFeature {
     }
 
     public void Install(Game game) {
-        game.AddSystem<SpaceSystem>(QuarkPhases.Gameplay, Order.Space);
+        // Zones first: what follows frames and fogs whatever they resolved to
+        game.AddSystem<CameraZoneSystem>(QuarkPhases.Gameplay, Order.Zones);
+        game.AddSystem<FogZoneSystem>(QuarkPhases.Gameplay, Order.Zones);
+        game.AddSystem<GradeZoneSystem>(QuarkPhases.Gameplay, Order.Zones);
         game.AddSystem<DoorApproachSystem>(QuarkPhases.Gameplay, Order.DoorApproach);
         game.AddSystem<FollowRigSystem>(QuarkPhases.Gameplay, Order.FollowRig);
         game.AddSystem<CameraDirectorSystem>(QuarkPhases.Gameplay, Order.CameraDirector);

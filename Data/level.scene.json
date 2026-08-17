@@ -15,14 +15,13 @@
     "interactive": { "baseColorTexture": "yellowGrid", "roughness": 0.7 }
   },
 
-  // How the place looks. The fog is not here: a Space overrides it room by room, so it belongs to
-  // the gameplay side rather than to the authored look.
+  // The look nothing drives. What a zone changes - fog, grading - is authored on the zones below
+  // instead, since a system has to write those every frame.
   "view": {
     "environment": { "gradient": { "horizon": "#6E6493", "zenith": "#1B2440", "ground": "#0E0F15" } },
     "effects": [
       { "bloom": { "threshold": 1.2, "radius": 1.3, "intensity": 0.22 } },
-      { "film":  { "vignette": 0.3 } },
-      { "grade": { "saturation": 0.9, "warmth": 0.1 } }
+      { "film":  { "vignette": 0.3 }, "space": "ldr" }
     ]
   },
 
@@ -35,8 +34,12 @@
                               "intensity": 1.5, "shadows": true } },
     { "id": "terrain", "at": [0, -14, 0], "material": "danger", "mesh": "terrain", "solid": true },
 
-    // The open-air fog. A space overrides the density indoors; this is what it comes back to.
-    { "id": "weather", "fog": { "density": 0.02, "color": "#0E0F15" } },
+    // The open air: aspects with no volume, in force wherever no zone says otherwise
+    { "id": "world",
+      "camera": { "iso": false, "distance": 90, "fov": 0.4 },
+      "fog":    { "density": 0.02, "color": "#0E0F15" },
+      "grade":  { "saturation": 0.9, "warmth": 0.1 },
+      "rain":   { "intensity": 0, "tilt": 8 } },
     // Arena
     { "id": "arena-1", "at": [-300, -300, -1], "block": [600, 600, 1.0] },
 
@@ -140,8 +143,11 @@
       "trigger": { "size": [2, 1.5, 2.5], "enter": "shop-doorstep", "exit": "shop-doorstep.left" } },
 
     // Shop: Interior
-    { "id": "shop1", "name": "shop1", "at": [9991, -6, -1],
-      "space": { "size": [16, 20, 6], "distance": 60, "fov": 0.3, "pivot": "center", "fog": 0 } },
+    { "id": "shop1", "name": "shop1", "at": [9991, -6, -1], "volume": [16, 20, 6],
+      "camera": { "iso": true, "distance": 60, "fov": 0.3, "pivot": "center" },
+      "fog":    { "density": 0, "color": "#0E0F15" },
+      "grade":  { "saturation": 0.8, "warmth": -0.05 },
+      "rain":   { "intensity": 0 } },
 
     { "id": "shop-interior-1", "at": [9994, -4, -1], "block": [12, 12, 1] },
     { "id": "shop-interior-2", "at": [9997, -8, -1], "block": [4, 4, 1] },

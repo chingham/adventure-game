@@ -36,8 +36,14 @@ sealed partial class LevelVocabulary {
             .Verb("ramp", level.Ramp, Shape, payloadType: typeof(RampPayload))
             .Verb("stairs", level.Stairs, Shape, payloadType: typeof(StairsPayload))
             .Verb("trigger", level.Trigger, Shape, payloadType: typeof(TriggerPayload))
-            .Verb("space", level.Space, Shape, payloadType: typeof(SpacePayload))
-            .Verb("fog", level.Fog, Shape, payloadType: typeof(FogPayload))
+            .Verb("volume", level.VolumeVerb, Shape, schema: SizeSchema)
+
+            // Zone aspects: each rides a volume, or stands alone as the level's own
+            .Verb("camera", level.CameraVerb, Rider, payloadType: typeof(CameraPayload))
+            .Verb("fog", level.FogVerb, Rider, payloadType: typeof(FogPayload))
+            .Verb("grade", level.GradeVerb, Rider, payloadType: typeof(GradePayload))
+            .Verb("rain", level.RainVerb, Rider, payloadType: typeof(RainPayload))
+            .Verb("shroud", level.ShroudVerb, Rider, payloadType: typeof(ShroudPayload))
             .Verb("portalEnd", level.PortalEnd, Shape, payloadType: typeof(PortalEndPayload))
 
             // Bodies, for a shape the file did not build itself

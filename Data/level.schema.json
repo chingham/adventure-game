@@ -969,22 +969,19 @@
           "camera": {
             "type": "object",
             "properties": {
+              "distance": {
+                "type": "number",
+                "description": null
+              },
               "fov": {
                 "type": "number",
-                "description": "Vertical field of view, degrees"
+                "description": null
               },
-              "ortho": {
-                "type": "number",
-                "description": "Orthographic world height; \u003E 0 switches projection"
+              "iso": {
+                "type": "boolean"
               },
-              "near": {
-                "type": "number"
-              },
-              "far": {
-                "type": "number"
-              },
-              "priority": {
-                "type": "integer"
+              "pivot": {
+                "type": "string"
               }
             },
             "additionalProperties": false
@@ -2006,29 +2003,13 @@
             },
             "additionalProperties": false
           },
-          "space": {
-            "type": "object",
-            "properties": {
-              "distance": {
-                "type": "number",
-                "description": null
-              },
-              "fog": {
-                "type": "number",
-                "description": null
-              },
-              "fov": {
-                "type": "number",
-                "description": null
-              },
-              "pivot": {
-                "type": "string"
-              },
-              "size": {
-                "$ref": "#/$defs/vec3"
-              }
+          "volume": {
+            "type": "array",
+            "items": {
+              "type": "number"
             },
-            "additionalProperties": false
+            "minItems": 3,
+            "maxItems": 3
           },
           "fog": {
             "type": "object",
@@ -2037,6 +2018,47 @@
                 "$ref": "#/$defs/color4"
               },
               "density": {
+                "type": "number",
+                "description": null
+              }
+            },
+            "additionalProperties": false
+          },
+          "grade": {
+            "type": "object",
+            "properties": {
+              "saturation": {
+                "type": "number",
+                "description": null
+              },
+              "warmth": {
+                "type": "number",
+                "description": null
+              }
+            },
+            "additionalProperties": false
+          },
+          "rain": {
+            "type": "object",
+            "properties": {
+              "intensity": {
+                "type": "number",
+                "description": null
+              },
+              "tilt": {
+                "type": "number",
+                "description": null
+              }
+            },
+            "additionalProperties": false
+          },
+          "shroud": {
+            "type": "object",
+            "properties": {
+              "color": {
+                "$ref": "#/$defs/color4"
+              },
+              "edge": {
                 "type": "number",
                 "description": null
               }
@@ -3092,22 +3114,19 @@
         "camera": {
           "type": "object",
           "properties": {
+            "distance": {
+              "type": "number",
+              "description": null
+            },
             "fov": {
               "type": "number",
-              "description": "Vertical field of view, degrees"
+              "description": null
             },
-            "ortho": {
-              "type": "number",
-              "description": "Orthographic world height; \u003E 0 switches projection"
+            "iso": {
+              "type": "boolean"
             },
-            "near": {
-              "type": "number"
-            },
-            "far": {
-              "type": "number"
-            },
-            "priority": {
-              "type": "integer"
+            "pivot": {
+              "type": "string"
             }
           },
           "additionalProperties": false
@@ -4129,29 +4148,13 @@
           },
           "additionalProperties": false
         },
-        "space": {
-          "type": "object",
-          "properties": {
-            "distance": {
-              "type": "number",
-              "description": null
-            },
-            "fog": {
-              "type": "number",
-              "description": null
-            },
-            "fov": {
-              "type": "number",
-              "description": null
-            },
-            "pivot": {
-              "type": "string"
-            },
-            "size": {
-              "$ref": "#/$defs/vec3"
-            }
+        "volume": {
+          "type": "array",
+          "items": {
+            "type": "number"
           },
-          "additionalProperties": false
+          "minItems": 3,
+          "maxItems": 3
         },
         "fog": {
           "type": "object",
@@ -4160,6 +4163,47 @@
               "$ref": "#/$defs/color4"
             },
             "density": {
+              "type": "number",
+              "description": null
+            }
+          },
+          "additionalProperties": false
+        },
+        "grade": {
+          "type": "object",
+          "properties": {
+            "saturation": {
+              "type": "number",
+              "description": null
+            },
+            "warmth": {
+              "type": "number",
+              "description": null
+            }
+          },
+          "additionalProperties": false
+        },
+        "rain": {
+          "type": "object",
+          "properties": {
+            "intensity": {
+              "type": "number",
+              "description": null
+            },
+            "tilt": {
+              "type": "number",
+              "description": null
+            }
+          },
+          "additionalProperties": false
+        },
+        "shroud": {
+          "type": "object",
+          "properties": {
+            "color": {
+              "$ref": "#/$defs/color4"
+            },
+            "edge": {
               "type": "number",
               "description": null
             }

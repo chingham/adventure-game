@@ -20,7 +20,7 @@ sealed class DebugVolumeSystem(DefaultRenderingModule rendering, IInput input) :
     // A colour per family, so a glance says what a volume is
     static readonly uint TriggerHue = Rgba(255, 205, 60);
     static readonly uint ColliderHue = Rgba(255, 105, 70);
-    static readonly uint SpaceHue = Rgba(80, 230, 255);
+    static readonly uint ZoneHue = Rgba(80, 230, 255);
     static readonly uint PointHue = Rgba(120, 255, 140);
     static readonly uint RetiredHue = Rgba(120, 255, 140, 70);
 
@@ -50,11 +50,11 @@ sealed class DebugVolumeSystem(DefaultRenderingModule rendering, IInput input) :
                 Wire(lines, shape.Shape, Frame.Of(pose, shape.Transform), hue);
         }
 
-        // Camera spaces, which are pure volume - already axis-aligned and in world coordinates
-        foreach (var row in world.Query<Space>()) {
-            var space = row.Component1;
-            var half = (space.Max - space.Min) * 0.5;
-            WireBox(lines, Frame.World(space.Center), -half, half, SpaceHue);
+        // Zones, which are pure volume - already axis-aligned and in world coordinates
+        foreach (var row in world.Query<Volume>()) {
+            var zone = row.Component1;
+            var half = (zone.Max - zone.Min) * 0.5;
+            WireBox(lines, Frame.World(zone.Center), -half, half, ZoneHue);
         }
 
         // Interaction points: where the hand lands, and how far it reaches

@@ -50,7 +50,7 @@ sealed class DoorApproachSystem(CameraTuning tuning) : ISystem {
         foreach (var evt in teleports.Read(world))
             foreach (var row in world.Query<CameraDirector>()) {
                 ref var director = ref row.Component1;
-                director.InSpace = SpaceSystem.Find(world, evt.To) is null ? 0 : 1;
+                director.InSpace = Zones.Resolve<CameraZone>(world, evt.To)?.Aspect.Iso == true ? 1 : 0;
                 director.SnapTarget(director.Flipped ? 1 - director.InSpace : director.InSpace);
 
                 ref var iso = ref world.Get<CameraRig>(director.IsometricRig);

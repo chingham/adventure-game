@@ -15,6 +15,7 @@ sealed class FlowFeature : IGameFeature {
 
         var flow = game.Shared<GameFlow>();
         flow.ReplaceAll(ScreenKind.Game);
-        flow.Push(ScreenKind.Inventory);   // dev entry point: boot straight into the panel being worked on
+        
+        //flow.Push(ScreenKind.Inventory);   // dev entry point: boot straight into the panel being worked on
     }
 }
