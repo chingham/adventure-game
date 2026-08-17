@@ -3,22 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LBA2 Remake — Feuille de route de production</title>
+<title>Nuit sur la Citadelle — Feuille de route de production</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  /* ————— Palette : dérivée du code du projet —————
-     ground   #0E0F15  (GradientSky.Ground)
-     zenith   #1B2440  (GradientSky.Zenith)
-     horizon  #6E6493  (GradientSky.Horizon)
-     gold     #F2D488  (TitleStyle, InventoryPanel)
-     bluegrey #9FB2D8  (BodyStyle, InventoryPanel)
-     warm     #E56619  (Warm, InventoryPanel)               */
   :root {
     --ground:   #0E0F15;
     --panel:    #12151f;
-    --panel-2:  #171b28;
     --line:     #262c3f;
     --zenith:   #1B2440;
     --horizon:  #6E6493;
@@ -36,68 +28,50 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--ground);
-    color: var(--text);
-    font-family: var(--body);
-    font-size: 16px;
-    line-height: 1.6;
+    background: var(--ground); color: var(--text);
+    font-family: var(--body); font-size: 16px; line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .wide { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
-  /* ————— Héro : nuit pluvieuse sur la Citadelle ————— */
   header.hero {
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
     background: linear-gradient(180deg, var(--zenith) 0%, #232048 55%, var(--ground) 100%);
     border-bottom: 1px solid var(--line);
   }
   .rain, .rain2 {
     position: absolute; inset: 0; pointer-events: none;
-    background-image: repeating-linear-gradient(
-      12deg,
+    background-image: repeating-linear-gradient(12deg,
       transparent 0px, transparent 46px,
       rgba(159,178,216,0.10) 46px, rgba(159,178,216,0.10) 47px,
       transparent 47px, transparent 96px);
-    animation: fall 1.1s linear infinite;
-    opacity: .8;
+    animation: fall 1.1s linear infinite; opacity: .8;
   }
   .rain2 {
-    background-image: repeating-linear-gradient(
-      10deg,
+    background-image: repeating-linear-gradient(10deg,
       transparent 0px, transparent 70px,
       rgba(110,100,147,0.12) 70px, rgba(110,100,147,0.12) 71px,
       transparent 71px, transparent 150px);
     animation-duration: 1.7s;
   }
   @keyframes fall { to { transform: translateY(180px); } }
-  @media (prefers-reduced-motion: reduce) {
-    .rain, .rain2 { animation: none; opacity: .35; }
-  }
+  @media (prefers-reduced-motion: reduce) { .rain, .rain2 { animation: none; opacity: .35; } }
   .hero-inner { position: relative; padding: 72px 0 56px; }
-  .eyebrow {
-    font-family: var(--mono); font-size: 12px; letter-spacing: .14em;
-    text-transform: uppercase; color: var(--horizon);
-  }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--horizon); }
   h1 {
-    font-family: var(--display);
-    font-weight: 700;
-    font-size: clamp(34px, 6vw, 58px);
-    line-height: 1.05;
-    color: var(--gold);
-    margin: 14px 0 10px;
-    letter-spacing: -0.01em;
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(34px, 6vw, 58px); line-height: 1.05;
+    color: var(--gold); margin: 14px 0 10px; letter-spacing: -0.01em;
   }
-  .subtitle { color: var(--bluegrey); font-size: 18px; max-width: 620px; }
+  .subtitle { color: var(--bluegrey); font-size: 18px; max-width: 640px; }
   .hero-stats { display: flex; gap: 28px; margin-top: 34px; flex-wrap: wrap; }
   .stat .n { font-family: var(--display); font-weight: 600; font-size: 26px; color: var(--text); }
   .stat .l { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 
-  /* ————— Nav ————— */
   nav.toc {
     position: sticky; top: 0; z-index: 10;
-    background: rgba(14,15,21,0.92);
-    backdrop-filter: blur(8px);
+    background: rgba(14,15,21,0.92); backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--line);
   }
   nav.toc .wrap { display: flex; gap: 4px; overflow-x: auto; padding: 0 24px; }
@@ -108,140 +82,96 @@
   }
   nav.toc a:hover, nav.toc a:focus-visible { color: var(--gold); border-bottom-color: var(--gold-dim); outline: none; }
 
-  /* ————— Sections ————— */
   section { padding: 56px 0 8px; }
-  .kicker {
-    font-family: var(--mono); font-size: 12px; letter-spacing: .14em;
-    text-transform: uppercase; color: var(--warm);
-  }
-  h2 {
-    font-family: var(--display); font-weight: 650;
-    font-size: clamp(24px, 4vw, 34px);
-    color: var(--text); margin: 8px 0 8px; letter-spacing: -0.01em;
-  }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--warm); }
+  h2 { font-family: var(--display); font-weight: 650; font-size: clamp(24px, 4vw, 34px); color: var(--text); margin: 8px 0 8px; letter-spacing: -0.01em; }
+  h3.sub { font-family: var(--display); font-weight: 600; font-size: 19px; color: var(--bluegrey); margin: 30px 0 10px; }
   .lead { color: var(--bluegrey); max-width: 680px; margin-bottom: 28px; }
   .lead strong { color: var(--gold); font-weight: 600; }
   p + p { margin-top: 12px; }
+  code { font-family: var(--mono); font-size: 13px; color: var(--gold-dim); }
 
-  /* ————— Cartes de tâches ————— */
   .cards { display: grid; gap: 12px; margin: 20px 0; }
-  .card {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 18px 20px;
-  }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
   .card .top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   .card h3 { font-family: var(--display); font-weight: 600; font-size: 17px; color: var(--text); }
   .card p { color: var(--muted); font-size: 14.5px; margin-top: 6px; }
   .card p strong { color: var(--bluegrey); font-weight: 600; }
   .seed {
-    margin-top: 10px; padding: 8px 12px;
-    background: rgba(242,212,136,0.06);
-    border-left: 2px solid var(--gold-dim);
-    border-radius: 0 6px 6px 0;
+    margin-top: 10px; padding: 8px 12px; background: rgba(242,212,136,0.06);
+    border-left: 2px solid var(--gold-dim); border-radius: 0 6px 6px 0;
     font-size: 13.5px; color: var(--gold-dim);
   }
   .seed b { color: var(--gold); font-weight: 600; }
 
-  .chip {
-    font-family: var(--mono); font-size: 11px; padding: 3px 9px;
-    border-radius: 999px; border: 1px solid var(--line);
-    color: var(--muted); white-space: nowrap;
-  }
+  .chip { font-family: var(--mono); font-size: 11px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
   .chip.s { color: var(--green); border-color: rgba(143,206,154,.35); }
   .chip.m { color: var(--gold); border-color: rgba(242,212,136,.35); }
   .chip.l { color: var(--warm); border-color: rgba(229,138,58,.4); }
   .chip.defer { color: var(--horizon); border-color: rgba(110,100,147,.5); }
+  .chip.new { color: var(--warm); border-color: rgba(229,138,58,.4); background: rgba(229,138,58,.08); }
 
-  /* ————— Listes état des lieux ————— */
   ul.plain { list-style: none; margin: 16px 0; }
-  ul.plain li {
-    padding: 9px 0 9px 30px; position: relative;
-    border-bottom: 1px solid rgba(38,44,63,.5);
-    color: var(--text); font-size: 15px;
-  }
-  ul.plain li::before {
-    content: "✦"; position: absolute; left: 4px; color: var(--gold-dim); font-size: 13px;
-  }
+  ul.plain li { padding: 9px 0 9px 30px; position: relative; border-bottom: 1px solid rgba(38,44,63,.5); color: var(--text); font-size: 15px; }
+  ul.plain li::before { content: "✦"; position: absolute; left: 4px; color: var(--gold-dim); font-size: 13px; }
   ul.plain li .why { color: var(--muted); font-size: 13.5px; display: block; }
   ul.plain.watch li::before { content: "▲"; color: var(--warm); font-size: 10px; top: 14px; }
 
-  /* ————— Callout ————— */
   .callout {
     background: linear-gradient(135deg, rgba(27,36,64,.7), rgba(14,15,21,.4));
-    border: 1px solid var(--horizon);
-    border-radius: 14px;
-    padding: 22px 24px;
-    margin: 28px 0;
+    border: 1px solid var(--horizon); border-radius: 14px; padding: 22px 24px; margin: 28px 0;
   }
   .callout .kicker { color: var(--gold); }
   .callout p { color: var(--text); margin-top: 6px; }
   .callout p b { color: var(--gold); }
 
-  /* ————— Rail des jalons (signature) ————— */
-  .rail { position: relative; margin: 34px 0 10px; padding-left: 34px; }
-  .rail::before {
-    content: ""; position: absolute; left: 11px; top: 8px; bottom: 8px;
-    width: 2px;
-    background: linear-gradient(180deg, var(--gold) 0%, var(--horizon) 55%, var(--line) 100%);
+  /* Battements du script */
+  ol.beats { counter-reset: b; list-style: none; margin: 22px 0; }
+  ol.beats li {
+    counter-increment: b; position: relative; padding: 0 0 22px 54px;
+    border-left: 2px solid var(--line); margin-left: 16px;
   }
-  .stone { position: relative; padding: 0 0 34px 12px; }
-  .stone::before {
-    content: ""; position: absolute; left: -34px; top: 5px;
-    width: 20px; height: 20px; border-radius: 50%;
-    background: var(--ground);
-    border: 2px solid var(--horizon);
+  ol.beats li:last-child { border-left-color: transparent; }
+  ol.beats li::before {
+    content: counter(b); position: absolute; left: -17px; top: -2px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--ground); border: 2px solid var(--gold-dim); color: var(--gold);
+    font-family: var(--mono); font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
   }
-  .stone.gold::before { border-color: var(--gold); box-shadow: 0 0 12px rgba(242,212,136,.35); }
-  .stone .mid {
-    font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-    color: var(--horizon); text-transform: uppercase;
-  }
-  .stone.gold .mid { color: var(--gold); }
-  .stone h3 { font-family: var(--display); font-weight: 650; font-size: 19px; color: var(--text); margin: 2px 0 4px; }
-  .stone p { color: var(--muted); font-size: 14.5px; max-width: 640px; }
-  .stone .exit {
-    margin-top: 8px; font-size: 13.5px; color: var(--bluegrey);
-    padding-left: 14px; border-left: 2px solid var(--line);
-  }
-  .stone .exit b { color: var(--green); font-weight: 600; }
+  ol.beats li b { color: var(--text); font-weight: 600; }
+  ol.beats li span { color: var(--muted); font-size: 14.5px; display: block; margin-top: 2px; }
 
-  /* ————— Tableau assets ————— */
+  figure.map { margin: 26px 0 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  figure.map figcaption { color: var(--muted); font-size: 13px; margin-top: 10px; padding: 0 6px; }
+
   table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
-  th {
-    font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--muted); text-align: left; padding: 10px 12px;
-    border-bottom: 1px solid var(--horizon);
-  }
+  th { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--horizon); }
   td { padding: 11px 12px; border-bottom: 1px solid rgba(38,44,63,.6); color: var(--text); vertical-align: top; }
   td.n { font-family: var(--mono); color: var(--gold-dim); white-space: nowrap; }
   td .d { color: var(--muted); font-size: 13px; display: block; }
 
-  /* ————— Règles de conduite ————— */
+  .rail { position: relative; margin: 34px 0 10px; padding-left: 34px; }
+  .rail::before { content: ""; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(180deg, var(--gold) 0%, var(--horizon) 55%, var(--line) 100%); }
+  .stone { position: relative; padding: 0 0 34px 12px; }
+  .stone::before { content: ""; position: absolute; left: -34px; top: 5px; width: 20px; height: 20px; border-radius: 50%; background: var(--ground); border: 2px solid var(--horizon); }
+  .stone.gold::before { border-color: var(--gold); box-shadow: 0 0 12px rgba(242,212,136,.35); }
+  .stone .mid { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--horizon); text-transform: uppercase; }
+  .stone.gold .mid { color: var(--gold); }
+  .stone h3 { font-family: var(--display); font-weight: 650; font-size: 19px; color: var(--text); margin: 2px 0 4px; }
+  .stone p { color: var(--muted); font-size: 14.5px; max-width: 640px; }
+  .stone .exit { margin-top: 8px; font-size: 13.5px; color: var(--bluegrey); padding-left: 14px; border-left: 2px solid var(--line); }
+  .stone .exit b { color: var(--green); font-weight: 600; }
+
   ol.rules { counter-reset: r; list-style: none; margin: 20px 0; }
-  ol.rules li {
-    counter-increment: r; position: relative;
-    padding: 14px 0 14px 52px; border-bottom: 1px solid rgba(38,44,63,.5);
-  }
-  ol.rules li::before {
-    content: counter(r, decimal-leading-zero);
-    position: absolute; left: 0; top: 14px;
-    font-family: var(--mono); font-size: 15px; color: var(--warm);
-  }
+  ol.rules li { counter-increment: r; position: relative; padding: 14px 0 14px 52px; border-bottom: 1px solid rgba(38,44,63,.5); }
+  ol.rules li::before { content: counter(r, decimal-leading-zero); position: absolute; left: 0; top: 14px; font-family: var(--mono); font-size: 15px; color: var(--warm); }
   ol.rules li b { color: var(--text); display: block; font-weight: 600; }
   ol.rules li span { color: var(--muted); font-size: 14.5px; }
 
-  footer {
-    margin-top: 64px; padding: 30px 0 46px;
-    border-top: 1px solid var(--line);
-    color: var(--muted); font-size: 13.5px;
-  }
+  footer { margin-top: 64px; padding: 30px 0 46px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; }
   footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  @media (max-width: 560px) {
-    .hero-inner { padding: 52px 0 40px; }
-    section { padding: 44px 0 8px; }
-  }
+  @media (max-width: 560px) { .hero-inner { padding: 52px 0 40px; } section { padding: 44px 0 8px; } }
 </style>
 </head>
 <body>
@@ -252,25 +182,26 @@
   <div class="wrap hero-inner">
     <div class="eyebrow">Quark Engine · Fan remake LBA2 · Solo dev</div>
     <h1>Nuit sur la Citadelle</h1>
-    <p class="subtitle">Feuille de route de production de la slice verticale — de la fusion des deux prototypes jusqu'au premier build partageable, dans l'ordre où chaque chose débloque la suivante. Objectif d'ambiance : un jeu qui se joue <em>sans une seule coupure</em>, de l'écran titre à la fin.</p>
+    <p class="subtitle">Feuille de route de production de la slice verticale — la quête, le plan de zone, les systèmes, et l'ordre dans lequel chaque chose débloque la suivante. Objectif d'ambiance : un jeu qui se joue <em>sans une seule coupure</em>, du plan titre à l'écran de fin.</p>
     <div class="hero-stats">
       <div class="stat"><div class="n">7</div><div class="l">Jalons</div></div>
-      <div class="stat"><div class="n">M0 → M6</div><div class="l">Chemin critique</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">Intérieurs</div></div>
+      <div class="stat"><div class="n">2</div><div class="l">PNJ</div></div>
       <div class="stat"><div class="n">~10–15 min</div><div class="l">Slice jouée</div></div>
       <div class="stat"><div class="n">0</div><div class="l">Coupure</div></div>
-      <div class="stat"><div class="n">0</div><div class="l">Deadline</div></div>
     </div>
   </div>
 </header>
 
 <nav class="toc">
   <div class="wrap">
+    <a href="#quete">La quête</a>
+    <a href="#plan">Le plan</a>
     <a href="#etat">État des lieux</a>
     <a href="#moteur">Moteur</a>
     <a href="#fusion">M0 · Fusion</a>
     <a href="#systemes">M1 · Systèmes</a>
     <a href="#greybox">M2 · Greybox</a>
-    <a href="#intro">Sans coupure</a>
     <a href="#assets">M3–M5 · Assets</a>
     <a href="#jalons">Jalons</a>
     <a href="#regles">Règles</a>
@@ -278,6 +209,269 @@
 </nav>
 
 <main class="wrap">
+
+  <!-- ————————————————— LA QUÊTE ————————————————— -->
+  <section id="quete">
+    <div class="kicker">Le contenu — décidé</div>
+    <h2>La quête</h2>
+    <p class="lead">Quête originale, univers LBA. Twinsen se réveille en pleine nuit d'orage et veut récupérer un objet qu'il avait confié à l'apothicaire du bourg. La boutique est ouverte — le vieux travaille tard — mais l'objet est rangé au fond, dans une arrière-boutique dont l'ampoule a lâché. Sur le quai, le gardien du phare regarde son phare éteint : sa mèche est noyée. <strong>L'apothicaire a de quoi rallumer.</strong></p>
+    <p class="lead"><strong>Le twist :</strong> le phare éteint est visible dès la première sortie, révélé par un éclair, dix minutes avant qu'on en ait besoin. Rien n'est verrouillé — un joueur têtu peut traverser l'arrière-boutique à l'aveugle et finir la slice sans jamais parler au gardien. C'est voulu.</p>
+
+    <ol class="beats">
+      <li><b>Plan titre</b><span>Gros plan sur le médaillon de Sendell, table de chevet, fenêtre battue par la pluie. Fort DOF : l'arrière-plan n'est que du bokeh. Menu à gauche.</span></li>
+      <li><b>Nouvelle partie</b><span>Le menu fond, la caméra recule et pivote à travers la pièce, se dépose dans le rig iso. Twinsen s'étire à côté du lit défait. Contrôle rendu. « Continuer » rejoue le même mouvement vers la position sauvegardée.</span></li>
+      <li><b>La maison</b><span>Twinsen dit ce qu'il cherche, jamais où aller. Le joueur apprend les contrôles, fouille le décor, et trouve le reçu de l'apothicaire. C'est lui qui déduit.</span></li>
+      <li><b>La sortie</b><span>Pluie, nuit, clair de lune. Un éclair révèle le phare éteint au loin. Aucun soulignement, aucun dialogue.</span></li>
+      <li><b>La descente</b><span>Le sentier contrôle le champ de vision et débouche au nord-ouest de la place. La vitrine allumée de l'apothicaire est le seul appel visuel, à gauche.</span></li>
+      <li><b>L'apothicaire</b><span>Dialogue banal, chaleureux. Il fait sa ronde : comptoir, puis il va ranger quelque chose. Si le joueur approche du fond pendant qu'il est au comptoir, il le prévient gentiment — « n'y va pas, l'ampoule a lâché, tu vas te casser une jambe ». Ce n'est pas une interdiction, c'est l'information « il faut de la lumière ». Dès que le joueur est passé, la boucle du PNJ s'arrête.</span></li>
+      <li><b>L'arrière-boutique</b><span>Noir, labyrinthique, quelques mètres de visibilité, aucun prompt d'interaction. Plusieurs caisses identiques : fouiller à l'aveugle donne des « ce n'est pas ça » à répétition. L'apothicaire relance depuis la boutique. Un joueur têtu peut aller au bout — fin de slice pour lui.</span></li>
+      <li><b>Le quai</b><span>Le gardien, sous l'auvent, à l'est. Sa mèche est noyée. Il ne demande rien d'extraordinaire : de quoi rallumer.</span></li>
+      <li><b>Retour à la boutique</b><span>Dialogue conditionnel : l'apothicaire donne ce qu'il faut, en précisant que ça ne servira à rien par ce temps. Il a tort.</span></li>
+      <li><b>Le phare</b><span>Le gardien rentre — quarante mètres, derrière la barrière. Le phare s'allume sur un trigger, jamais sur un timer : le joueur découvre le faisceau en ressortant.</span></li>
+      <li><b>Le final</b><span>Le faisceau balaie l'arrière-boutique (≈ 3 s de clarté toutes les 5 s) plus une ambiante faible. Le joueur se repère, avance, trouve l'objet. Éclair, plan sur la place, fin de slice.</span></li>
+    </ol>
+
+    <h3 class="sub">Personnages et objets</h3>
+    <p><strong style="color:var(--bluegrey)">L'apothicaire-bricoleur</strong> — vieux, chaleureux, range mal, travaille la nuit. Il ne se souvient pas avoir rangé l'objet au fond : il ne peut donc pas te le donner. <strong style="color:var(--bluegrey)">Le gardien du phare</strong> — sur le quai est, sa mèche noyée par la pluie. <strong style="color:var(--bluegrey)">Zoé est absente</strong> (chez sa mère, à l'autre bout de l'île) : un PNJ de moins, et pas de trope de l'homme qui dépend de sa femme.</p>
+    <p>Objets : le <strong style="color:var(--bluegrey)">médaillon de Sendell</strong> (hero prop du plan titre, budget macro, sert aussi au showroom d'inventaire) · le <strong style="color:var(--bluegrey)">reçu</strong> (indice, dans la maison) · <strong style="color:var(--bluegrey)">l'objet confié à réparer</strong>, petit mécanisme hérité du grand-père — valeur sentimentale, aucune explication nécessaire · <strong style="color:var(--bluegrey)">de quoi rallumer</strong> (mèche, briquet, combustible).</p>
+
+    <div class="callout">
+      <div class="kicker">Les six règles de conception tenues</div>
+      <p><b>1.</b> La porte est verrouillée par de la connaissance, pas par un objet — un savoir ne se brute-force pas. <b>2.</b> L'énigme ne repose jamais sur un geste sans incitation. <b>3.</b> Rien n'est bloqué, tout est dissuadé : le joueur têtu gagne. <b>4.</b> L'indice est montré avant d'être utile, et jamais souligné. <b>5.</b> Aucun antagoniste — les obstacles sont des circonstances. <b>6.</b> Le joueur n'assiste jamais à une incohérence : on montre le résultat, déclenché par un trigger.</p>
+    </div>
+  </section>
+
+  <!-- ————————————————— LE PLAN ————————————————— -->
+  <section id="plan">
+    <div class="kicker">Le plan de zone — v3</div>
+    <h2>La zone</h2>
+    <p class="lead">Trois intérieurs, une place, un quai, une vista. Le sentier débouche <strong>au nord-ouest de la place</strong> (et non devant la boutique) : le joueur arrive sur la place, découvre le lieu, et la vitrine allumée de l'apothicaire l'appelle sur sa gauche. Le gardien est loin à l'est, donc l'ordre de rencontre s'impose sans rien interdire.</p>
+    <figure class="map">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 830" width="100%" height="auto" style="max-width:100%;display:block" font-family="'Instrument Sans','Helvetica Neue',Arial,sans-serif">
+
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1B2440"/>
+      <stop offset="100%" stop-color="#0E0F15"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#141d33"/>
+      <stop offset="100%" stop-color="#0b0e17"/>
+    </linearGradient>
+    <radialGradient id="beam" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#F2D488" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#F2D488" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dark" width="10" height="10" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <rect width="10" height="10" fill="#0a0c14"/>
+      <line x1="0" y1="0" x2="0" y2="10" stroke="#1c2233" stroke-width="4"/>
+    </pattern>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#F2D488"/>
+    </marker>
+    <marker id="arrowW" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#e58a3a"/>
+    </marker>
+  </defs>
+
+  <rect width="1040" height="830" fill="url(#sky)"/>
+
+  <!-- ————— TERRE ————— -->
+  <path d="M0,150 C120,110 260,90 400,110 C520,127 600,190 700,260
+           C790,322 880,360 990,420 C1015,433 1030,450 1040,470
+           L1040,700 L0,700 Z"
+        fill="#151824" stroke="#262c3f" stroke-width="2"/>
+
+  <path d="M330,110 C420,86 520,110 566,168 C596,206 570,258 510,272
+           C430,290 350,268 322,214 C306,182 310,124 330,110 Z"
+        fill="#1a1e2c" stroke="#2f3650" stroke-width="1.5"/>
+
+  <!-- ————— MER ————— -->
+  <rect x="0" y="700" width="1040" height="130" fill="url(#sea)"/>
+  <g stroke="#1e2a44" stroke-width="1.5" fill="none" opacity="0.75">
+    <path d="M70,745 q25,-8 50,0 t50,0"/><path d="M300,775 q25,-8 50,0 t50,0"/>
+    <path d="M560,750 q25,-8 50,0 t50,0"/><path d="M180,805 q25,-8 50,0 t50,0"/>
+    <path d="M760,800 q25,-8 50,0 t50,0"/><path d="M900,752 q25,-8 50,0 t50,0"/>
+  </g>
+
+  <!-- ————— FAISCEAU ————— -->
+  <ellipse cx="905" cy="530" rx="620" ry="330" fill="url(#beam)" opacity="0.5"/>
+  <path d="M905,530 L180,430 L200,600 Z" fill="#F2D488" opacity="0.06"/>
+  <path d="M812,470 A120,120 0 0,0 806,600" fill="none" stroke="#F2D488"
+        stroke-width="1.5" stroke-dasharray="4 6" opacity="0.6" marker-end="url(#arrow)"/>
+  <text x="686" y="450" fill="#b99f63" font-size="11" font-style="italic">le faisceau balaie tout le bourg — 3 s de clarté / 5 s</text>
+
+  <!-- ————— MAISON ————— -->
+  <rect x="368" y="128" width="165" height="115" rx="6" fill="#232a3d" stroke="#F2D488" stroke-width="2"/>
+  <rect x="383" y="143" width="60" height="45" rx="3" fill="#2c3550" stroke="#3d4666"/>
+  <rect x="453" y="143" width="65" height="85" rx="3" fill="#2c3550" stroke="#3d4666"/>
+  <rect x="383" y="198" width="60" height="30" rx="3" fill="#2c3550" stroke="#3d4666"/>
+  <circle cx="401" cy="158" r="7" fill="#F2D488" opacity="0.85"/>
+  <text x="380" y="118" fill="#F2D488" font-size="14" font-weight="600">Maison de Twinsen</text>
+  <text x="380" y="104" fill="#7583a3" font-size="11">intérieur · caméra iso · plan titre</text>
+  <text x="389" y="164" fill="#0E0F15" font-size="9" font-weight="700">MÉD.</text>
+  <text x="459" y="171" fill="#8e9cc0" font-size="10">pièce de vie</text>
+  <text x="459" y="185" fill="#8e9cc0" font-size="10">(indice : le reçu)</text>
+  <text x="388" y="218" fill="#8e9cc0" font-size="10">réserve</text>
+  <rect x="418" y="238" width="22" height="12" fill="#F2D488" opacity="0.75"/>
+
+  <path d="M436,262 L580,306 L905,510" fill="none" stroke="#6E6493"
+        stroke-width="1.5" stroke-dasharray="9 7" opacity="0.75"/>
+  <text x="512" y="296" fill="#6E6493" font-size="11" font-style="italic" transform="rotate(21 512 296)">
+    ligne de vue — joueur / bourg / phare éteint révélé par l'éclair
+  </text>
+
+  <!-- ————— SENTIER : arrive au nord-ouest de la place ————— -->
+  <path d="M428,252 C414,316 428,376 458,418 C478,444 490,450 498,452"
+        fill="none" stroke="#2b3146" stroke-width="26" stroke-linecap="round"/>
+  <path d="M428,252 C414,316 428,376 458,418 C478,444 490,450 498,452"
+        fill="none" stroke="#333b55" stroke-width="20" stroke-linecap="round" stroke-dasharray="2 14"/>
+  <text x="352" y="330" fill="#5c688a" font-size="12" font-style="italic" transform="rotate(76 352 330)">sentier en descente</text>
+  <text x="352" y="416" fill="#5c688a" font-size="11" font-style="italic">débouche sur la place,</text>
+  <text x="352" y="430" fill="#5c688a" font-size="11" font-style="italic">pas devant la boutique</text>
+
+  <!-- ————— ARRIÈRE-BOUTIQUE ————— -->
+  <rect x="106" y="452" width="168" height="172" rx="6" fill="url(#dark)" stroke="#59628a" stroke-width="2" stroke-dasharray="7 4"/>
+  <g stroke="#39415e" stroke-width="9" stroke-linecap="round" fill="none" opacity="0.9">
+    <path d="M132,492 L132,548"/><path d="M132,548 L180,548"/>
+    <path d="M212,478 L212,530"/><path d="M156,586 L220,586"/>
+    <path d="M248,538 L248,592"/>
+  </g>
+  <rect x="124" y="470" width="26" height="26" rx="3" fill="#F2D488" opacity="0.9"/>
+  <text x="112" y="464" fill="#F2D488" font-size="11" font-weight="600">objet</text>
+  <text x="106" y="442" fill="#9FB2D8" font-size="14" font-weight="600">Arrière-boutique</text>
+  <text x="106" y="428" fill="#7583a3" font-size="11">noir · labyrinthique · aucun prompt sans lumière</text>
+  <text x="128" y="614" fill="#5c688a" font-size="10" font-style="italic">fausses caisses</text>
+  <rect x="196" y="618" width="34" height="10" fill="#F2D488" opacity="0.55"/>
+  <text x="196" y="646" fill="#b99f63" font-size="10">lucarne</text>
+
+  <!-- ————— APOTHICAIRE ————— -->
+  <rect x="286" y="452" width="172" height="172" rx="6" fill="#242b3f" stroke="#F2D488" stroke-width="2"/>
+  <rect x="286" y="452" width="172" height="28" rx="6" fill="#2e3752"/>
+  <text x="296" y="472" fill="#F2D488" font-size="12" font-weight="600">Apothicaire-bricoleur</text>
+  <rect x="274" y="500" width="14" height="26" fill="#0a0c14" stroke="#59628a"/>
+  <text x="196" y="516" fill="#7583a3" font-size="10">porte du fond</text>
+  <rect x="330" y="540" width="112" height="16" rx="3" fill="#3d4666" stroke="#59628a"/>
+  <text x="334" y="534" fill="#8e9cc0" font-size="10">comptoir</text>
+  <path d="M370,562 C330,566 306,540 308,514" fill="none" stroke="#6E6493"
+        stroke-width="2" stroke-dasharray="5 5"/>
+  <circle cx="374" cy="562" r="7" fill="#9FB2D8"/>
+  <text x="352" y="590" fill="#9FB2D8" font-size="11">ronde ⟳</text>
+  <g fill="#F2D488" opacity="0.85">
+    <rect x="450" y="496" width="10" height="26"/>
+    <rect x="450" y="536" width="10" height="26"/>
+    <rect x="450" y="576" width="10" height="26"/>
+  </g>
+  <text x="286" y="646" fill="#F2D488" font-size="11">vitrine allumée, face à la place</text>
+  <text x="286" y="660" fill="#7583a3" font-size="10">→ visible dès l'arrivée, à gauche</text>
+
+  <!-- ————— PLACE ————— -->
+  <rect x="478" y="452" width="292" height="172" rx="8" fill="#1b2030" stroke="#39415e" stroke-width="1.5"/>
+  <g stroke="#232a3d" stroke-width="1">
+    <line x1="478" y1="494" x2="770" y2="494"/><line x1="478" y1="536" x2="770" y2="536"/>
+    <line x1="478" y1="578" x2="770" y2="578"/>
+    <line x1="550" y1="452" x2="550" y2="624"/><line x1="622" y1="452" x2="622" y2="624"/>
+    <line x1="694" y1="452" x2="694" y2="624"/>
+  </g>
+  <text x="566" y="484" fill="#9FB2D8" font-size="15" font-weight="600">Place portuaire</text>
+  <text x="566" y="500" fill="#7583a3" font-size="11">caméra follow · pavés mouillés</text>
+  <g fill="#e58a3a" opacity="0.75">
+    <circle cx="500" cy="606" r="5"/><circle cx="668" cy="466" r="5"/><circle cx="750" cy="600" r="5"/>
+  </g>
+  <text x="566" y="560" fill="#5c688a" font-size="11" font-style="italic">caisses, tonneaux, barques</text>
+
+  <!-- ————— FAÇADES CLOSES ————— -->
+  <g fill="#1d2231" stroke="#39415e" stroke-width="1.5">
+    <rect x="528" y="336" width="110" height="94" rx="5"/>
+    <rect x="656" y="360" width="104" height="84" rx="5"/>
+    <rect x="778" y="320" width="96" height="100" rx="5"/>
+  </g>
+  <g fill="#F2D488" opacity="0.5">
+    <rect x="548" y="398" width="16" height="18"/><rect x="602" y="398" width="16" height="18"/>
+    <rect x="688" y="412" width="16" height="18"/><rect x="806" y="388" width="16" height="18"/>
+  </g>
+  <text x="640" y="326" fill="#7583a3" font-size="11">maisons closes — silhouettes, sons, linge · non visitables</text>
+
+  <!-- ————— QUAI ————— -->
+  <rect x="286" y="626" width="560" height="56" rx="4" fill="#20263a" stroke="#39415e" stroke-width="1.5"/>
+  <g stroke="#39415e" stroke-width="1">
+    <line x1="386" y1="626" x2="386" y2="682"/><line x1="486" y1="626" x2="486" y2="682"/>
+    <line x1="586" y1="626" x2="586" y2="682"/><line x1="686" y1="626" x2="686" y2="682"/>
+    <line x1="786" y1="626" x2="786" y2="682"/>
+  </g>
+  <text x="300" y="672" fill="#7583a3" font-size="12">Quai</text>
+
+  <path d="M742,616 L836,616 L826,638 L752,638 Z" fill="#2e3752" stroke="#59628a"/>
+  <circle cx="790" cy="654" r="9" fill="#9FB2D8"/>
+  <text x="706" y="704" fill="#9FB2D8" font-size="12" font-weight="600">Gardien du phare</text>
+  <text x="706" y="718" fill="#7583a3" font-size="11">sous l'auvent · son phare à 40 m</text>
+
+  <g stroke="#6E6493" stroke-width="2.5"><line x1="852" y1="470" x2="852" y2="676"/></g>
+  <g fill="#6E6493">
+    <circle cx="852" cy="486" r="3"/><circle cx="852" cy="530" r="3"/>
+    <circle cx="852" cy="574" r="3"/><circle cx="852" cy="618" r="3"/><circle cx="852" cy="660" r="3"/>
+  </g>
+  <text x="864" y="690" fill="#6E6493" font-size="11" transform="rotate(-90 864 690)">barrière — au-delà, non jouable</text>
+
+  <!-- ————— PHARE ————— -->
+  <path d="M878,470 C930,450 1000,470 1020,530 C1032,580 1000,640 940,650
+           C892,658 866,610 868,556 C870,510 862,478 878,470 Z"
+        fill="#1a1e2c" stroke="#2f3650" stroke-width="1.5"/>
+  <path d="M886,588 L896,506 L922,506 L932,588 Z" fill="#232a3d" stroke="#59628a" stroke-width="1.5"/>
+  <circle cx="909" cy="516" r="12" fill="#F2D488" opacity="0.95"/>
+  <circle cx="909" cy="516" r="24" fill="#F2D488" opacity="0.16"/>
+  <text x="884" y="616" fill="#F2D488" font-size="13" font-weight="600">Phare</text>
+  <text x="866" y="632" fill="#7583a3" font-size="11">vista · horloge du monde</text>
+
+  <!-- ————— TRAJET ————— -->
+  <g fill="none" stroke="#F2D488" stroke-width="2.5" stroke-linecap="round">
+    <path d="M510,470 C500,494 486,506 472,510" marker-end="url(#arrow)"/>
+    <path d="M400,506 L400,470" marker-end="url(#arrow)"/>
+  </g>
+  <g fill="none" stroke="#e58a3a" stroke-width="2.5" stroke-dasharray="8 6" stroke-linecap="round">
+    <path d="M470,660 C560,690 680,682 760,668" marker-end="url(#arrowW)"/>
+    <path d="M756,690 C660,706 540,700 462,678" marker-end="url(#arrowW)"/>
+  </g>
+
+  <g font-size="13" font-weight="700">
+    <circle cx="450" cy="196" r="14" fill="#F2D488"/><text x="445" y="201" fill="#0E0F15">1</text>
+    <circle cx="416" cy="286" r="14" fill="#F2D488"/><text x="411" y="291" fill="#0E0F15">2</text>
+    <circle cx="524" cy="440" r="14" fill="#F2D488"/><text x="519" y="445" fill="#0E0F15">3</text>
+    <circle cx="418" cy="616" r="14" fill="#F2D488"/><text x="413" y="621" fill="#0E0F15">4</text>
+    <circle cx="252" cy="440" r="14" fill="#F2D488"/><text x="247" y="445" fill="#0E0F15">5</text>
+    <circle cx="790" cy="606" r="14" fill="#e58a3a"/><text x="785" y="611" fill="#0E0F15">6</text>
+    <circle cx="466" cy="628" r="14" fill="#e58a3a"/><text x="461" y="633" fill="#0E0F15">7</text>
+    <circle cx="909" cy="464" r="14" fill="#e58a3a"/><text x="904" y="469" fill="#0E0F15">8</text>
+    <circle cx="88" cy="470" r="14" fill="#8fce9a"/><text x="83" y="475" fill="#0E0F15">9</text>
+  </g>
+
+  <!-- ————— LÉGENDE ————— -->
+  <rect x="40" y="120" width="300" height="252" rx="10" fill="#12151f" stroke="#262c3f" stroke-width="1.5"/>
+  <text x="58" y="146" fill="#F2D488" font-size="14" font-weight="700">Trajet</text>
+  <g font-size="11.5" fill="#c7d1e8">
+    <text x="58" y="168">1 · Réveil, médaillon, fouille → le reçu</text>
+    <text x="58" y="187">2 · Sortie : pluie, éclair, phare éteint</text>
+    <text x="58" y="206">3 · Arrivée au nord-ouest de la place</text>
+    <text x="58" y="225">4 · Apothicaire : dialogue, ronde, comptoir</text>
+    <text x="58" y="244">5 · Arrière-boutique : noir, on n'y voit rien</text>
+    <text x="58" y="263" fill="#e58a3a">6 · Quai est : le gardien, sa mèche noyée</text>
+    <text x="58" y="282" fill="#e58a3a">7 · Retour : de quoi rallumer</text>
+    <text x="58" y="301" fill="#e58a3a">8 · Il rentre (40 m) — le phare s'allume</text>
+    <text x="58" y="320" fill="#8fce9a">9 · Le faisceau entre par la lucarne → objet</text>
+  </g>
+  <line x1="58" y1="334" x2="322" y2="334" stroke="#262c3f"/>
+  <g font-size="11" fill="#7583a3">
+    <text x="58" y="352">— — ligne de vue   ⟳ ronde   ▨ zone sans lumière</text>
+    <text x="58" y="366">Échelle indicative : la place ≈ 30 m de large</text>
+  </g>
+
+  <text x="40" y="60" fill="#F2D488" font-size="22" font-weight="700">Nuit sur la Citadelle — plan de la zone</text>
+  <text x="40" y="82" fill="#9FB2D8" font-size="13">v3 · le sentier débouche sur la place · apothicaire à l'ouest · phare à la pointe est</text>
+</svg>
+
+      <figcaption>Le phare est à la pointe est de l'île, derrière une barrière : le trajet du gardien fait quarante mètres, plus aucun problème de crédibilité. Son faisceau tourne et balaie tout le bourg — le joueur en voit le rythme sur les façades bien avant d'en avoir besoin dans le noir. La ligne de vue maison → phare est la contrainte qui prime sur tout le reste : c'est elle qui rend possible la révélation par l'éclair, et elle donne la composition de sortie — Twinsen au premier plan, les toits et les fenêtres allumées au milieu, le phare noir au fond.</figcaption>
+    </figure>
+  </section>
 
   <!-- ————————————————— ÉTAT DES LIEUX ————————————————— -->
   <section id="etat">
@@ -287,24 +481,23 @@
     <ul class="plain">
       <li>Character controller complet et sérieux : coyote time, jump buffer, jump cut, step up/down, pentes, plateformes mobiles avec héritage de vitesse, anti-crush, corner correction, interpolation fixed-tick.
         <span class="why">C'est le système qui coule le plus de projets solo. Il est fait.</span></li>
-      <li>Animation moteur prête pour la production : glTF skinné, animateur par couches — Blend1D synchronisé en phase (idle → walk → jog → sprint), couches masquées par os (haut du corps), couches additives, one-shots avec crossfade — root motion consommable, événements de marqueurs sur les clips, sockets d'os pour des props.
-        <span class="why">La démo Locomotion exerce déjà tout ça. Il ne reste que le pont vers le gameplay à écrire — voir M1.</span></li>
-      <li>Audio moteur opérationnel : bus hiérarchiques (Sfx, Ui, bus custom d'ambiance), groupes de variantes avec volume et pitch aléatoires (les footsteps de la démo), volumes de bus animables sans clic, pause globale que le bus UI peut ignorer, fades, boucles, spatial.
-        <span class="why">Exactement le kit dont la slice a besoin ; là aussi, seuls les points d'accroche gameplay manquent.</span></li>
-      <li>Double précision partout dans le moteur : les grandes coordonnées ne sont pas un sujet, et le système de level parentera les intérieurs pour que leurs objets restent en coordonnées locales.</li>
+      <li>Animation moteur prête pour la production : glTF skinné, animateur par couches — Blend1D synchronisé en phase (idle → walk → jog → sprint), couches masquées par os, couches additives, one-shots avec crossfade — root motion consommable, événements de marqueurs, sockets d'os.
+        <span class="why">La démo Locomotion exerce déjà tout ça. Il ne reste que le pont vers le gameplay.</span></li>
+      <li>Audio moteur opérationnel : bus hiérarchiques, groupes de variantes avec volume et pitch aléatoires (footsteps), volumes animables sans clic, pause globale que le bus UI peut ignorer, fades, boucles, spatial.
+        <span class="why">Exactement le kit dont la slice a besoin ; seuls les points d'accroche gameplay manquent.</span></li>
+      <li>Double précision partout : les grandes coordonnées ne sont pas un sujet, et le système de level parentera les intérieurs pour que leurs objets restent en coordonnées locales.</li>
       <li>Animation procédurale de la capsule (squash, lean, hop, land) qui définit déjà le « feel » du personnage.
-        <span class="why">Référence de timing pour les vraies anims — et la capsule reste volontairement en jeu jusqu'au vrai héros, pour ne pas polluer l'imaginaire du projet.</span></li>
-      <li>Caméra à trois rigs (follow / iso / porte) pilotée par un director qui les blende, avec Spaces par volume (framing, FOV, fog par pièce) et bascule extérieur/intérieur.
-        <span class="why">Le pilier du concept « follow dehors, iso dedans » est fonctionnel — et l'architecture accueille un rig de plus sans se tordre, ce qui compte pour l'intro (voir plus bas).</span></li>
-      <li>Portails avec téléportation propre (offset, cap et vélocité conservés) : aucun chargement entre intérieur et extérieur.
-        <span class="why">Le « jeu sans coupure » est déjà à moitié acquis par l'architecture elle-même.</span></li>
-      <li>Bus de signaux + triggers avec latch/rearm + interactables (sélection par cône, one-shot persisté en flags) + séquences : un vrai mini-DSL de scripting (wait, emit, waitSignal, if/then/else, gate, face, move, toast…).
-        <span class="why">C'est l'embryon direct du système de quêtes et de cutscenes. L'énigme coffre → clé → porte le prouve déjà de bout en bout.</span></li>
+        <span class="why">Référence de timing pour les vraies anims — la capsule reste en jeu jusqu'au vrai héros, pour ne pas polluer l'imaginaire du projet.</span></li>
+      <li>Caméra à trois rigs (follow / iso / porte) pilotée par un director qui les blende, avec Spaces par volume (framing, FOV, fog par pièce).
+        <span class="why">Le pilier « follow dehors, iso dedans » est fonctionnel — et l'architecture accueille un quatrième rig sans se tordre, ce qui compte pour le plan titre.</span></li>
+      <li>Portails avec téléportation propre : aucun chargement entre intérieur et extérieur.
+        <span class="why">Le « sans coupure » est déjà à moitié acquis par l'architecture elle-même.</span></li>
+      <li>Bus de signaux + triggers avec latch/rearm + interactables (cône de sélection, one-shot persisté en flags) + séquences : un mini-DSL de scripting (wait, emit, waitSignal, if/then/else, gate, face, move, toast…).
+        <span class="why">L'énigme coffre → clé → porte prouve déjà la chaîne complète que la quête va généraliser.</span></li>
       <li>Workflow d'itération sain : level JSON rechargeable à chaud (F5), volumes debug (F3), toasts, flags panel.</li>
       <li>Inputs clavier <em>et</em> manette déjà mappés, avec deadzones radiales.</li>
-      <li>UI : stack d'écrans (pause réelle, slow-mo inventaire, groupes d'inputs), panel inventaire avec showroom 3D d'objet — très LBA — et labs typo/prose/clavier qui valident le rendu de texte.</li>
-      <li>Quark.Kit.Scenes : format .scene.jsonc avec schéma auto-généré (autocomplétion IDE), textures avec ajustements, matériaux, glTF, prefabs, Vocabulary extensible.
-        <span class="why">Le format de l'ère « assets » existe déjà et charge déjà des modèles.</span></li>
+      <li>UI : stack d'écrans (pause réelle, slow-mo inventaire, groupes d'inputs), panel inventaire avec showroom 3D d'objet, labs typo/prose/clavier.</li>
+      <li>Quark.Kit.Scenes : format .scene.jsonc avec schéma auto-généré, textures avec ajustements, matériaux, glTF, prefabs, Vocabulary extensible.</li>
     </ul>
   </section>
 
@@ -312,171 +505,166 @@
   <section id="moteur">
     <div class="kicker">Points de vigilance restants</div>
     <h2>Côté moteur : peu de choses, mais à vérifier tôt</h2>
-    <p class="lead">Les gros risques classiques (skinning, précision, audio) sont levés par les démos. Reste une courte liste de points à <strong>prouver par un mini-test d'une soirée chacun</strong> — on ne développe que si le test échoue.</p>
+    <p class="lead">Les gros risques classiques (skinning, précision, audio) sont levés. Reste une courte liste à <strong>prouver par un mini-test d'une soirée chacun</strong> — on ne développe que si le test échoue.</p>
     <ul class="plain watch">
-      <li>Profondeur de champ. <span class="why">Absente de la chaîne de post actuelle (Bloom, DepthFog, Film, Grade) — et c'est la clé de voûte du plan titre (voir la section « sans coupure »). Un DOF simple à deux plans suffit largement.</span></li>
-      <li>Budget de lumières ponctuelles. <span class="why">Une nuit crédible = beaucoup de petites lumières (fenêtres, lampadaires, éclairs). Vérifier combien la passe de rendu en encaisse à budget confortable.</span></li>
-      <li>Particules denses en extérieur (pluie plein champ) + coût GPU. <span class="why">La pluie de la slice n'est pas un effet ponctuel, elle tourne en permanence.</span></li>
-      <li>Ambiances longues : boucles streamées avec crossfade entre deux ambiances (extérieur pluie ↔ intérieur feutré). <span class="why">Les bus animables couvrent le volume ; vérifier le confort côté boucles longues et transitions.</span></li>
-      <li>Sérialisation : sauvegarder flags + inventaire + position doit être trivial ; vérifier qu'aucun état critique ne vit ailleurs.</li>
-      <li>Localisation : une table de textes par clés. <span class="why">LBA2 est bavard ; les prompts sont aujourd'hui en dur en français dans le level JSON. À basculer en clés dès le système de dialogue, sinon migration douloureuse plus tard.</span></li>
-      <li>Hygiène : la TODO de Program.cs (fixed tick, interpolation) semble périmée — l'interpolation existe. L'ImGui inline dans CameraDirectorSystem mérite de migrer vers un panel debug dédié.</li>
+      <li>Profondeur de champ. <span class="why">Absente de la chaîne de post actuelle — et c'est la clé de voûte du plan titre : c'est le DOF qui dispense d'avoir un environnement détaillé autour du médaillon. Un DOF simple à deux plans suffit.</span></li>
+      <li>Budget de lumières ponctuelles. <span class="why">Fenêtres, lampadaires, faisceau, éclairs. Vérifier combien la passe de rendu en encaisse à budget confortable.</span></li>
+      <li>Particules denses en extérieur (pluie plein champ) + coût GPU. <span class="why">La pluie tourne en permanence pendant toute la slice.</span></li>
+      <li>Ambiances longues : boucles streamées avec crossfade entre extérieur pluie et intérieur feutré. <span class="why">Les bus animables couvrent le volume ; vérifier le confort côté boucles longues.</span></li>
+      <li>Une lumière très large et animée qui traverse une lucarne (le faisceau du phare). <span class="why">Le seul effet un peu inhabituel de la slice : vérifier tôt qu'il éclaire proprement un intérieur sans coût délirant.</span></li>
+      <li>Sérialisation : flags + inventaire + position, trivial à sauvegarder.</li>
+      <li>Localisation : table de textes par clés. <span class="why">Les prompts sont aujourd'hui en dur en français dans le level JSON. À basculer dès le système de dialogue.</span></li>
+      <li>Hygiène : TODO périmée dans Program.cs, ImGui inline dans CameraDirectorSystem à migrer vers un panel debug.</li>
     </ul>
   </section>
 
-  <!-- ————————————————— M0 FUSION ————————————————— -->
+  <!-- ————————————————— M0 ————————————————— -->
   <section id="fusion">
     <div class="kicker">Jalon M0 · fondations</div>
     <h2>La fusion : un exécutable, un format</h2>
-    <p class="lead">Tu l'as identifié toi-même, et le code le confirme : c'est le chantier bloquant. Tout ce qui suit s'appuie dessus, donc il passe en premier et <strong>rien d'autre ne démarre tant qu'il n'est pas fini</strong>.</p>
+    <p class="lead">Chantier bloquant : tout ce qui suit s'appuie dessus, donc il passe en premier et <strong>rien d'autre ne démarre tant qu'il n'est pas fini</strong>.</p>
     <div class="cards">
       <div class="card">
         <div class="top"><h3>Fusionner Ui → AdventureGame</h3><span class="chip m">M · 3–5 soirées</span></div>
-        <p>Rapatrier GameFlow, les panels (Menu, Inventaire), Fonts et Icons dans le jeu. Un seul point de friction sérieux : il existera alors <strong>deux autorités concurrentes sur le contrôle du joueur</strong> — <code>PlayerControl.Locked</code> (séquences) et les groupes d'inputs de GameFlow (écrans). À unifier en une seule source de vérité, sinon bugs de « joueur figé » impossibles à tracer.</p>
-        <div class="seed"><b>Déjà en place :</b> les deux moitiés fonctionnent chacune de leur côté ; GameFlow gère déjà pause et time scale proprement.</div>
+        <p>Rapatrier GameFlow, les panels (Menu, Inventaire), Fonts et Icons dans le jeu. Un point de friction sérieux : il existera alors <strong>deux autorités concurrentes sur le contrôle du joueur</strong> — <code>PlayerControl.Locked</code> (séquences) et les groupes d'inputs de GameFlow (écrans). À unifier en une seule source de vérité, sinon bugs de « joueur figé » impossibles à tracer.</p>
+        <div class="seed"><b>Déjà en place :</b> les deux moitiés fonctionnent ; GameFlow gère déjà pause et time scale proprement.</div>
       </div>
       <div class="card">
         <div class="top"><h3>Porter le level sur Quark.Kit.Scenes via Vocabulary</h3><span class="chip m">M · 4–8 soirées</span></div>
-        <p>Exposer Trigger, Interactable, Space, Mover, Portal et les Sequences comme composants du Vocabulary, et faire des bricks (block/ramp/stairs/pillar) des verbes du format de scène — ou un dialecte chargé par lui. Au passage, parenter les intérieurs (parent lointain, objets en coordonnées locales) comme prévu. <strong>Exigences non négociables :</strong> le F5 hot-reload et le F3 debug survivent à la migration, et le schéma auto-généré couvre le vocabulaire gameplay (l'autocomplétion IDE sur les séquences sera un énorme confort d'écriture de quêtes).</p>
-        <div class="seed"><b>Déjà en place :</b> WriteSchema fonctionne, le pattern <code>Vocabulary.Component&lt;Spin&gt;()</code> montre exactement la voie.</div>
+        <p>Exposer Trigger, Interactable, Space, Mover, Portal et les Sequences comme composants du Vocabulary, et faire des bricks des verbes du format de scène. Au passage, parenter les intérieurs (parent lointain, objets en coordonnées locales). <strong>Non négociable :</strong> F5 et F3 survivent, et le schéma auto-généré couvre le vocabulaire gameplay — l'autocomplétion IDE sur les séquences sera un énorme confort pour écrire cette quête.</p>
+        <div class="seed"><b>Déjà en place :</b> WriteSchema fonctionne, <code>Vocabulary.Component&lt;Spin&gt;()</code> montre la voie.</div>
       </div>
       <div class="card">
         <div class="top"><h3>Petit nettoyage de fusion</h3><span class="chip s">S · 1–2 soirées</span></div>
-        <p>Sortir l'ImGui du CameraDirectorSystem vers un panel debug, purger la TODO périmée, passer les prompts d'interaction en clés de texte (préparation localisation).</p>
+        <p>Sortir l'ImGui du CameraDirectorSystem, purger la TODO périmée, passer les prompts en clés de texte.</p>
       </div>
     </div>
   </section>
 
-  <!-- ————————————————— M1 SYSTÈMES ————————————————— -->
+  <!-- ————————————————— M1 ————————————————— -->
   <section id="systemes">
     <div class="kicker">Jalon M1 · systèmes de la slice</div>
-    <h2>Les systèmes manquants, par ordre d'attaque</h2>
-    <p class="lead">Chaque carte indique sa <strong>graine</strong> : ce qui existe déjà dans le code et sur quoi le système se greffe. L'ordre va du plus structurant au plus cosmétique ; le pont d'animation ouvre le bal parce qu'il se développe hors du jeu et dérisque tout M3.</p>
+    <h2>Les systèmes, par ordre d'attaque</h2>
+    <p class="lead">Liste <strong>close</strong> : elle couvre exactement la quête décidée, rien de plus. Chaque carte indique sa <em>graine</em> — ce qui existe déjà et sur quoi le système se greffe. Les cartes marquées « nouveau » sont celles que la quête a fait apparaître.</p>
     <div class="cards">
       <div class="card">
-        <div class="top"><h3>1 · Pont animation ↔ contrôleur</h3><span class="chip m">M/L · 4–8 soirées</span><span class="chip">dans la scène de démo, pas dans la greybox</span></div>
-        <p>Écrire le CharacterAnimationSystem qui traduit CharacterIntent et les états du contrôleur en pilotage de l'Animator : Blend1D par vitesse pour la locomotion, one-shots plein corps pour saut et réception, couche haut du corps pour l'interaction, marqueurs de clips → événements de pas. <strong>Il se développe dans le projet Animations, sur le mannequin de démo</strong> — la capsule reste dans le jeu jusqu'au vrai héros (choix assumé et sain pour garder le cap LBA), mais le code du pont l'attendra, prêt à l'accueillir. Sans ça, M3 cumulerait deux inconnues d'un coup : l'asset <em>et</em> l'intégration.</p>
-        <div class="seed"><b>Déjà en place :</b> Blend1D phase-syncée, couches masquées/additives, root motion, marqueurs — toute la surface moteur est démontrée ; et CharacterEvents côté jeu fournit les hooks.</div>
+        <div class="top"><h3>1 · Pont animation ↔ contrôleur</h3><span class="chip m">M/L · 4–8 soirées</span><span class="chip">dans la scène de démo</span></div>
+        <p>Traduire CharacterIntent et les états du contrôleur en pilotage de l'Animator : Blend1D par vitesse, one-shots plein corps pour saut et réception, couche haut du corps pour l'interaction, marqueurs de clips → événements de pas. <strong>Se développe dans le projet Animations, sur le mannequin de démo</strong> — le jeu garde sa capsule. Sans ça, M3 cumulerait deux inconnues : l'asset et l'intégration.</p>
+        <div class="seed"><b>Déjà en place :</b> toute la surface moteur est démontrée ; CharacterEvents fournit les hooks côté jeu.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>2 · Prompt & highlight d'interaction</h3><span class="chip s">S · 2–3 soirées</span></div>
-        <p>Afficher <code>Interactable.Prompt</code> + l'icône de touche en UI ancrée monde quand un candidat existe, et surligner l'objet (rim light ou variante émissive du matériau — l'outline shader peut attendre le polish).</p>
-        <div class="seed"><b>Déjà en place :</b> <code>Interactor.Candidate</code> est calculé chaque frame, le champ Prompt existe, <code>Input.Describe()</code> sait déjà nommer la touche selon le périphérique.</div>
+        <div class="top"><h3>2 · Prompt &amp; highlight d'interaction</h3><span class="chip s">S · 2–3 soirées</span></div>
+        <p>Afficher <code>Interactable.Prompt</code> + l'icône de touche en UI ancrée monde, et surligner l'objet (rim light ou variante émissive). <strong>Prévoir dès maintenant le gating par lumière</strong> (carte 4) dans la même passe : c'est le même point de code.</p>
+        <div class="seed"><b>Déjà en place :</b> <code>Interactor.Candidate</code> chaque frame, le champ Prompt, <code>Input.Describe()</code> pour le nom de touche selon le périphérique.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>3 · Allures : marche / course / discret</h3><span class="chip s">S · 2–3 soirées</span></div>
-        <p>Un état de gait sur l'intent, trois vitesses cibles, bascules par touches (déjà prévues dans ton design de contrôles). Bonus naturel : les vitesses de gait deviendront directement les stops du Blend1D de locomotion. Le discret modifiera aussi le volume des pas — prévoir le hook maintenant.</p>
-        <div class="seed"><b>Déjà en place :</b> <code>CharacterIntent.Speed</code> module déjà la vitesse ; c'est un multiplicateur et deux bindings.</div>
+        <div class="top"><h3>3 · Dialogues conditionnels</h3><span class="chip m">M · 5–9 soirées</span><span class="chip new">nouveau — exigé par la quête</span></div>
+        <p>Verbe <code>say</code> dans les séquences (locuteur, clé de texte), boîte de dialogue avec avance par touche et gate automatique, table localisée FR/EN. <strong>Et surtout des conditions sur flags</strong> : l'apothicaire doit dire autre chose une fois le gardien rencontré, donc un état par PNJ et un choix de réplique. Pas de choix multiples — la slice n'en a aucun.</p>
+        <div class="seed"><b>Déjà en place :</b> ProsePanel, TextEffects, et le SequenceSystem qui gère déjà <code>if/then/else</code> sur flags et gate/release — <code>say</code> est un cousin de <code>toast</code>.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>4 · Dialogues</h3><span class="chip m">M · 4–8 soirées</span></div>
-        <p>Un verbe <code>say</code> dans les séquences (locuteur, clé de texte), une boîte de dialogue avec avance par touche et gate automatique du joueur, texte tiré d'une table localisée FR/EN dès le départ. Les choix multiples peuvent attendre — LBA2 en a peu, la slice zéro.</p>
-        <div class="seed"><b>Déjà en place :</b> ProsePanel (wrap, spans, alignement), TextEffects, et surtout le SequenceSystem qui gère déjà gate/release et l'attente — <code>say</code> est un cousin de <code>toast</code>.</div>
+        <div class="top"><h3>4 · Zones sans lumière</h3><span class="chip s">S · 2–3 soirées</span><span class="chip new">nouveau — cœur de l'énigme</span></div>
+        <p>Une zone peut être déclarée noire : <strong>pas de prompt d'interaction, visibilité courte</strong>, tant qu'un flag n'est pas levé. Version saine : <em>déclaré par le Space</em> (« ici c'est noir tant que <code>phare-allume</code> est absent »), surtout pas d'échantillonnage de luminance réelle. Le Space pilote déjà fog et framing — c'est un champ de plus.</p>
+        <div class="seed"><b>Déjà en place :</b> Space + Flags. Coût réel : une condition dans le sélecteur d'interaction.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>5 · PNJ</h3><span class="chip m">M/L · 6–10 soirées</span></div>
-        <p>Composant NPC : liste de waypoints, vitesse, pauses, orientation vers le joueur à proximité, arrêt pendant un dialogue. <strong>Ne pas réutiliser le character controller complet</strong> — un déplacement cinématique sur chemin suffit largement pour des villageois. Parler = un Interactable qui émet vers une séquence <code>say</code>.</p>
-        <div class="seed"><b>Déjà en place :</b> le verbe <code>face</code> tourne déjà le héros vers une cible ; Interactable + séquences couvrent tout le déclenchement.</div>
+        <div class="top"><h3>5 · PNJ à routine interruptible</h3><span class="chip m">M/L · 6–10 soirées</span></div>
+        <p>Waypoints, vitesse, pauses, orientation vers le joueur, arrêt pendant un dialogue — et <strong>arrêt définitif quand le joueur franchit un trigger</strong> (l'apothicaire ne fait pas demi-tour, triche assumée). Déplacement cinématique sur chemin, surtout pas le character controller complet.</p>
+        <div class="seed"><b>Déjà en place :</b> le verbe <code>face</code>, Interactable + séquences pour tout le déclenchement.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>6 · Inventaire réel</h3><span class="chip m">M · 4–6 soirées</span></div>
-        <p>Items définis en data, verbes <code>give</code>/<code>take</code> dans les séquences, la clé du magasin devient un vrai item affiché, l'InventoryPanel lit ce modèle au lieu de la liste en dur. Le showroom 3D par item est déjà prototypé — le brancher sur les modèles d'items quand ils existeront.</p>
-        <div class="seed"><b>Déjà en place :</b> le panel complet, le showroom, et les flags qui font déjà office d'items invisibles (<code>shop-key</code>).</div>
+        <div class="top"><h3>6 · Flags qui modifient le monde</h3><span class="chip s">S · 2–4 soirées</span><span class="chip new">nouveau</span></div>
+        <p><code>phare-allume</code> doit changer <strong>deux choses à distance</strong> : l'éclairage extérieur et l'état de l'arrière-boutique. Un petit système qui écoute les flags et bascule lumières, matériaux émissifs et Spaces. Générique, réutilisable pour tout le jeu.</p>
+        <div class="seed"><b>Déjà en place :</b> Flags persiste déjà à travers le hot reload ; les séquences savent <code>set</code>/<code>clear</code>.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>7 · Sauvegarde</h3><span class="chip s">S/M · 3–5 soirées</span></div>
-        <p>Sérialiser flags + inventaire + position + scène courante en JSON, un slot suffit. À faire tôt : plus on attend, plus l'état s'éparpille. Note pour le sans-coupure : « continuer » devra rejouer le même dézoom d'intro vers la position sauvegardée.</p>
-        <div class="seed"><b>Déjà en place :</b> l'architecture pousse déjà tout l'état persistant dans Flags (les one-shots y survivent au F5) — c'est la moitié du travail.</div>
+        <div class="top"><h3>7 · Lumière animée &amp; faisceau</h3><span class="chip s">S · 2–3 soirées</span><span class="chip new">nouveau</span></div>
+        <p>Intensité pulsée (3 s de clarté / 5 s de cycle) sur la lumière du faisceau, plus le halo tournant côté vista. Une dizaine de lignes, mais c'est le climax visuel de la slice : soigner la courbe, pas le carré.</p>
+        <div class="seed"><b>Déjà en place :</b> le composant Spin de la démo de scène fait déjà tourner une entité.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>8 · Nuit & lumières</h3><span class="chip m">S/M · 3–5 soirées</span></div>
-        <p>Passer le playground en nuit : lumières de fenêtres émissives, lampadaires, réglage exposition/bloom/grade. C'est le premier des deux tests de direction artistique.</p>
-        <div class="seed"><b>Déjà en place :</b> le ciel est déjà crépusculaire (#1B2440 / #6E6493), bloom, fog, film et grade sont déjà dans la chaîne de post.</div>
+        <div class="top"><h3>8 · Allures : marche / course / discret</h3><span class="chip s">S · 2–3 soirées</span></div>
+        <p>État de gait sur l'intent, trois vitesses, bascules par touches. Les vitesses deviendront directement les stops du Blend1D. Le discret sert dans la boutique et module le volume des pas.</p>
+        <div class="seed"><b>Déjà en place :</b> <code>CharacterIntent.Speed</code> module déjà la vitesse.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>9 · Pluie & orage</h3><span class="chip m">M · 5–8 soirées</span></div>
-        <p>Particules de pluie suivant la caméra, occlusion simple (pas de pluie sous les toits — les Spaces peuvent le dire), ripples au sol version simple (quads animés suffisent), éclair = flash directionnel + tonnerre décalé via une séquence. Second test de DA : <strong>si la greybox est atmosphérique sous la pluie de nuit, le pari visuel est gagné avant le premier asset.</strong></p>
-        <div class="seed"><b>Déjà en place :</b> le système de particules moteur ; les Spaces savent déjà où est « l'intérieur ».</div>
+        <div class="top"><h3>9 · Inventaire réel</h3><span class="chip m">M · 4–6 soirées</span></div>
+        <p>Items en data, verbes <code>give</code>/<code>take</code>, le reçu et la mèche deviennent de vrais items, l'InventoryPanel lit ce modèle au lieu de la liste en dur. Le showroom 3D se branchera sur les modèles d'items quand ils existeront.</p>
+        <div class="seed"><b>Déjà en place :</b> le panel complet, le showroom, et les flags qui font déjà office d'items invisibles.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>10 · Hooks audio</h3><span class="chip m">M · 4–6 soirées</span></div>
-        <p>Verbe <code>sound</code> dans les séquences, footsteps branchés sur les marqueurs d'animation (et sur l'anim capsule en attendant), ambiance par Space avec crossfade entre bus (extérieur pluie ↔ intérieur feutré — le Space pilote déjà fog et framing, l'ambiance est le même pattern), UI sur son bus dédié qui ignore la pause.</p>
-        <div class="seed"><b>Déjà en place :</b> les bus, les groupes de variantes (footsteps démontrés), les volumes animables, la pause sélective — tout le moteur audio y est. Il ne manque que les fils.</div>
+        <div class="top"><h3>10 · Sauvegarde</h3><span class="chip s">S/M · 3–5 soirées</span></div>
+        <p>Flags + inventaire + position + scène en JSON, un slot. « Continuer » rejoue le dézoom d'intro vers la position sauvegardée.</p>
+        <div class="seed"><b>Déjà en place :</b> l'état persistant vit déjà dans Flags — c'est la moitié du travail.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>11 · Rig cinématique & intro</h3><span class="chip s">S/M · 3–5 soirées</span></div>
-        <p>Un quatrième rig « cinématique » dans le director, piloté par un chemin de caméra (quelques keyframes lissées suffisent, pas besoin d'un éditeur de splines). L'écran titre devient un état du monde : caméra posée sur le plan du médaillon, menu en GameFlow par-dessus ; « nouvelle partie » fond le menu et fait voyager le rig jusqu'à la remise de contrôle. Voir la section « sans coupure » pour le design complet du plan.</p>
-        <div class="seed"><b>Déjà en place :</b> le director blende déjà des rigs arbitraires (le door rig fait exactement ce métier), GameFlow superpose déjà des écrans sur le monde vivant, et les séquences savent orchestrer le timing.</div>
+        <div class="top"><h3>11 · Nuit &amp; lumières</h3><span class="chip m">S/M · 3–5 soirées</span></div>
+        <p>Playground en nuit : fenêtres émissives, lampadaires, clair de lune, exposition/bloom/grade. Premier test de direction artistique.</p>
+        <div class="seed"><b>Déjà en place :</b> ciel déjà crépusculaire, bloom, fog, film et grade dans la chaîne de post.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>12 · Combat — stub seulement</h3><span class="chip defer">différable · 2–3 soirées</span></div>
-        <p>L'ouverture de LBA2 ne se bat presque pas. Une touche d'attaque, une hitbox, un mannequin qui réagit : juste assez pour valider l'architecture et réserver les inputs. Le vrai système de combat vient <strong>après</strong> la slice — c'est un puits sans fond et il n'est pas sur le chemin critique.</p>
+        <div class="top"><h3>12 · Pluie &amp; orage</h3><span class="chip m">M · 5–8 soirées</span></div>
+        <p>Pluie suivant la caméra, pas de pluie sous les toits (les Spaces le disent), ripples simples, éclair = flash directionnel + tonnerre décalé via une séquence. <strong>L'éclair a un rôle narratif</strong> : c'est lui qui révèle le phare éteint à la sortie. Second test de DA : si la greybox est atmosphérique sous la pluie de nuit, le pari visuel est gagné avant le premier asset.</p>
+        <div class="seed"><b>Déjà en place :</b> le système de particules ; les Spaces savent où est l'intérieur.</div>
+      </div>
+      <div class="card">
+        <div class="top"><h3>13 · Hooks audio</h3><span class="chip m">M · 4–6 soirées</span></div>
+        <p>Verbe <code>sound</code>, footsteps sur les marqueurs d'animation, ambiance par Space avec crossfade entre bus, UI sur son bus qui ignore la pause. <strong>L'audio porte l'île habitée</strong> (voir M2) : c'est un poste à ne pas traiter comme du décor.</p>
+        <div class="seed"><b>Déjà en place :</b> bus, groupes de variantes, volumes animables, pause sélective — il ne manque que les fils.</div>
+      </div>
+      <div class="card">
+        <div class="top"><h3>14 · Rig cinématique &amp; plan titre</h3><span class="chip s">S/M · 3–5 soirées</span></div>
+        <p>Quatrième rig piloté par un chemin de caméra (quelques keyframes lissées, pas d'éditeur de splines). L'écran titre devient un état du monde ; « nouvelle partie » fond le menu et fait voyager le rig jusqu'à la remise de contrôle.</p>
+        <div class="seed"><b>Déjà en place :</b> le director blende déjà des rigs arbitraires (le door rig fait ce métier), GameFlow superpose déjà des écrans sur le monde vivant.</div>
+      </div>
+      <div class="card">
+        <div class="top"><h3>15 · Combat — stub seulement</h3><span class="chip defer">différable · 2–3 soirées</span></div>
+        <p>La slice n'a aucun combat. Une touche d'attaque, une hitbox, un mannequin qui réagit : juste assez pour valider l'architecture et réserver les inputs. Le vrai système vient <strong>après</strong> la slice.</p>
       </div>
     </div>
   </section>
 
-  <!-- ————————————————— M2 GREYBOX ————————————————— -->
+  <!-- ————————————————— M2 ————————————————— -->
   <section id="greybox">
     <div class="kicker">Jalon M2 · la slice en blocs</div>
     <h2>Greybox complète avant le premier asset</h2>
-    <p class="lead">Réponse à ta question : <strong>oui</strong> — la slice entière se construit et se joue en greybox avant de remplacer quoi que ce soit. Un level en blocs se remanie en une soirée ; un level en assets se remanie en un mois. Même l'intro se prototype en blocs : le chemin de caméra du plan titre se règle sur un cube doré posé sur une étagère grise.</p>
+    <p class="lead">La slice entière se construit et se joue en blocs avant tout remplacement. Un level en blocs se remanie en une soirée ; un level en assets se remanie en un mois. Le plan titre lui-même se règle sur un cube doré posé sur une étagère grise.</p>
+
     <div class="cards">
       <div class="card">
         <div class="top"><h3>Figer les métriques</h3><span class="chip s">1 soirée — avant toute modélisation</span></div>
-        <p>Grille de construction (1 m ?), hauteur de porte (2,5 m est déjà dans le level), hauteur d'étage, largeur de ruelle, hauteur de marche, gabarit du perso. Ces chiffres deviennent <strong>la loi</strong> : le kit d'architecture sera modélisé dessus, et chaque module remplacera son bloc 1:1 sans retouche de level design.</p>
+        <p>Pas de grille de tiles : du terrain organique et des <strong>mesures communes</strong>. Hauteur de porte (2,5 m est déjà dans le level), hauteur d'étage, épaisseur de mur, hauteur de marche, largeur de ruelle, gabarit du perso. Ces chiffres deviennent la loi : le kit d'architecture sera modélisé dessus, et un module retouché se remplacera sans casser les raccords.</p>
       </div>
       <div class="card">
-        <div class="top"><h3>Construire la greybox de la slice</h3><span class="chip m">M · 4–8 soirées</span></div>
-        <p>La version condensée de l'ouverture : maison de Twinsen (intérieur iso, un étage) → sentier en descente qui contrôle le champ de vision → petite place portuaire de Lupin-Bourg, 3–4 façades (follow cam) → pharmacie (intérieur iso). La vista non jouable — phare, lumières du bourg, silhouette de montagne — se pose en blocs émissifs lointains dès maintenant : elle coûte trois blocs et vend déjà le plan. Le playground actuel reste à côté comme scène de test des systèmes.</p>
-        <div class="seed"><b>Déjà en place :</b> portails, Spaces, bricks, hot reload — la construction est exactement le workflow que tu pratiques déjà.</div>
+        <div class="top"><h3>Construire la zone en blocs</h3><span class="chip m">M · 5–9 soirées</span></div>
+        <p>Les six espaces du plan : maison (iso, promontoire), sentier en descente, place portuaire (follow), apothicaire à l'ouest de la place (iso), arrière-boutique labyrinthique (iso, sombre), quai est avec l'auvent. Plus la vista : trois façades closes, le phare à la pointe est derrière sa barrière, la silhouette du bourg. La <strong>ligne de vue maison → phare</strong> est la contrainte qui prime sur tout le reste : c'est elle qui rend possible la révélation par l'éclair.</p>
+        <div class="seed"><b>Déjà en place :</b> portails, Spaces, bricks, hot reload — c'est exactement le workflow que tu pratiques déjà.</div>
       </div>
       <div class="card">
-        <div class="top"><h3>Scripter la slice de bout en bout</h3><span class="chip m">M · 3–6 soirées</span></div>
-        <p>La quête complète en séquences : plan titre → réveil chez Twinsen → objectif donné (dialogue) → sortie sous l'orage → PNJ sur la place → objet à récupérer → porte verrouillée de la pharmacie → clé → dialogue final → écran de fin de slice. C'est la généralisation directe de ton énigme coffre/clé/porte.</p>
+        <div class="top"><h3>Régler la composition à la sortie</h3><span class="chip s">S · 1–2 soirées</span></div>
+        <p>Le plan le plus important de la slice : premier plan Twinsen, mid plan les toits et les fenêtres allumées, arrière-plan le phare noir. À cadrer avec la caméra follow avant d'habiller quoi que ce soit — si ce plan fonctionne en blocs gris, il sera superbe en assets.</p>
+      </div>
+      <div class="card">
+        <div class="top"><h3>Scripter la quête de bout en bout</h3><span class="chip m">M · 4–7 soirées</span></div>
+        <p>Les onze battements en séquences et flags, du plan titre à l'écran de fin, y compris le chemin « têtu » (traverser le noir sans le phare) qui doit rester praticable.</p>
+      </div>
+      <div class="card">
+        <div class="top"><h3>Régler le labyrinthe sombre</h3><span class="chip s">S · 2–3 soirées</span><span class="chip new">à tester tôt</span></div>
+        <p>Nombre et disposition des fausses caisses, distance jusqu'à l'objet, portée de visibilité. <strong>Le risque n°1 de la quête :</strong> si la moitié des joueurs traverse en trente secondes, l'acte II tombe. Le réglage se fait sur la distance et le nombre de leurres, jamais sur un blocage.</p>
       </div>
       <div class="card">
         <div class="top"><h3>Passe « manette seule, zéro debug »</h3><span class="chip s">S · 1–2 soirées</span></div>
-        <p>Jouable au pad du plan titre à la fin sans toucher au clavier ni lire la console : prompts visibles, dialogues avançables, inventaire consultable. C'est le critère de sortie de M2.</p>
+        <p>Jouable au pad du plan titre à la fin sans clavier ni console. Critère de sortie de M2.</p>
       </div>
       <div class="card">
-        <div class="top"><h3>Stress test nuit + pluie dans la greybox</h3><span class="chip s">S · 1–2 soirées</span></div>
-        <p>Pluie plein régime, toutes lumières allumées, éclairs : mesurer, encaisser, et figer les budgets (nombre de lumières, densité de particules) que la production d'assets devra respecter.</p>
+        <div class="top"><h3>Stress test nuit + pluie + faisceau</h3><span class="chip s">S · 1–2 soirées</span></div>
+        <p>Pluie plein régime, toutes lumières allumées, éclairs, faisceau balayant : mesurer et figer les budgets que la production d'assets devra respecter.</p>
       </div>
     </div>
+
     <div class="callout">
       <div class="kicker">Règle d'or — et son unique exception</div>
-      <p>La slice entière vit en greybox avant le premier remplacement d'asset. <b>Exception :</b> le pont animation ↔ contrôleur (système n°1) et la preuve du pipeline contenu (phase A1) se mènent <b>en parallèle, tôt, et hors de la greybox</b> — dans la scène de démo pour l'un, sur un prop jetable pour l'autre. Prouver le tuyau n'est pas produire du contenu, et ça n'introduit aucun robot Mixamo dans ton monde.</p>
-    </div>
-  </section>
-
-  <!-- ————————————————— SANS COUPURE ————————————————— -->
-  <section id="intro">
-    <div class="kicker">Le pari d'ambiance</div>
-    <h2>Le jeu sans coupure, et le plan titre</h2>
-    <p class="lead">L'intro façon God of War — zoom sur un hero prop, menu à gauche, dézoom continu vers le contrôle — n'est pas un caprice tardif : <strong>ton architecture est déjà construite pour ça.</strong> Les portails suppriment les chargements, les Spaces font les raccords d'ambiance, et le director sait blender un rig de plus. Le coût réel est petit ; le design, lui, mérite d'être posé maintenant.</p>
-
-    <p>Le plan proposé : <strong>le Médaillon de Sendell, posé sur une étagère de la maison de Twinsen</strong>, cadré à droite, une fenêtre battue par la pluie derrière lui, le menu à gauche. « Nouvelle partie » : le menu fond, la caméra recule et pivote à travers la pièce, et se dépose dans le rig iso de la maison — exactement le premier lieu du jeu. Le raccord est parfait parce que le plan titre <em>habite déjà</em> le point de départ. « Continuer » rejoue le même mouvement vers la position sauvegardée.</p>
-
-    <p>Ta vraie question — <strong>comment un gros plan cohabite avec un style qui n'a pas ce niveau de détail partout</strong> — a trois réponses qui se cumulent :</p>
-
-    <div class="cards">
-      <div class="card">
-        <div class="top"><h3>Le « hero prop » est une catégorie, pas une entorse au style</h3></div>
-        <p>Tous les jeux stylisés font ça : <strong>un</strong> objet vu en macro reçoit un budget spécial (géométrie plus dense, matériau plus riche), et c'est tout. Le médaillon est le seul asset du projet modélisé pour tenir un gros plan — plus 2 à 4 soirées sur lui, pas un changement de style. Bonus : il servira aussi le showroom 3D de l'inventaire.</p>
-      </div>
-      <div class="card">
-        <div class="top"><h3>La profondeur de champ fait disparaître le reste</h3></div>
-        <p>À l'ouverture virtuelle d'un f/1.8, l'arrière-plan n'est pas un décor : c'est un <strong>bokeh</strong>. La fenêtre pluvieuse derrière le médaillon devient des taches de lumière chaude et froide, les gouttes des étincelles floues. L'environnement du plan titre n'a besoin d'<em>aucun</em> détail net — c'est précisément pour ça que le DOF est le seul vrai ajout moteur de cette feature (voir vigilance). Pendant le dézoom, la mise au point s'élargit au rythme où la caméra atteint des distances où le style tient déjà tout seul.</p>
-      </div>
-      <div class="card">
-        <div class="top"><h3>Le stylisé tient le macro par la forme et le matériau</h3></div>
-        <p>Ce qui rend un gros plan pauvre, c'est la texture qui pixelise — pas le style. En low-poly stylisé à palette, le détail proche vient de la <strong>silhouette</strong> (gravures modelées, pas peintes), de la <strong>réponse matériau</strong> (variations de roughness, reflets des éclairs sur le métal) et de l'<strong>émissif</strong> (la lueur magique du médaillon, très LBA). Aucun de ces trois ne trahit le reste du monde.</p>
-      </div>
-    </div>
-
-    <div class="callout">
-      <div class="kicker">Le plan titre comme fondation de la DA</div>
-      <p>Ce cadre — médaillon net, fenêtre en bokeh, pluie, or sur bleu nuit — devient <b>le paintover fondateur de la phase A0</b> : si la style bible prouve cette image, elle prouve tout le reste du jeu. Et pour la slice, le sans-coupure est trivial à garantir : pas de mort possible dans l'ouverture, donc pas de game over à raccorder — cette question-là attend le jeu complet.</p>
+      <p>La slice entière vit en greybox avant le premier remplacement d'asset. <b>Exception :</b> le pont animation (système 1) et la preuve du pipeline (phase A1) se mènent <b>en parallèle, tôt, et hors de la greybox</b> — dans la scène de démo pour l'un, sur un prop jetable pour l'autre. Prouver le tuyau n'est pas produire du contenu, et ça n'introduit aucun mannequin étranger dans ton monde.</p>
     </div>
   </section>
 
@@ -484,64 +672,72 @@
   <section id="assets">
     <div class="kicker">Jalons M3–M5 · production</div>
     <h2>La découpe des assets</h2>
-    <p class="lead">La montagne devient une liste finie parce que la slice est finie. Ordre des phases : <strong>cible visuelle → pipeline → héros → kit d'architecture → props → PNJ → VFX → audio</strong>. Le level se rhabille bloc par bloc et reste jouable en permanence.</p>
+    <p class="lead">La montagne devient une liste finie parce que la zone est finie. Ordre : <strong>cible visuelle → pipeline → héros → kit d'architecture → props → PNJ → VFX → audio</strong>. Le level se rhabille bloc par bloc et reste jouable en permanence.</p>
 
     <div class="cards">
       <div class="card">
         <div class="top"><h3>A0 · Cible visuelle</h3><span class="chip s">2–4 soirées</span></div>
-        <p>Moodboard 15–20 images, palette figée (partir de celle déjà dans ton code est une vraie option — elle est cohérente), style bible d'une page : proportions perso, densité de props, niveau de détail maximum autorisé. Le paintover fondateur est <strong>le plan titre</strong> (médaillon + fenêtre en bokeh) plus un second sur la place portuaire greybox. Ce document juge chaque asset ensuite : conforme ou pas, sans débat.</p>
+        <p>Moodboard, palette figée (celle de ton code est déjà cohérente), style bible d'une page. Deux paintovers fondateurs : <strong>le plan titre</strong> (médaillon net, fenêtre en bokeh) et <strong>la sortie de la maison</strong> (joueur / bourg / phare éteint). Si ces deux images tiennent, tout le reste tient.</p>
       </div>
       <div class="card">
         <div class="top"><h3>A1 · Preuve du pipeline contenu</h3><span class="chip s">2–4 soirées — en parallèle de M2</span></div>
-        <p>Un prop (caisse, tonneau) : Blender → glTF → .scene.jsonc, échelle, matériau palette, collision. Le maillon skinné étant déjà prouvé côté moteur, il ne reste à valider que <strong>ton</strong> export Blender riggé (armature, échelle, noms d'os) sur un mesh jetable — pas Twinsen.</p>
+        <p>Un prop : Blender → glTF → .scene.jsonc, échelle, matériau palette, collision. Le maillon skinné étant prouvé côté moteur, il ne reste qu'à valider <strong>ton</strong> export riggé (armature, échelle, noms d'os) sur un mesh jetable.</p>
       </div>
       <div class="card">
         <div class="top"><h3>A2 · Le héros</h3><span class="chip l">10–20 soirées · timeboxé</span></div>
-        <p>Blockout → sculpt léger → retopo simple (le style low-poly stylisé pardonne tout) → rig auto (Rigify / AccuRig) → skinning corrigé à la main sur les zones qui plient → 6 anims : idle, walk, run, jump, fall, land. <strong>Version 1 moche acceptée et intégrée</strong> — le pont d'animation de M1 l'attend déjà, donc l'intégration est un après-midi, pas un chantier. Un héros médiocre in-game vaut plus qu'un héros parfait dans Blender, et il se ré-itérera trois fois de toute façon.</p>
+        <p>Blockout → sculpt léger → retopo simple → rig auto (Rigify / AccuRig) → skinning corrigé à la main → 6 anims : idle, walk, run, jump, fall, land. <strong>Version 1 moche acceptée et intégrée</strong> — le pont d'animation l'attend déjà, donc l'intégration est un après-midi.</p>
       </div>
       <div class="card">
-        <div class="top"><h3>A3 · Kit d'architecture modulaire</h3><span class="chip l">10–15 soirées</span></div>
-        <p>~15–20 modules sur la grille de M2 : murs, angles, encadrements de porte et fenêtre, toits, cheminées, sol pavé, quai, muret. Pas de bâtiment unique — tout est assemblage. Les fenêtres sont émissives : la nuit fera 50 % du travail de beauté.</p>
+        <div class="top"><h3>A3 · Kit d'architecture</h3><span class="chip l">10–15 soirées</span></div>
+        <p>~15–20 modules aux mesures de M2 : murs, angles, encadrements, toits, cheminées, sol pavé, quai, muret, barrière. Pas de bâtiment unique — tout est assemblage. Fenêtres émissives : la nuit fait 50 % du travail.</p>
       </div>
       <div class="card">
-        <div class="top"><h3>A4 · Props & végétation</h3><span class="chip l">10–20 soirées</span></div>
-        <p>~30 props répartis par lieu (tableau ci-dessous), en commençant par ceux que la caméra iso voit de près. Le médaillon en hero prop (budget macro) vit ici. Végétation en shader (vent simple) sur quelques meshes seulement.</p>
+        <div class="top"><h3>A4 · Props &amp; végétation</h3><span class="chip l">10–20 soirées</span></div>
+        <p>~35 props par lieu (tableau ci-dessous), en commençant par ceux que la caméra iso voit de près. Le médaillon (budget macro) et les caisses de l'arrière-boutique vivent ici. Végétation en shader sur quelques meshes.</p>
       </div>
       <div class="card">
         <div class="top"><h3>A5 · PNJ</h3><span class="chip m">5–10 soirées</span></div>
-        <p>2–3 villageois : le rig du héros ré-habillé (tête, tenue, silhouette). Aucune anim propre au début — idle et walk du héros ralenties suffisent pour la slice.</p>
+        <p>L'apothicaire et le gardien : le rig du héros ré-habillé. Aucune anim propre — idle et walk du héros ralenties suffisent, plus une pose « range un objet » pour la ronde.</p>
       </div>
       <div class="card">
-        <div class="top"><h3>A6 · VFX, ciel & plan titre</h3><span class="chip m">5–9 soirées</span></div>
-        <p>Pluie finale, éclairs synchronisés au tonnerre, skyline en silhouettes (phare, bourg, montagne), reflets humides simples sur les pavés si le budget le permet — et le réglage fin du plan titre : cadrage, DOF, timing du dézoom, lumière du médaillon.</p>
+        <div class="top"><h3>A6 · VFX, ciel &amp; plan titre</h3><span class="chip m">6–10 soirées</span></div>
+        <p>Pluie finale, éclairs synchronisés au tonnerre, skyline en silhouettes, reflets humides sur les pavés — et surtout <strong>le faisceau du phare</strong> (halo volumétrique, balayage sur les façades, lumière par la lucarne) plus le réglage fin du plan titre : cadrage, DOF, timing du dézoom.</p>
       </div>
       <div class="card">
-        <div class="top"><h3>A7 · Audio</h3><span class="chip m">4–8 soirées — rien à produire</span></div>
-        <p>Packs CC0 (Freesound, Sonniss GDC, Kenney) : pluie int/ext, tonnerre, pas (en groupes de variantes — le moteur les randomise déjà), portes, coffre, UI, ambiance portuaire. Musique : placeholder d'ambiance, ou silence habité — la pluie porte la scène. La slice finie servira à recruter un compositeur, pas l'inverse.</p>
+        <div class="top"><h3>A7 · Audio</h3><span class="chip m">5–9 soirées — rien à produire</span></div>
+        <p>Packs CC0 (Freesound, Sonniss GDC, Kenney) : pluie int/ext, tonnerre, pas en groupes de variantes, portes, UI, ambiance portuaire — et les <strong>sons de vie derrière les façades closes</strong>, qui sont ce qui rend l'île habitée. Musique : placeholder ou silence habité. La slice finie servira à recruter un compositeur.</p>
       </div>
     </div>
+
+    <h3 class="sub">Faire vivre l'île sans 50 assets</h3>
+    <p style="color:var(--muted);font-size:15px">La nuit d'orage est l'alibi : tout est fermé parce qu'il est tard et qu'il pleut. Portes closes, fenêtres allumées avec une silhouette derrière un rideau (un quad + une texture), linge oublié qui claque, barques amarrées qui tanguent, un chat sous un auvent. <strong style="color:var(--bluegrey)">L'audio fait 70 % du travail</strong> : rires étouffés, vaisselle, une radio lointaine, un volet qui bat. Trois façades non visitables suffisent si elles sonnent habitées — et le fait que seuls deux lieux soient ouverts devient une information sur le monde, pas une limite technique.</p>
 
     <table>
       <thead><tr><th>Lieu</th><th>Contenu à produire</th><th>Volume</th></tr></thead>
       <tbody>
         <tr>
           <td>Maison de Twinsen</td>
-          <td>Lit, table, chaises, cheminée, coffre, étagères, vaisselle, tapis, luminaire — et le médaillon en hero prop (budget macro pour le plan titre)<span class="d">L'intérieur iso rapproché : le plus exigeant en finition, le plus petit en surface. Le plan titre y habite.</span></td>
-          <td class="n">~12 props + 1 hero</td>
+          <td>Lit défait, table de chevet, table, chaises, cheminée, étagères, vaisselle, tapis, luminaire, le reçu — et le médaillon en hero prop<span class="d">Iso rapproché + gros plan du titre : le plus exigeant en finition, le plus petit en surface.</span></td>
+          <td class="n">~12 + 1 hero</td>
         </tr>
         <tr>
-          <td>Place portuaire</td>
-          <td>3–4 façades en kit, caisses, tonneaux, barques, lampadaires, enseignes, amarres, mouettes posées<span class="d">Vue follow : lisible de loin, la pluie et la nuit masquent la simplicité.</span></td>
-          <td class="n">kit + ~10 props</td>
+          <td>Place, sentier, quai</td>
+          <td>3 façades closes en kit, caisses, tonneaux, barques, lampadaires, enseignes, amarres, auvent, barrière, végétation de sentier<span class="d">Vue follow : lisible de loin, la pluie et la nuit masquent la simplicité.</span></td>
+          <td class="n">kit + ~14</td>
         </tr>
         <tr>
-          <td>Pharmacie</td>
-          <td>Comptoir, étagères, fioles, balance, chaudron, caisse, porte d'arrière-boutique<span class="d">Réutilise étagères et contenants de la maison au maximum.</span></td>
-          <td class="n">~10 props</td>
+          <td>Apothicaire</td>
+          <td>Comptoir, étagères, fioles, balance, chaudron, outils de bricolage, porte du fond<span class="d">Réutilise étagères et contenants de la maison au maximum.</span></td>
+          <td class="n">~9</td>
         </tr>
         <tr>
-          <td>Global</td>
-          <td>Héros + 2–3 PNJ, végétation (3–4 meshes), skyline silhouettes, pluie/éclairs, ~25 sons<span class="d">Le perso et ses anims restent le plus gros poste individuel.</span></td>
+          <td>Arrière-boutique</td>
+          <td>Caisses (dont les leurres, toutes identiques), rayonnages, bric-à-brac, lucarne, l'objet final<span class="d">Vu majoritairement dans le noir ou en éclairage intermittent : le lieu le moins cher du jeu.</span></td>
+          <td class="n">~6</td>
+        </tr>
+        <tr>
+          <td>Vista &amp; global</td>
+          <td>Phare, silhouettes du bourg, héros + 2 PNJ, pluie, éclairs, faisceau, ~28 sons<span class="d">Le phare est vu de loin uniquement : silhouette et lumière, aucun détail.</span></td>
           <td class="n">le reste</td>
         </tr>
       </tbody>
@@ -552,49 +748,49 @@
   <section id="jalons">
     <div class="kicker">Le chemin</div>
     <h2>Jalons, avec critères de sortie</h2>
-    <p class="lead">Les estimations sont en soirées de solo dev, à ±50 % — <strong>c'est l'ordre qui compte, pas les dates</strong>. Le total se situe grossièrement entre 120 et 220 soirées : à trois soirées par semaine, une slice en un an à un an et demi. C'est le rythme normal et sain d'un projet de cette ambition — et chaque jalon produit quelque chose de montrable.</p>
+    <p class="lead">Estimations en soirées de solo dev, à ±50 % — <strong>c'est l'ordre qui compte, pas les dates</strong>. Total grossièrement entre 130 et 230 soirées : à trois soirées par semaine, une slice en un an à un an et demi. C'est le rythme normal d'un projet de cette ambition, et chaque jalon produit quelque chose de montrable.</p>
     <div class="rail">
       <div class="stone gold">
         <div class="mid">M0 · ~8–15 soirées</div>
         <h3>Fusion</h3>
-        <p>Un seul exécutable, un seul format de scène (Quark.Kit.Scenes + Vocabulary), une seule autorité de contrôle joueur, intérieurs parentés en coordonnées locales.</p>
-        <div class="exit"><b>Sortie :</b> l'énigme coffre/clé/porte tourne dans l'app fusionnée, chargée depuis un .scene.jsonc, F5 fonctionnel, inventaire et menu accessibles en jeu.</div>
+        <p>Un exécutable, un format de scène, une autorité de contrôle, intérieurs parentés.</p>
+        <div class="exit"><b>Sortie :</b> l'énigme coffre/clé/porte tourne dans l'app fusionnée depuis un .scene.jsonc, F5 fonctionnel, inventaire et menu accessibles en jeu.</div>
       </div>
       <div class="stone">
-        <div class="mid">M1 · ~40–60 soirées</div>
+        <div class="mid">M1 · ~45–70 soirées</div>
         <h3>Systèmes de la slice</h3>
-        <p>Pont d'animation (en scène de démo), prompts, allures, dialogues, PNJ, inventaire réel, sauvegarde, nuit, pluie, hooks audio, rig cinématique — validés dans le playground.</p>
-        <div class="exit"><b>Sortie :</b> le mannequin de démo joue idle/walk/run/jump piloté par le code du contrôleur dans la scène de test ; dans le jeu, un PNJ parle au joueur sous la pluie de nuit, le menu titre dézoom vers le contrôle, et la partie se sauvegarde.</div>
+        <p>Pont d'animation (en démo), prompts, zones sans lumière, dialogues conditionnels, PNJ à routine, flags-monde, faisceau, allures, inventaire, sauvegarde, nuit, pluie, audio, rig cinématique.</p>
+        <div class="exit"><b>Sortie :</b> dans le playground, un PNJ fait sa ronde et change de discours selon un flag, une pièce déclarée noire refuse ses prompts jusqu'à ce qu'une lumière pulsée s'allume, et le menu titre dézoom vers le contrôle.</div>
       </div>
       <div class="stone">
-        <div class="mid">M2 · ~10–18 soirées</div>
+        <div class="mid">M2 · ~14–24 soirées</div>
         <h3>Slice greybox « content complete »</h3>
-        <p>Le level condensé de l'ouverture, la quête scriptée du plan titre à l'écran de fin, métriques figées, budgets de perf mesurés.</p>
-        <div class="exit"><b>Sortie :</b> la slice se joue à la manette du titre à la fin, sans debug, en blocs. <em>Moment charnière : à partir d'ici, plus aucun code sur le chemin critique.</em></div>
+        <p>La zone en blocs, la quête scriptée du titre à la fin, la composition de sortie cadrée, le labyrinthe réglé, budgets mesurés.</p>
+        <div class="exit"><b>Sortie :</b> la slice se joue à la manette de bout en bout, sans debug, en blocs — y compris le chemin « têtu ». <em>À partir d'ici, plus aucun code sur le chemin critique.</em></div>
       </div>
       <div class="stone">
         <div class="mid">M3 · ~14–28 soirées</div>
-        <h3>Cible visuelle & héros</h3>
-        <p>Style bible (paintover fondateur = le plan titre), pipeline contenu prouvé, le héros v1 remplace la capsule sur le pont d'animation déjà écrit.</p>
+        <h3>Cible visuelle &amp; héros</h3>
+        <p>Style bible (deux paintovers fondateurs), pipeline prouvé, le héros v1 remplace la capsule.</p>
         <div class="exit"><b>Sortie :</b> le héros animé joue la slice greybox. Premier screenshot qui ressemble à un jeu.</div>
       </div>
       <div class="stone">
-        <div class="mid">M4 · ~32–58 soirées</div>
+        <div class="mid">M4 · ~34–62 soirées</div>
         <h3>Art pass</h3>
-        <p>Kit d'architecture, puis props lieu par lieu, puis PNJ, puis VFX et plan titre — le jeu reste jouable après chaque soirée.</p>
-        <div class="exit"><b>Sortie :</b> plus un seul bloc gris visible dans la slice ; le médaillon tient le gros plan et la vista tient le dézoom.</div>
+        <p>Kit d'architecture, props lieu par lieu, PNJ, puis VFX et plan titre — jouable après chaque soirée.</p>
+        <div class="exit"><b>Sortie :</b> plus un bloc gris visible ; le médaillon tient le gros plan, le faisceau balaie les façades, la vista tient le plan de sortie.</div>
       </div>
       <div class="stone">
-        <div class="mid">M5 · ~4–8 soirées</div>
+        <div class="mid">M5 · ~5–9 soirées</div>
         <h3>Audio pass</h3>
-        <p>Pas, portes, pluie int/ext, tonnerre, UI, ambiance portuaire avec crossfade, musique placeholder.</p>
-        <div class="exit"><b>Sortie :</b> jouer au casque sans gêne — le silence gênant a disparu.</div>
+        <p>Pas, portes, pluie int/ext, tonnerre, UI, ambiance portuaire, vie derrière les façades closes.</p>
+        <div class="exit"><b>Sortie :</b> jouer au casque sans gêne — et l'île paraît habitée alors que deux portes seulement s'ouvrent.</div>
       </div>
       <div class="stone gold">
         <div class="mid">M6 · ~8–15 soirées</div>
-        <h3>Polish & build</h3>
-        <p>Tweaks caméra et transitions, exposition nuit, perfs, combat stub si l'envie est là.</p>
-        <div class="exit"><b>Sortie :</b> un build zippé qu'un ami lance sans toi à côté — et du médaillon à l'écran de fin, <b>pas une seule coupure</b>. La slice existe.</div>
+        <h3>Polish &amp; build</h3>
+        <p>Tweaks caméra et transitions, exposition nuit, période du faisceau, perfs, combat stub si l'envie est là.</p>
+        <div class="exit"><b>Sortie :</b> un build qu'un ami lance sans toi — et du médaillon à l'écran de fin, <b>pas une seule coupure</b>.</div>
       </div>
     </div>
   </section>
@@ -605,13 +801,14 @@
     <h2>Règles de conduite</h2>
     <ol class="rules">
       <li><b>Toujours jouable.</b><span>Jamais deux chantiers de front ; chaque soirée se termine sur un jeu qui se lance et se finit.</span></li>
-      <li><b>Timeboxer les puits moteur.</b><span>Trois soirées maximum sur un problème moteur sans décision : contourner, simplifier, ou l'inscrire comme vraie tâche — mais pas dériver.</span></li>
-      <li><b>Un asset intégré vaut trois assets parfaits sur disque.</b><span>Tout passe in-game en version moche d'abord ; on itère dans le contexte réel, sous la pluie, de nuit.</span></li>
-      <li><b>Le monde reste LBA, les tests restent au labo.</b><span>Ta règle « pas de robot Mixamo dans la greybox » est la bonne : tout ce qui n'est pas du jeu se développe dans les scènes de démo, et le jeu ne reçoit que ce qui lui appartient.</span></li>
-      <li><b>Le combat attend.</b><span>Il n'est pas sur le chemin critique de la slice. Y toucher avant M6, c'est de la procrastination déguisée en travail.</span></li>
-      <li><b>Après M2, le clavier sert à Blender.</b><span>Plus aucun système « nécessaire » ne s'invente pendant l'art pass. La liste de M1 est close.</span></li>
-      <li><b>Les soirées dures ont leur menu.</b><span>Garder une liste de tâches S (un prop, un son à intégrer, un tweak) pour les soirs de fatigue — avancer petit plutôt que pas du tout.</span></li>
-      <li><b>Montrer à chaque jalon.</b><span>Un screenshot ou un clip par jalon, ne serait-ce que pour toi : la motivation est la seule ressource vraiment rare du projet.</span></li>
+      <li><b>Le design est clos, les réglages sont ouverts.</b><span>La quête et la liste de systèmes ne bougent plus. Le nombre de caisses, la durée de la ronde, le phrasé des dialogues se tranchent manette en main, jamais sur le papier.</span></li>
+      <li><b>Timeboxer les puits moteur.</b><span>Trois soirées maximum sur un problème sans décision : contourner, simplifier, ou l'inscrire comme vraie tâche — mais pas dériver.</span></li>
+      <li><b>Un asset intégré vaut trois assets parfaits sur disque.</b><span>Tout passe in-game en version moche d'abord ; on itère sous la pluie, de nuit.</span></li>
+      <li><b>Le monde reste LBA, les tests restent au labo.</b><span>Tout ce qui n'est pas du jeu se développe dans les scènes de démo ; le jeu ne reçoit que ce qui lui appartient.</span></li>
+      <li><b>Le combat attend.</b><span>Il n'est pas sur le chemin critique. Y toucher avant M6, c'est de la procrastination déguisée en travail.</span></li>
+      <li><b>Après M2, le clavier sert à Blender.</b><span>Plus aucun système « nécessaire » ne s'invente pendant l'art pass.</span></li>
+      <li><b>Les soirées dures ont leur menu.</b><span>Une liste de tâches S (un prop, un son, un tweak) pour les soirs de fatigue — avancer petit plutôt que pas du tout.</span></li>
+      <li><b>Montrer à chaque jalon.</b><span>Un screenshot ou un clip, ne serait-ce que pour toi : la motivation est la seule ressource vraiment rare du projet.</span></li>
     </ol>
   </section>
 
@@ -619,7 +816,7 @@
 
 <footer>
   <div class="wrap">
-    <div>Feuille de route établie sur lecture de pack01 (AdventureGame + Ui) et pack01-demos (Animations, Audio) · août 2026</div>
+    <div>Feuille de route · design de quête et plan de zone v3 · établie sur lecture de pack01 et pack01-demos · août 2026</div>
     <div>Fan game non commercial — droits LBA : [2.21]</div>
   </div>
 </footer>
