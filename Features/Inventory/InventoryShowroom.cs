@@ -8,6 +8,7 @@ using Quark.Kit.Ui;
 using Quark.Numerics;
 using WebGpuSharp;
 using Color = Quark.Numerics.Color;
+using LayerMask = Quark.Kit.LayerMask;
 
 namespace AdventureGame.Features.Inventory;
 
@@ -32,7 +33,7 @@ sealed record InventoryShowroom(UiImage Atlas) {
 
     // Its own visibility layer: the studio's objects and lights never reach the main view, and the world never
     // reaches the atlas.
-    static readonly RenderLayers Layer = RenderLayers.Bit(1);
+    static readonly LayerMask Layer = LayerMask.FromBit(31);
 
     public static InventoryShowroom Build(Game game) {
         var rendering = game.Rendering;

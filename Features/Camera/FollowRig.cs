@@ -2,6 +2,7 @@ using System.Numerics;
 using AdventureGame.App;
 using AdventureGame.Common;
 using AdventureGame.Features.Character;
+using AdventureGame.Level;
 using Quark.Ecs;
 using Quark.Kit;
 using Quark.Kit.Components;
@@ -41,10 +42,26 @@ sealed class FollowRigSystem(
     const double MinDistance = 3.5, MaxDistance = 16.0;
     const double RotationDecay = 22.0;
 
-    public static Entity SpawnRig(EntityCommands world, Entity target) =>
-        world.Spawn(new CameraRig { FieldOfView = Math.PI / 3, NearPlane = 0.1, FarPlane = 500 })
+    public static Entity SpawnRig(EntityCommands world, LevelSpawn spawn, Entity target) {
+        return world
+            .Spawn(new CameraRig {
+                FieldOfView = Math.PI / 3,
+                NearPlane = 0.1,
+                FarPlane = 500,
+                Pivot = spawn.Point
+            })
             .At(new Vector3d(0, -14, 6))
-            .With(new FollowRig { Target = target, Pitch = 0.35, Distance = 8, FocusHeight = 1.3 });
+            .With(new FollowRig {
+                Target = target,
+                Yaw = spawn.Yaw,
+                actualYaw = spawn.Yaw,
+                Pitch = 0.35,
+                actualPitch = 0.35,
+                Distance = 8,
+                actualDistance = 8,
+                FocusHeight = 1.3
+            });
+    }
 
     readonly EventReader<CharacterEvents.Teleported> teleports = new();
 
@@ -58,10 +75,9 @@ sealed class FollowRigSystem(
             look = Vector2.Zero;
         }
 
-        foreach (var row in world.Query<RelativeTransform, FollowRig, CameraRig>()) {
-            ref var transform = ref row.Component1;
-            ref var cam = ref row.Component2;
-            ref var rig = ref row.Component3;
+        foreach (var row in world.Query<FollowRig, CameraRig>()) {
+            ref var cam = ref row.Component1;
+            ref var rig = ref row.Component2;
             
             // Reset look idle time
             cam.lookIdleTime = look.LengthSquared() > 0 ? 0 : cam.lookIdleTime + deltaTime; 
@@ -151,7 +167,7 @@ sealed class FollowRigSystem(
                 ref var rig = ref row.Component2;
                 if (cam.Target != evt.Entity)
                     continue;
-
+                
                 rig.Pivot = evt.To + Utils.TurnZ(rig.Pivot - evt.From, evt.YawDelta);
                 rig.Lead = Utils.TurnZ(rig.Lead, evt.YawDelta);
                 cam.Yaw = Angle.Wrap(cam.Yaw + evt.YawDelta);
@@ -211,7 +227,7 @@ sealed class FollowRigSystem(
         var sphere = new Sphere(0.15f); //Radius = near plane
         var origin = rig.Pivot;
         var motion = position - origin;
-        var hit = simulation.Sweep(sphere, (Vector3)origin, (Vector3)motion, out var h, Layers.Environment);
+        var hit = simulation.Sweep(sphere, (Vector3)origin, (Vector3)motion, out var h, Layers.Physics.Environment);
         if (hit && h.Normal.LengthSquared() > 0) {
             var targetDistance = Math.Max(h.Distance - 0.3, tuning.MinDistance);
             

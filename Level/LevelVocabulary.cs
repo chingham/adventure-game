@@ -83,20 +83,20 @@ sealed partial class LevelVocabulary {
 
     static RigidBody Static(TransformedShape[] shapes) => new() {
         Kind = RigidBodyKind.Static,
-        Layer = Layers.Environment,
+        Layer = Layers.Physics.Environment,
         Shapes = shapes
     };
 
     static RigidBody Kinematic(TransformedShape[] shapes) => new() {
         Kind = RigidBodyKind.Kinematic,
-        Layer = Layers.Environment,
+        Layer = Layers.Physics.Environment,
         Shapes = shapes
     };
 
     static RigidBody TriggerVolume(TransformedShape[] shapes) => new() {
         Kind = RigidBodyKind.Static,
         IsTrigger = true,
-        Layer = Layers.Trigger,
+        Layer = Layers.Physics.Trigger,
         Shapes = shapes
     };
 

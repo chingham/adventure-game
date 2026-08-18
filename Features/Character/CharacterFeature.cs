@@ -26,7 +26,7 @@ sealed class CharacterFeature : IGameFeature {
         game.AddSystem<CharacterCapsuleAnimationSystem>(QuarkPhases.LateUpdate, Order.CharacterAnimation);
 
         // The rig, where the level said to put it, in the greybox the level is made of
-        var spawn = game.Shared<LevelSpawn>().Point;
+        var spawn = game.Shared<LevelSpawn>();
         var material = game.Shared<SceneFileHandle>().Material("neutral");
         game.World.Setup(world => CharacterRig.Build(world, game, material, spawn));
     }

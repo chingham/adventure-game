@@ -37,21 +37,34 @@ sealed class InteractionSystem(IInput input, Flags flags) : ISystem {
     public static string UsedFlag(string emit) => emit + ".used";
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
-        // Consume takes the press edge exactly once. A sequence holding the reins drains it all the
-        // same, so a press made mid-scene cannot fire the instant control comes back.
-        var used = input.Consume(Controls.Interact);
+        var use = input.Consume(Controls.Interact);
 
         foreach (var row in world.Query<CharacterMovement, Interactor>()) {
             ref var interactor = ref row.Component2;
-            interactor.Candidate = Select(world, row.Component1);
+            
+            // Find new candidate
+            var previousCandidate = interactor.Candidate;
+            var newCandidate = Select(world, row.Component1);
+            
+            // Assign new candidate, changing render layers
+            if (previousCandidate != newCandidate) {
+                interactor.Candidate = newCandidate;
+                SetHighlighted(world, previousCandidate, highlighted: false);
+                SetHighlighted(world, newCandidate, highlighted: true);
+            }
 
-            if (!used || interactor.Candidate.IsNull)
-                continue;
+            // Use item
+            if (use && !interactor.Candidate.IsNull) {
+                // Get interactable
+                var interactable = world.Get<Interactable>(interactor.Candidate);
+                
+                // Set flag if one-shot
+                if (interactable.Once)
+                    flags.Set(UsedFlag(interactable.Emit));
 
-            var interactable = world.Get<Interactable>(interactor.Candidate);
-            if (interactable.Once)
-                flags.Set(UsedFlag(interactable.Emit));
-            world.Events<Signal>().Write(new Signal(interactable.Emit, interactor.Candidate));
+                // Emit signal
+                world.Events<Signal>().Write(new Signal(interactable.Emit, interactor.Candidate));
+            }
         }
     }
 
@@ -89,5 +102,20 @@ sealed class InteractionSystem(IInput input, Flags flags) : ISystem {
         }
 
         return best;
+    }
+
+    static void SetHighlighted(World world, Entity entity, bool highlighted) {
+        // Find mesh
+        if (entity.IsNull) return;
+        if (!world.Has<RenderMesh>(entity)) return;
+        ref var mesh = ref world.Get<RenderMesh>(entity);
+            
+        // Get mask without highlight layer, and add it back if highlighted
+        var mask = mesh.Layers.Without(Layers.Render.Highlight);
+        if (highlighted)
+            mask |= Layers.Render.Highlight;
+
+        // Update layer mask
+        mesh.Layers = mask;
     }
 }

@@ -9,11 +9,11 @@ using Quark.Numerics;
 namespace AdventureGame.Features.Character;
 
 static class CharacterRig {
-    public static void Build(EntityCommands entityCommands, Game game, MaterialHandle material, Vector3d spawn) {
+    public static void Build(EntityCommands entityCommands, Game game, MaterialHandle material, LevelSpawn spawn) {
         var character = Character.Spawn(entityCommands, game.Rendering, game.Primitives, game.Assets, material, spawn);
             
         // Spawn rigs and camera
-        var followRig = FollowRigSystem.SpawnRig(entityCommands, character);
+        var followRig = FollowRigSystem.SpawnRig(entityCommands, spawn, character);
             
         // Wide interior shot. DoorApproachSystem parks its pivot on the character.
         var isometricRig = entityCommands
@@ -45,7 +45,10 @@ static class CharacterRig {
             .Spawn(new CameraComponent { Priority = 100 })
             .At(Vector3d.Zero)
             .With(new CameraDirector {
-                FollowRig = followRig, IsometricRig = isometricRig, DoorRig = doorRig, Target = 0
+                FollowRig = followRig, 
+                IsometricRig = isometricRig,
+                DoorRig = doorRig, 
+                Target = 0,
             });
     }
 }

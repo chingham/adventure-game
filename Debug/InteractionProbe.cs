@@ -16,10 +16,6 @@ sealed class InteractionProbeSystem : ISystem {
             if (candidate == announced)
                 continue;
             announced = candidate;
-
-            Console.WriteLine(candidate.IsNull
-                ? "[Interact] nothing in reach"
-                : $"[Interact] {world.Get<Interactable>(candidate).Prompt}");
         }
 
         foreach (var signal in signals.Read(world))

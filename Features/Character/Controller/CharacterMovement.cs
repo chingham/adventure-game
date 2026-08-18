@@ -2,6 +2,7 @@ using System.Numerics;
 using AdventureGame.App;
 using AdventureGame.Common;
 using Quark.Ecs;
+using Quark.Kit;
 using Quark.Kit.Components;
 using Quark.Numerics;
 using Quark.Physics.Dimension3D.Shapes;
@@ -15,7 +16,7 @@ namespace AdventureGame.Features.Character;
  */
 
 struct CharacterMovement() {
-    public PhysicsLayer CollisionMask = Layers.Environment;
+    public LayerMask CollisionMask = Layers.Physics.Environment;
 
     public Vector3d Position;
     public Vector3d Velocity;
@@ -177,7 +178,7 @@ sealed unsafe partial class CharacterMovementSystem(RigidBodySimulation simulati
     }
 
     // A sweep that stops on the first thing in the way, used wherever motion is not slid along
-    Vector3d SweepStop(Vector3d position, Vector3d motion, PhysicsLayer layer) {
+    Vector3d SweepStop(Vector3d position, Vector3d motion, LayerMask layer) {
         var d = motion.Length();
         if (d < Utils.Epsilon) return position;
 

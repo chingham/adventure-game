@@ -1,3 +1,4 @@
+using System.Numerics;
 using AdventureGame.App;
 using Quark.Assets;
 using Quark.Kit;
@@ -11,7 +12,7 @@ namespace AdventureGame.Level;
 
 // Where the level file says the player stands. Read once, so a hot reload rebuilds the bricks under
 // his feet without teleporting him back to the start.
-sealed record LevelSpawn(Vector3d Point);
+sealed record LevelSpawn(Vector3d Point, double Yaw);
 
 // The greybox kit and the level authored out of it. The file owns everything it describes: saving it
 // re-applies at the next frame boundary, and an invalid save is rejected with the loaded level intact.
@@ -35,16 +36,26 @@ sealed class LevelFeature : IGameFeature {
         LevelVocabulary.Register(game.SceneFiles.Vocabulary, terrain);
         game.SceneFiles.WriteSchema(SchemaPath);
 
+
         var level = game.SceneFiles.Load(ScenePath);
+        var spawn = SpawnPoint(game, level);
+        
         game.Provide(level);
-        game.Provide(new LevelSpawn(SpawnPoint(game, level)));
+        game.Provide(spawn);
     }
 
     // The spawn marker is an ordinary entity, so it moves with the level like anything else - but it is
     // read here and never again.
-    static Vector3d SpawnPoint(Game game, SceneFileHandle level) =>
-        level.TryEntity("spawn", out var marker)
-        && game.World.TryGet<RelativeTransform>(marker, out var transform)
-            ? transform.LocalTransform.Position
-            : Vector3d.Zero;
+    static LevelSpawn SpawnPoint(Game game, SceneFileHandle level) {
+        if (!level.TryEntity("spawn", out var marker) || !game.World.TryGet<RelativeTransform>(marker, out var t))
+            return new LevelSpawn(Vector3d.Zero, 0.0);
+
+        var position = t.LocalTransform.Position;
+
+        var orientation = Vector3.Transform(Vector3.UnitY, t.LocalTransform.Rotation);
+        var direction = Vector2.Normalize(new Vector2(orientation.X, orientation.Y));
+        var yaw = MathF.Atan2(direction.Y, direction.X);
+
+        return new LevelSpawn(position, yaw);
+    }
 }

@@ -23,7 +23,7 @@ static class Character {
         GamePrimitiveLibrary primitives,
         AssetLibrary assets,
         MaterialHandle material,
-        Vector3d spawn) {
+        LevelSpawn spawn) {
         // Primitive
         var restPose = Pose.At(new Vector3(0, 0, CharacterShape.CapsuleRestHeight));
         var capsule = primitives.Capsule(
@@ -43,10 +43,16 @@ static class Character {
         
         // Spawn root character
         var character = world.Spawn(capsule.WithoutMesh())
-            .Kinematic(layer: Layers.Character)
+            .Kinematic(layer: Layers.Physics.Character)
             .With(new InputBasis())
             .With(new CharacterIntent())
-            .With(new CharacterMovement { Position = spawn })
+            .With(new CharacterMovement {
+                Position = spawn.Point,
+                PreviousPosition = spawn.Point,
+                Yaw = spawn.Yaw,
+                VisualYaw = spawn.Yaw,
+                PreviousVisualYaw = spawn.Yaw,
+            })
             .With(new CharacterAnimParams())
             .With(new Interactor())
             .With(new ParticleEmitter {
@@ -68,7 +74,7 @@ static class Character {
                     new ColorOverLife(Gradient.Ramp((0, Vector4.One), (0.8f, Vector4.One), (1, new Vector4(1, 1, 1, 0))))
                 ]
             })
-            .At(new Vector3d())
+            .At(spawn.Point)
             .Named("Character");
         
         // Pan mesh
@@ -82,14 +88,15 @@ static class Character {
                           * Quaternion.CreateFromAxisAngle(Vector3.UnitY, -0.2f);
         
         // Spawn render geometry
-        var body = world.Spawn(capsule)
+        var renderLayers = Layers.Render.Character | LayerMask.Default;
+        var body = world.Spawn(capsule, layers: renderLayers)
             .ChildOf(character)
             .Named("CharacterMesh (Body)");
-        world.Spawn(box)
+        world.Spawn(box, layers: renderLayers)
             .ChildOf(body)
             .At(new Vector3(0, 0.31f, 1.3f))
             .Named("CharacterMesh (Eyes)");
-        world.Spawn(panMesh)
+        world.Spawn(panMesh, layers: renderLayers)
             .ChildOf(body)
             .Scaled(panScale).At(panOffset, panRotation)
             .Named("CharacterMesh (Pan)");

@@ -1,4 +1,5 @@
 using AdventureGame.App;
+using AdventureGame.Presentation.Highlight;
 using Quark.Kit;
 using Quark.Kit.Rendering.PostEffects;
 using Quark.Numerics;
@@ -18,6 +19,18 @@ sealed class PresentationFeature : IGameFeature {
 
         game.Provide(Fonts.Build(game));
         game.Provide<Toasts>();
+
+        // Highlight / Shadow effect
+        HighlightPasses.Install(game.Rendering);
+
+        var highlightFx = game.Rendering.AddPostEffect(new HighlightEffect {
+            CharacterFill = Color.FromHex("#00000088"),
+            CharacterStroke = Color.FromHex("#FFFFFF11"),
+            HighlightFill = Color.FromHex("#FFFFFF22"),
+            HighlightStroke = Color.FromHex("#FFFFFFFF"),
+            Thickness = 2f
+        }, PostEffectSpace.Ldr);
+        game.Provide(highlightFx);
     }
 
     public void Install(Game game) {

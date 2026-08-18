@@ -1,7 +1,6 @@
 {
     "$schema": "level.schema.json",
 
-    // The greybox kit: one texture per role, an inner grid of one metre per cell
     "textures": {
         "greyGrid": { "path": "Data/Textures/greybox-unit-darkgray.png" },
         "whiteGrid": { "path": "Data/Textures/greybox-unit-white.png" },
@@ -15,8 +14,6 @@
         "interactive": { "baseColorTexture": "yellowGrid", "roughness": 0.7 },
     },
 
-    // The look nothing drives. What a zone changes - fog, grading - is authored on the zones below
-    // instead, since a system has to write those every frame.
     "view": {
         "environment": { "gradient": { "horizon": "#6E6493", "zenith": "#1B2440", "ground": "#0E0F15" } },
         "effects": [
@@ -26,8 +23,21 @@
     },
 
     "entities": [
-        // Where the player starts, read once at load
-        { "id": "spawn", "at": [0, -6, -0.5], "rot": [0, 0, 0] },
+        { "id": "spawn", "at": [-13, -10, 0], "rot": [0, 0, -60] },
+
+        // Spawn interactable
+        {
+            "id": "inter",
+            "name": "inter",
+            "at": [-11, -9, 0],
+            "material": "interactive",
+            "block": [0.5, 0.5, 1.0],
+            "interactable": {
+                "at": [-11, -9, 0],
+                "prompt": "Lorem ipsum",
+                "emit": "inter-signal",
+            },
+        },
 
         // Sun and ground
         {
