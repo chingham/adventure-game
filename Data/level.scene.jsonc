@@ -33,7 +33,7 @@
             "material": "interactive",
             "block": [0.5, 0.5, 1.0],
             "interactable": {
-                "at": [-11, -9, 0],
+                "at": [-10.75, -8.75, 1],
                 "prompt": "Lorem ipsum",
                 "emit": "inter-signal",
             },

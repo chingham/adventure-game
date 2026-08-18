@@ -23,34 +23,45 @@ struct Interactable() {
 }
 
 // Rides whoever can use things, and holds what he has in reach right now.
-struct Interactor {
+struct Interactor() {
     public Entity Candidate;
+
+    public double ReachCone = 120;
+    public double VerticalReach = 2;
+    public FloatRange MarkerRange = new(6, 8);
 }
 
-sealed class InteractionSystem(IInput input, Flags flags) : ISystem {
-    // Cosine of half the 120 degree cone in front of the character, and how far up or down reach carries.
-    const double ConeCos = 0.5;
-    const double VerticalReach = 2;
-
-    // A spent one-shot is remembered as a flag rather than on the component: the level is rebuilt from
-    // its file on every reload, and an emptied chest must not refill itself.
+sealed class InteractionSystem(IInput input, Flags flags, InteractionMarkers markers) : ISystem {
     public static string UsedFlag(string emit) => emit + ".used";
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
         var use = input.Consume(Controls.Interact);
+        
+        markers.Visible.Clear();
 
         foreach (var row in world.Query<CharacterMovement, Interactor>()) {
+            ref var movement = ref row.Component1;
             ref var interactor = ref row.Component2;
             
             // Find new candidate
             var previousCandidate = interactor.Candidate;
-            var newCandidate = Select(world, row.Component1);
+            var newCandidate = Select(world, movement, interactor, markers);
             
             // Assign new candidate, changing render layers
             if (previousCandidate != newCandidate) {
                 interactor.Candidate = newCandidate;
-                SetHighlighted(world, previousCandidate, highlighted: false);
-                SetHighlighted(world, newCandidate, highlighted: true);
+                SetHighlighted(world, markers, previousCandidate, highlighted: false);
+                SetHighlighted(world, markers, newCandidate, highlighted: true);
+            }
+            
+            // Update marker selected state
+            for (var i = 0; i < markers.Visible.Count; i++) {
+                var marker = markers.Visible[i];
+                if (marker.Entity != interactor.Candidate) continue;
+            
+                // Update marker selection
+                markers.Visible[i] = marker with { Selected = true };
+                break;
             }
 
             // Use item
@@ -68,35 +79,50 @@ sealed class InteractionSystem(IInput input, Flags flags) : ISystem {
         }
     }
 
-    // Best thing within its own reach and inside the cone the character faces, scored by how deep into
-    // that reach he stands - so a small thing he is on top of wins over a wide one further out.
-    Entity Select(World world, in CharacterMovement movement) {
+    Entity Select(World world, in CharacterMovement movement, in Interactor interactor, InteractionMarkers markers) {
+        // Store best candidate
         var facing = new Vector3d(Math.Sin(movement.Yaw), Math.Cos(movement.Yaw), 0);
         var best = Entity.Null;
         var bestScore = double.MaxValue;
 
+        // For each interactable
         foreach (var row in world.Query<Interactable, RelativeTransform>()) {
+            
+            // Filter if disabled or already used
             var interactable = row.Component1;
             if (!interactable.Enabled || interactable.Once && flags.Has(UsedFlag(interactable.Emit)))
                 continue;
 
+            // Compute world point
             var transform = row.Component2.LocalTransform;
             var point = transform.Position + Vector3d.Transform(interactable.Offset, transform.Rotation);
             var toPoint = point - movement.Position;
-            if (Math.Abs(toPoint.Z) > VerticalReach)
-                continue;
 
+            // Compute distance
             var flat = Utils.FlattenXY(toPoint);
-            var distance = flat.Length();
+            var distance = interactor.MarkerRange.Max * 2;
+            if (Math.Abs(toPoint.Z) <= interactor.VerticalReach) {
+                distance = (float)flat.Length();
+            }
+            
+            // Add marker
+            var presence = 1 - interactor.MarkerRange.Progress(distance).Clamp01();
+            var marker = new InteractionMarker(row.Entity, point, presence, false);
+            markers.Visible.Add(marker);
+            
+            // Filter if out of reach
             if (distance > interactable.Reach)
                 continue;
+
             // Standing right on it has no direction to judge, so the cone only applies at a distance
-            if (distance > Utils.Epsilon && Vector3d.Dot(flat / distance, facing) < ConeCos)
+            if (distance > Utils.Epsilon && Vector3d.Dot(flat / distance, facing) < Math.Cos(interactor.ReachCone.ToRadians()))
                 continue;
 
+            // Replace best based on score (distance)
             var score = distance / interactable.Reach;
             if (score >= bestScore)
                 continue;
+            
             bestScore = score;
             best = row.Entity;
         }
@@ -104,18 +130,20 @@ sealed class InteractionSystem(IInput input, Flags flags) : ISystem {
         return best;
     }
 
-    static void SetHighlighted(World world, Entity entity, bool highlighted) {
-        // Find mesh
+    static void SetHighlighted(World world, InteractionMarkers markers, Entity entity, bool highlighted) {
         if (entity.IsNull) return;
-        if (!world.Has<RenderMesh>(entity)) return;
-        ref var mesh = ref world.Get<RenderMesh>(entity);
-            
-        // Get mask without highlight layer, and add it back if highlighted
-        var mask = mesh.Layers.Without(Layers.Render.Highlight);
-        if (highlighted)
-            mask |= Layers.Render.Highlight;
+        
+        // Find mesh
+        if (world.Has<RenderMesh>(entity)) {
+            ref var mesh = ref world.Get<RenderMesh>(entity);
 
-        // Update layer mask
-        mesh.Layers = mask;
+            // Get mask without highlight layer, and add it back if highlighted
+            var mask = mesh.Layers.Without(Layers.Render.Highlight);
+            if (highlighted)
+                mask |= Layers.Render.Highlight;
+
+            // Update layer mask
+            mesh.Layers = mask;
+        }
     }
 }
