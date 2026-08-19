@@ -17,45 +17,68 @@ sealed class InputGlyphs {
     readonly PadBrand defaultGamepadBrand = PadBrand.Xbox;
     readonly Dictionary<PadBrand, GlyphAtlas> gamepadGlyphs = [];
     
-    public InputGlyph? GetGlyph(string keyName) {
-        throw new NotImplementedException();
+    // Public API
+    
+    public bool TryGetGlyph(InputKey key, out InputGlyph glyph) {
+        if (keyboardGlyphs == null) {
+            glyph = default;
+            return false;
+        }
+        
+        var assetName = KeyboardAsset(key);
+        if (assetName == null) {
+            glyph = default;
+            return false;
+        }
+        
+        return TryGetGlyph(keyboardGlyphs, assetName, out glyph);
     }
     
-    public InputGlyph? GetGlyph(PadBrand brand, PadButton button) {
+    public bool TryGetGlyph(PadBrand brand, PadButton button, out InputGlyph glyph) {
         (brand, var atlas) = NormalizeBrand(brand);
 
         var assetName = brand switch {
             PadBrand.PlayStation => PlayStationAsset(button),
             _ => XboxAsset(button),
         };
-        if (assetName == null) return null;
+        if (assetName == null) {
+            glyph = default;
+            return false;
+        }
         
-        return GetGlyph(atlas, assetName);
+        return TryGetGlyph(atlas, assetName, out glyph);
     }
-    public InputGlyph? GetGlyph(PadBrand brand, PadTrigger trigger) {
+    public bool TryGetGlyph(PadBrand brand, PadTrigger trigger, out InputGlyph glyph) {
         (brand, var atlas) = NormalizeBrand(brand);
 
         var assetName = brand switch {
             PadBrand.PlayStation => PlayStationAsset(trigger),
             _ => XboxAsset(trigger),
         };
-        if (assetName == null) return null;
+        if (assetName == null) {
+            glyph = default;
+            return false;
+        }
         
-        return GetGlyph(atlas, assetName);
+        return TryGetGlyph(atlas, assetName, out glyph);
     }
-    public InputGlyph? GetGlyph(PadBrand brand, PadStick stick) {
+    public bool TryGetGlyph(PadBrand brand, PadStick stick, out InputGlyph glyph) {
         (brand, var atlas) = NormalizeBrand(brand);
 
         var assetName = brand switch {
             PadBrand.PlayStation => PlayStationAsset(stick),
             _ => XboxAsset(stick),
         };
-        if (assetName == null) return null;
+        if (assetName == null) {
+            glyph = default;
+            return false;
+        }
         
-        return GetGlyph(atlas, assetName);
+        return TryGetGlyph(atlas, assetName, out glyph);
     }
 
     // Helpers
+    
     (PadBrand, GlyphAtlas) NormalizeBrand(PadBrand brand) {
         if (gamepadGlyphs.TryGetValue(brand, out var atlas)) {
             return (brand, atlas);
@@ -67,14 +90,24 @@ sealed class InputGlyphs {
 
         throw new InvalidOperationException("No gamepad glyph atlas available.");
     }
-    static InputGlyph? GetGlyph(GlyphAtlas atlas, string name) {
+    
+    static bool TryGetGlyph(GlyphAtlas atlas, string name, out InputGlyph glyph) {
         if (atlas.TryGetGlyphRect(name, out var rect)) {
-            return new InputGlyph(atlas.Texture, rect);
+            glyph = new InputGlyph(atlas.Texture, rect);
+            return true;
         }
-        return null;
+        glyph = default;
+        return false;
     }
 
     // Brand specific mapping
+    
+    static string? KeyboardAsset(InputKey key) {
+        if (key >= InputKey.A && key <= InputKey.Z)
+            return $"keyboard_{key.ToString().ToLower()}";
+        
+        return null;
+    }
     
     static string? XboxAsset(PadButton b) {
         return b switch {

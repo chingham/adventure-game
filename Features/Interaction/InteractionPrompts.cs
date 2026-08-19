@@ -6,18 +6,22 @@ using Quark.Kit.Rendering;
 using Quark.Kit.Ui;
 using Quark.Numerics;
 using Quark.Platform.Input;
+using InputGlyphs = AdventureGame.Input.InputGlyphs;
 
 namespace AdventureGame.Features.Interaction;
 
-sealed class InteractionPrompts(InteractionMarkers markers, IRenderer renderer, IInput input) : IUiRecipe {
-
-    const float PresenceCircleSize = 12f;
-    const float PromptCircleSize = 16f;
+sealed class InteractionPrompts(
+    InteractionMarkers markers,
+    InputGlyphs glyphs,
+    IRenderer renderer,
+    IInput input, 
+    UiModule module) : IUiRecipe {
     
     public void Compose(UiComposer ui) {
 
         var camera = renderer.Camera;
-        var label = input.Prompt(Controls.Interact).Label;
+        var hasInteractionImage = TryGetInteractionImage(out var interactionImage);
+        var held = input.Held(Controls.Interact);
         
         // Draw the circle exactly at the projected position
         using (ui.Portal()) {
@@ -37,27 +41,109 @@ sealed class InteractionPrompts(InteractionMarkers markers, IRenderer renderer, 
                 SetMarkerState(marker.Entity, state);
                 
                 // Draw marker
-                MarkerCircle(ui, screen, (float)marker.Presence, state.Value);
+                Marker(ui,
+                    image: hasInteractionImage ? interactionImage : null,
+                    invert: held || marker.Active < 1,
+                    position: screen, 
+                    presence: (float)marker.Presence, 
+                    selected: state.Value,
+                    farewell: (float)marker.Active);
             }
         }
     }
 
-    static void MarkerCircle(UiComposer ui, Vector2 position, float presence, float selected) {
-        var targetRadius = float.Lerp(PresenceCircleSize, PromptCircleSize, selected);
-        var radius = targetRadius / 2 * presence.Clamp01();
-        var rect = new Rect(position.X - radius, position.Y - radius, position.X + radius, position.Y + radius);
+    void Marker(UiComposer ui, UiImage? image, bool invert, Vector2 position, float presence, float selected, float farewell) {
+        const float presenceSize = 18f;
+        const float promptSize = 29f;
+        const float promptKeyBorderRadius = 6f;
+        const float glyphMargin = -2f;
+        const float farewellHold = 0.5f;
+
+        var scale = farewell > farewellHold ? 1 : farewell / farewellHold;
+        var targetSize = float.Lerp(presenceSize * presence.Clamp01(), promptSize, selected) * scale;
+        var radius = input.Scheme == InputScheme.KeyboardMouse && selected > 0.5f ? promptKeyBorderRadius : targetSize / 2;
+        var rect = new Rect(
+            position.X - targetSize / 2,
+            position.Y - targetSize / 2,
+            position.X + targetSize / 2, 
+            position.Y + targetSize / 2);
+
+        using (ui.Node().At(rect).Enter()) {
+            var fillColor = (invert ? Color.White : Color.Black).WithAlpha(selected);
+            var imageColor = invert ? Color.Black : Color.White;
+            //Console.WriteLine($"Invert: {invert}, Selected: {selected}, HasImage: {image != null}, ImageColor: {imageColor}, FillColor: {fillColor}");
+            
+            ui.DrawRect(radius)
+                .Stroke(Color.White.WithAlpha(1 - selected), 1)
+                .Color(fillColor)
+                .OuterShadow(0x00000044, 8, 0, new Vector2(0, 1));
+
+            if (image != null) {
+                var imageNode = ui
+                    .Node(Size.Pixels(rect.Width - glyphMargin * 2), Size.Pixels(rect.Height  - glyphMargin * 2))
+                    .Margin(glyphMargin)
+                    .Opacity(selected);
+                using (imageNode.Enter()) {
+                    ui.DrawImage(image.Value).Color(imageColor);
+                }
+            }
+        }
+
+        //ui.DrawRect(rect).Stroke(0xFF0000FF, 1).Color(0x00000000);
+    }
+    
+    // Glyph images
+    readonly Dictionary<string, UiImage> glyphImages = [];
+
+    bool TryGetInteractionImage(out UiImage image) {
+        var prompt = input.Prompt(Controls.Interact);
         
-        var fillColor = Color.Lerp(Color.FromHex("#FFFFFF00"), Color.FromHex("#FFFFFFFF"), selected);
-        ui.DrawRect(rect, radius)
-            .Stroke(0xFFFFFFFF, 1)
-            .Color(fillColor)
-            .OuterShadow(0x00000044, 8, 0, new Vector2(0, 1));
+        // Depends on scheme
+        switch (prompt.Source) {
+            case PadButtonSource s: {
+                var brand = input.Player.Brand;
+                var button = s.Button;
+                
+                var cacheKey = $"gamepad:{brand}:{button}";
+                if (glyphImages.TryGetValue(cacheKey, out image)) return true;
+                if (!glyphs.TryGetGlyph(brand, button, out var g)) {
+                    Console.WriteLine($"{brand}:{button} not found");
+                    return false;
+                }
+        
+                image = module.Image(g.Texture).Region(g.Rect);
+                glyphImages[cacheKey] = image;
+                return true;
+            }
+            
+            case KeySource s: {
+                var key = s.Key;
+                
+                var cacheKey = $"keyboard:{key}";
+                if (glyphImages.TryGetValue(cacheKey, out image)) return true;
+                if (!glyphs.TryGetGlyph(key, out var g)) {
+                    Console.WriteLine($"{key} not found");
+                    return false;
+                }
+                
+                image = module.Image(g.Texture).Region(g.Rect);
+                glyphImages[cacheKey] = image;
+                return true;
+            }
+            
+            case LetterSource:
+            case MouseButtonSource:
+            default:
+                Console.WriteLine($"No glyph for {prompt.Source}");
+                image = default;
+                return false;
+        }
     }
 
     // Marker spring states
-    readonly Spring spring = Spring.FromDuration(0.2f, 0.7f);
-    
-    readonly Dictionary<Entity, SpringState> markerStates = new();
+    readonly Spring spring = Spring.FromDuration(0.17f, 0.55f);
+
+    readonly Dictionary<Entity, SpringState> markerStates = [];
 
     struct SpringState(float value, float velocity) {
         public float Value = value;

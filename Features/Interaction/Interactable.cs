@@ -25,6 +25,8 @@ struct Interactable() {
 // Rides whoever can use things, and holds what he has in reach right now.
 struct Interactor() {
     public Entity Candidate;
+    
+    public (Entity Entity, Vector3d Point, double Fade) LastUsed;
 
     public double ReachCone = 120;
     public double VerticalReach = 2;
@@ -33,6 +35,8 @@ struct Interactor() {
 
 sealed class InteractionSystem(IInput input, Flags flags, InteractionMarkers markers) : ISystem {
     public static string UsedFlag(string emit) => emit + ".used";
+
+    const double FarewellDuration = 0.17;
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
         var use = input.Consume(Controls.Interact);
@@ -54,29 +58,79 @@ sealed class InteractionSystem(IInput input, Flags flags, InteractionMarkers mar
                 SetHighlighted(world, markers, newCandidate, highlighted: true);
             }
             
+            // Use item
+            if (use && !interactor.Candidate.IsNull)
+                Use(world, ref interactor, interactor.Candidate);
+            
             // Update marker selected state
             for (var i = 0; i < markers.Visible.Count; i++) {
                 var marker = markers.Visible[i];
                 if (marker.Entity != interactor.Candidate) continue;
-            
-                // Update marker selection
                 markers.Visible[i] = marker with { Selected = true };
                 break;
             }
-
-            // Use item
-            if (use && !interactor.Candidate.IsNull) {
-                // Get interactable
-                var interactable = world.Get<Interactable>(interactor.Candidate);
-                
-                // Set flag if one-shot
-                if (interactable.Once)
-                    flags.Set(UsedFlag(interactable.Emit));
-
-                // Emit signal
-                world.Events<Signal>().Write(new Signal(interactable.Emit, interactor.Candidate));
-            }
+            
+            // Update farewell
+            Farewell(ref interactor, deltaTime);
         }
+    }
+
+    void Use(World world, ref Interactor interactor, Entity entity) {
+        var intectable = world.Get<Interactable>(entity);
+        
+        // Set flag if one-shot
+        if (intectable.Once)
+            flags.Set(UsedFlag(intectable.Emit));
+        
+        // Emit signal
+        world.Events<Signal>().Write(new Signal(intectable.Emit, entity));
+        
+        // Store last used for marker fade
+        //if (!IsElligible(intectable)) {
+            var point = PointOf(intectable, world.Get<RelativeTransform>(entity));
+            interactor.LastUsed = (entity, point, 1);
+        //}
+    }
+    void Farewell(ref Interactor interactor, float deltaTime) {
+        
+        // Skip if last used is already faded out
+        if (interactor.LastUsed.Fade <= 0) 
+            return;
+
+        // Search marker for last used entity in visible list
+        var found = false;
+        for (var i = 0; i < markers.Visible.Count; i++) {
+            var marker = markers.Visible[i];
+            if (marker.Entity != interactor.LastUsed.Entity) continue;
+            
+            // Update marker to be selected and active
+            markers.Visible[i] = marker with { Selected = true, Active = 1 };
+            found = true;
+            break;
+        }
+
+        if (!found) {
+            // Not found, add a new marker for the last used entity
+            markers.Visible.Add(new InteractionMarker(
+                interactor.LastUsed.Entity,
+                interactor.LastUsed.Point,
+                Presence: 1,
+                Selected: true,
+                Active: interactor.LastUsed.Fade));
+        }
+
+        // Fade out the last used marker over time
+        interactor.LastUsed.Fade = (interactor.LastUsed.Fade - deltaTime / FarewellDuration).Clamp01();
+        if (interactor.LastUsed.Fade <= 0)
+            interactor.LastUsed.Entity = Entity.Null;
+    }
+    
+    bool IsElligible(in Interactable interactable) {
+        return interactable.Enabled && (!interactable.Once || !flags.Has(UsedFlag(interactable.Emit)));
+    }
+    static Vector3d PointOf(in Interactable interactable, in RelativeTransform transform) {
+        var pose = transform.LocalTransform;
+        return pose.Position + Vector3d.Transform(interactable.Offset, pose.Rotation);
     }
 
     Entity Select(World world, in CharacterMovement movement, in Interactor interactor, InteractionMarkers markers) {
@@ -90,12 +144,11 @@ sealed class InteractionSystem(IInput input, Flags flags, InteractionMarkers mar
             
             // Filter if disabled or already used
             var interactable = row.Component1;
-            if (!interactable.Enabled || interactable.Once && flags.Has(UsedFlag(interactable.Emit)))
+            if (!IsElligible(interactable))
                 continue;
 
             // Compute world point
-            var transform = row.Component2.LocalTransform;
-            var point = transform.Position + Vector3d.Transform(interactable.Offset, transform.Rotation);
+            var point = PointOf(interactable, row.Component2);
             var toPoint = point - movement.Position;
 
             // Compute distance
@@ -107,7 +160,7 @@ sealed class InteractionSystem(IInput input, Flags flags, InteractionMarkers mar
             
             // Add marker
             var presence = 1 - interactor.MarkerRange.Progress(distance).Clamp01();
-            var marker = new InteractionMarker(row.Entity, point, presence, false);
+            var marker = new InteractionMarker(row.Entity, point, presence, false, 1);
             markers.Visible.Add(marker);
             
             // Filter if out of reach

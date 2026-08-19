@@ -18,6 +18,8 @@ sealed class GlyphAtlas {
         
         // Load texture
         var texturePath = Path.GetFullPath(Path.Combine(FolderPath, root.Attribute("imagePath")!.Value));
+        var textureWidth = int.Parse(root.Attribute("width")!.Value);
+        var textureHeight = int.Parse(root.Attribute("height")!.Value);
         
         Texture = assets.LoadTexture(texturePath);
         
@@ -28,6 +30,8 @@ sealed class GlyphAtlas {
             var y = float.Parse(glyph.Attribute("y")!.Value);
             var width = float.Parse(glyph.Attribute("width")!.Value);
             var height = float.Parse(glyph.Attribute("height")!.Value);
+            
+            y = textureHeight - y - height; // Flip Y axis
             
             glyphs[glyphName] = new Rect(x, y, x + width, y + height);
         }

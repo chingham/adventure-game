@@ -1,4 +1,4 @@
-<TextureAtlas imagePath="xbox.png">
+<TextureAtlas imagePath="xbox.png" width="640" height="640">
     <SubTexture name="controller_xbox_adaptive" x="0" y="0" width="64" height="64" />
     <SubTexture name="controller_xbox360" x="64" y="0" width="64" height="64" />
     <SubTexture name="controller_xboxone" x="128" y="0" width="64" height="64" />

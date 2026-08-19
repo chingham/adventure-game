@@ -1,4 +1,4 @@
-<TextureAtlas imagePath="pc.png">
+<TextureAtlas imagePath="pc.png" width="1088" height="1024">
     <SubTexture name="keyboard" x="0" y="0" width="64" height="64" />
     <SubTexture name="keyboard_0" x="64" y="0" width="64" height="64" />
     <SubTexture name="keyboard_0_outline" x="128" y="0" width="64" height="64" />

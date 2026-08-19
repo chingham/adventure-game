@@ -1,4 +1,4 @@
-<TextureAtlas imagePath="playstation.png">
+<TextureAtlas imagePath="playstation.png" width="768" height="768">
     <SubTexture name="controller_playstation1" x="0" y="0" width="64" height="64" />
     <SubTexture name="controller_playstation2" x="64" y="0" width="64" height="64" />
     <SubTexture name="controller_playstation3" x="128" y="0" width="64" height="64" />
