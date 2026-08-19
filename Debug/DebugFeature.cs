@@ -2,6 +2,7 @@ using AdventureGame.App;
 using AdventureGame.Features.Camera;
 using AdventureGame.Features.Character;
 using AdventureGame.Features.Progression;
+using AdventureGame.Features.Sequences;
 using Quark.Kit;
 
 namespace AdventureGame.Debug;
@@ -10,11 +11,9 @@ namespace AdventureGame.Debug;
 // game running with nothing drawn on top of it. The panels themselves live next to what they inspect.
 sealed class DebugFeature : IGameFeature {
     public void Install(Game game) {
-        // Probes: they annotate gameplay, so they sit right behind what they watch
-        game.AddSystem<TriggerProbeSystem>(QuarkPhases.Gameplay, Order.Probe);
-        game.AddSystem<InteractionProbeSystem>(QuarkPhases.Gameplay, Order.Probe);
 
         // Panels
+        game.AddSystem<ConsolePanel>(QuarkPhases.LateUpdate, Order.Panel);
         game.AddSystem<CharacterPanel>(QuarkPhases.LateUpdate, Order.Panel);
         game.AddSystem<CameraPanel>(QuarkPhases.LateUpdate, Order.Panel);
         game.AddSystem<ProgressionPanel>(QuarkPhases.LateUpdate, Order.Panel);
