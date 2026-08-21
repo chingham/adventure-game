@@ -2,8 +2,10 @@
     <Project Path="AdventureGame.csproj" />
     <Folder Name="/Engine/">
         <Project Path="../../engine/Quark.Assets/Quark.Assets.csproj" />
+        <Project Path="../../engine/Quark.Audio/Quark.Audio.csproj" />
         <Project Path="../../engine/Quark.Ecs/Quark.Ecs.csproj" />
         <Project Path="../../engine/Quark.Graphics/Quark.Graphics.csproj" />
+        <Project Path="../../engine/Quark.Kit.Audio/Quark.Kit.Audio.csproj" />
         <Project Path="../../engine/Quark.Kit.Capture/Quark.Kit.Capture.csproj" />
         <Project Path="../../engine/Quark.Kit.ImGui/Quark.Kit.ImGui.csproj" />
         <Project Path="../../engine/Quark.Kit.Physics/Quark.Kit.Physics.csproj" />
