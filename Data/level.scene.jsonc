@@ -15,7 +15,9 @@
     },
 
     "view": {
-        "environment": { "gradient": { "horizon": "#6E6493", "zenith": "#1B2440", "ground": "#0E0F15" } },
+        "environment": {
+            "gradient": { "horizon": "#6E6493", "zenith": "#1B2440", "ground": "#0E0F15" },
+        },
         "effects": [
             { "bloom": { "threshold": 1.2, "radius": 1.3, "intensity": 0.22 } },
             { "film": { "vignette": 0.3 }, "space": "ldr" },
@@ -42,9 +44,20 @@
         // Sun and ground
         {
             "id": "sun",
-            "light": { "type": "directional", "dir": [-0.4, -0.35, -0.85], "intensity": 1.5, "shadows": true },
+            "light": {
+                "type": "directional",
+                "dir": [-0.4, -0.35, -0.85],
+                "intensity": 1.5,
+                "shadows": true,
+            },
         },
-        { "id": "terrain", "at": [0, -14, 0], "material": "danger", "mesh": "terrain", "solid": true },
+        {
+            "id": "terrain",
+            "at": [0, -14, 0],
+            "material": "danger",
+            "mesh": "terrain",
+            "solid": true,
+        },
 
         // The open air: aspects with no volume, in force wherever no zone says otherwise
         {
@@ -99,7 +112,12 @@
         { "id": "tower-1", "at": [2, 24, 0], "block": [4, 4, 10] },
         { "id": "tower-2", "at": [-2, 20, 0], "block": [4, 4, 3] },
         { "id": "tower-3", "at": [2, 20, 0], "block": [4, 4, 3] },
-        { "id": "tower-4", "at": [2, 20, 3], "material": "danger", "stairs": { "steps": 8, "w": 4, "facing": "east" } },
+        {
+            "id": "tower-4",
+            "at": [2, 20, 3],
+            "material": "danger",
+            "stairs": { "steps": 8, "w": 4, "facing": "east" },
+        },
         { "id": "tower-5", "at": [6, 20, 3], "block": [4, 4, 2] },
         {
             "id": "tower-6",
@@ -108,14 +126,30 @@
             "stairs": { "steps": 8, "w": 4, "facing": "north" },
         },
         { "id": "tower-7", "at": [6, 28, 5], "block": [4, 4, 2] },
-        { "id": "tower-8", "at": [2, 28, 7], "material": "danger", "stairs": { "steps": 8, "w": 4, "facing": "west" } },
+        {
+            "id": "tower-8",
+            "at": [2, 28, 7],
+            "material": "danger",
+            "stairs": { "steps": 8, "w": 4, "facing": "west" },
+        },
         { "id": "tower-9", "at": [-2, 24, 7], "block": [4, 8, 2] },
-        { "id": "tower-10", "at": [0, 24, 9], "material": "danger", "ramp": { "size": [2, 2, 1], "facing": "east" } },
+        {
+            "id": "tower-10",
+            "at": [0, 24, 9],
+            "material": "danger",
+            "ramp": { "size": [2, 2, 1], "facing": "east" },
+        },
         { "id": "tower-11", "at": [2, 20, 8], "block": [4, 4, 2] },
         { "id": "tower-12", "at": [6, 20, 9], "block": [4, 4, 1] },
 
         // Callable lifts
-        { "id": "tower-pad", "name": "tower-pad", "at": [7, 21, 10], "material": "interactive", "block": [2, 2, 0.2] },
+        {
+            "id": "tower-pad",
+            "name": "tower-pad",
+            "at": [7, 21, 10],
+            "material": "interactive",
+            "block": [2, 2, 0.2],
+        },
         {
             "id": "callable-lifts-1",
             "at": [7, 21, 10.2],
@@ -127,11 +161,23 @@
             "at": [10, 39, 11.75],
             "material": "danger",
             "block": [4, 4, 0.25],
-            "mover": { "to": [12, 22, 9.875], "mode": "called", "on": "tower-call", "speed": 6, "dwell": 2 },
+            "mover": {
+                "to": [12, 22, 9.875],
+                "mode": "called",
+                "on": "tower-call",
+                "speed": 6,
+                "dwell": 2,
+            },
         },
         { "id": "callable-lifts-2", "at": [6, 43, 11], "block": [8, 8, 1] },
 
-        { "id": "lift-pad", "name": "lift-pad", "at": [-1, 25, 0], "material": "interactive", "block": [2, 2, 0.2] },
+        {
+            "id": "lift-pad",
+            "name": "lift-pad",
+            "at": [-1, 25, 0],
+            "material": "interactive",
+            "block": [2, 2, 0.2],
+        },
         {
             "id": "callable-lifts-3",
             "at": [-1, 25, 0.2],
@@ -143,7 +189,13 @@
             "at": [-6, 28, 8.75],
             "material": "danger",
             "block": [4, 4, 0.25],
-            "mover": { "to": [-4, 30, 0.125], "mode": "called", "on": "lift-call", "speed": 6, "dwell": 2 },
+            "mover": {
+                "to": [-4, 30, 0.125],
+                "mode": "called",
+                "on": "lift-call",
+                "speed": 6,
+                "dwell": 2,
+            },
         },
 
         {
@@ -172,14 +224,24 @@
         { "id": "pyramid-1", "at": [12, 12, 0], "block": [12, 12, 1] },
         { "id": "pyramid-2", "at": [14, 16, 1], "block": [8, 6, 1] },
         { "id": "pyramid-3", "at": [18, 18, 2], "block": [2, 2, 1] },
-        { "id": "pyramid-4", "at": [10, 14, 0], "material": "danger", "ramp": { "size": [2, 2, 1], "facing": "east" } },
+        {
+            "id": "pyramid-4",
+            "at": [10, 14, 0],
+            "material": "danger",
+            "ramp": { "size": [2, 2, 1], "facing": "east" },
+        },
         {
             "id": "pyramid-5",
             "at": [16, 14, 1],
             "material": "danger",
             "ramp": { "size": [2, 2, 1], "facing": "north" },
         },
-        { "id": "pyramid-6", "at": [16, 18, 2], "material": "danger", "ramp": { "size": [2, 2, 1], "facing": "east" } },
+        {
+            "id": "pyramid-6",
+            "at": [16, 18, 2],
+            "material": "danger",
+            "ramp": { "size": [2, 2, 1], "facing": "east" },
+        },
 
         // Jump platforms
         { "id": "jump-platforms-1", "at": [10, -3, 0], "block": [3, 3, 1] },
@@ -214,7 +276,12 @@
         // Balance beam on two pillars
         { "id": "balance-beam-on-1", "at": [-16, -6, 0], "pillar": { "r": 0.5, "h": 2 } },
         { "id": "balance-beam-on-2", "at": [-16, 2, 0], "pillar": { "r": 0.5, "h": 2 } },
-        { "id": "balance-beam-on-3", "at": [-16, -7, 2], "material": "interactive", "block": [1, 10, 0.25] },
+        {
+            "id": "balance-beam-on-3",
+            "at": [-16, -7, 2],
+            "material": "interactive",
+            "block": [1, 10, 0.25],
+        },
 
         //---
 
@@ -228,12 +295,24 @@
         {
             "id": "shop-exterior-portal-a",
             "at": [-8, 0, 0],
-            "portalEnd": { "w": 2, "h": 2.5, "facing": "south", "exitAt": [9998, -5, 0], "exitFacing": "north" },
+            "portalEnd": {
+                "w": 2,
+                "h": 2.5,
+                "facing": "south",
+                "exitAt": [9998, -5, 0],
+                "exitFacing": "north",
+            },
         },
         {
             "id": "shop-exterior-portal-b",
             "at": [9998, -5, 0],
-            "portalEnd": { "w": 2, "h": 2.5, "facing": "north", "exitAt": [-8, 0, 0], "exitFacing": "south" },
+            "portalEnd": {
+                "w": 2,
+                "h": 2.5,
+                "facing": "north",
+                "exitAt": [-8, 0, 0],
+                "exitFacing": "south",
+            },
         },
 
         // The doorstep announces itself on the bus, and nothing listens yet
@@ -241,7 +320,11 @@
             "id": "shop-doorstep",
             "name": "shop-doorstep",
             "at": [-8, -1.5, 0],
-            "trigger": { "size": [2, 1.5, 2.5], "enter": "shop-doorstep", "exit": "shop-doorstep.left" },
+            "trigger": {
+                "size": [2, 1.5, 2.5],
+                "enter": "shop-doorstep",
+                "exit": "shop-doorstep.left",
+            },
         },
 
         // Shop: Interior
@@ -267,13 +350,23 @@
             "at": [9999, 8, 0],
             "material": "danger",
             "block": [2, 1, 3],
-            "interactable": { "at": [10000, 8, 1.2], "prompt": "Ouvrir la porte", "emit": "shop-door", "reach": 1.8 },
+            "interactable": {
+                "at": [10000, 8, 1.2],
+                "prompt": "Ouvrir la porte",
+                "emit": "shop-door",
+                "reach": 1.8,
+            },
         },
         { "id": "shop-interior-6", "at": [9993, -5, 0], "block": [1, 14, 3] },
         { "id": "shop-interior-7", "at": [10006, -5, 0], "block": [1, 14, 3] },
         { "id": "shop-interior-8", "at": [9994, -5, 0], "block": [4, 1, 3] },
         { "id": "shop-interior-9", "at": [10000, -5, 0], "block": [6, 1, 3] },
-        { "id": "shop-interior-10", "at": [9996, 4, 0], "material": "interactive", "block": [8, 2, 1] },
+        {
+            "id": "shop-interior-10",
+            "at": [9996, 4, 0],
+            "material": "interactive",
+            "block": [8, 2, 1],
+        },
         { "id": "shop-interior-11", "at": [9995, -2, 0], "pillar": { "r": 0.5, "h": 3 } },
         { "id": "shop-interior-12", "at": [10004, -2, 0], "pillar": { "r": 0.5, "h": 3 } },
 
@@ -297,7 +390,12 @@
         { "id": "shop-back-room-2", "at": [9997, 9, 0], "block": [1, 5, 3] },
         { "id": "shop-back-room-3", "at": [10002, 9, 0], "block": [1, 5, 3] },
         { "id": "shop-back-room-4", "at": [9997, 13, 0], "block": [6, 1, 3] },
-        { "id": "shop-back-room-5", "at": [9999.5, 11, 0], "material": "interactive", "block": [1, 1, 1] },
+        {
+            "id": "shop-back-room-5",
+            "at": [9999.5, 11, 0],
+            "material": "interactive",
+            "block": [1, 1, 1],
+        },
 
         // Rules: hearing a signal runs these steps
         // A pressure pad is a sensor, a sink and a call: the sequence is what ties the three together.
@@ -337,7 +435,7 @@
                     { "face": {} },
                     { "wait": 0.5 },
                     { "set": "shop-key" },
-                    { "toast": "Clé du magasin obtenue" },
+                    { "notice": "Clé du magasin obtenue" },
                     { "wait": 0.4 },
                     { "release": {} },
                 ],
@@ -355,12 +453,18 @@
                             "flag": "shop-key",
                             "then": [
                                 { "gate": {} },
-                                { "toast": "La porte s'ouvre" },
+                                { "notice": "La porte s'ouvre" },
                                 { "disable": "shop-door-panel" },
-                                { "move": { "id": "shop-door-panel", "by": [0, 0, -3.1], "s": 1.4 } },
+                                {
+                                    "move": {
+                                        "id": "shop-door-panel",
+                                        "by": [0, 0, -3.1],
+                                        "s": 1.4,
+                                    },
+                                },
                                 { "release": {} },
                             ],
-                            "else": [{ "toast": "C'est verrouillé." }],
+                            "else": [{ "notice": "C'est verrouillé." }],
                         },
                     },
                 ],

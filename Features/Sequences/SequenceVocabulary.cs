@@ -22,7 +22,9 @@ static class SequenceVocabulary {
             .Variant<IStep, Enable>("enable")
             .Variant<IStep, Disable>("disable")
             .Variant<IStep, Move>("move")
-            .Variant<IStep, Toast>("toast")
+            .Variant<IStep, Say>("say")
+            .Variant<IStep, Bark>("bark")
+            .Variant<IStep, Notice>("notice")
             .Variant<IStep, If>("if");
     }
 

@@ -66,7 +66,6 @@ record struct Disable(string Id) : IStep {
     public IEnumerable<string> References() => [Id];
 }
 
-// Slides an object by an offset, eased over s seconds
 record struct Move(string Id, Vector3d By, float S) : IStep {
     public string? Validate() =>
         Id is null ? "move needs an id"
@@ -75,12 +74,30 @@ record struct Move(string Id, Vector3d By, float S) : IStep {
     public IEnumerable<string> References() => [Id];
 }
 
-// Say something out loud
-record struct Toast(string Text) : IStep {
-    public string? Validate() => Text is not null ? null : "toast needs a text";
+// Dialogue
+
+record struct Say(string Speaker, string[] Pages) : IStep {
+    public string? Validate() {
+        if (Speaker is null) return "say needs a speaker";
+        if (Pages is null || Pages.Length == 0) return "say needs pages";
+        return null;
+    }
 }
 
-// Branching. The taken branch is spliced in front of what is left, so nesting needs no stack.
+record struct Bark(string Id, string Text) : IStep {
+    public string? Validate() {
+        if (Id is null) return "bark needs an id";
+        if (Text is null) return "bark needs a text";
+        return null;
+    }
+}
+
+record struct Notice(string Text) : IStep {
+    public string? Validate() => Text is not null ? null : "notice needs a text";
+}
+
+// Branching
+
 record struct If(string Flag, IStep[] Then, IStep[] Else) : IStep {
     public string? Validate() =>
         Flag is null ? "if needs a flag"

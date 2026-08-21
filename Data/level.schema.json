@@ -1082,6 +1082,27 @@
                     {
                       "type": "object",
                       "properties": {
+                        "bark": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "text": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "bark"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
                         "clear": {
                           "oneOf": [
                             {
@@ -1231,6 +1252,27 @@
                                   {
                                     "type": "object",
                                     "properties": {
+                                      "bark": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "text": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "required": [
+                                      "bark"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
                                       "clear": {
                                         "oneOf": [
                                           {
@@ -1407,6 +1449,31 @@
                                   {
                                     "type": "object",
                                     "properties": {
+                                      "notice": {
+                                        "oneOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "text": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "notice"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
                                       "release": {
                                         "type": "object",
                                         "properties": {},
@@ -1415,6 +1482,24 @@
                                     },
                                     "required": [
                                       "release"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "say": {
+                                        "type": "object",
+                                        "properties": {
+                                          "speaker": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "required": [
+                                      "say"
                                     ],
                                     "additionalProperties": false
                                   },
@@ -1440,31 +1525,6 @@
                                     },
                                     "required": [
                                       "set"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "toast": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "text": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "toast"
                                     ],
                                     "additionalProperties": false
                                   },
@@ -1533,6 +1593,27 @@
                                   {
                                     "type": "object",
                                     "properties": {
+                                      "bark": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "text": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "required": [
+                                      "bark"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
                                       "clear": {
                                         "oneOf": [
                                           {
@@ -1709,6 +1790,31 @@
                                   {
                                     "type": "object",
                                     "properties": {
+                                      "notice": {
+                                        "oneOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "text": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "notice"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
                                       "release": {
                                         "type": "object",
                                         "properties": {},
@@ -1717,6 +1823,24 @@
                                     },
                                     "required": [
                                       "release"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "say": {
+                                        "type": "object",
+                                        "properties": {
+                                          "speaker": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "required": [
+                                      "say"
                                     ],
                                     "additionalProperties": false
                                   },
@@ -1742,31 +1866,6 @@
                                     },
                                     "required": [
                                       "set"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "toast": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "text": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "toast"
                                     ],
                                     "additionalProperties": false
                                   },
@@ -1862,6 +1961,31 @@
                     {
                       "type": "object",
                       "properties": {
+                        "notice": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "text": {
+                                  "type": "string"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "notice"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
                         "release": {
                           "type": "object",
                           "properties": {},
@@ -1870,6 +1994,24 @@
                       },
                       "required": [
                         "release"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "say": {
+                          "type": "object",
+                          "properties": {
+                            "speaker": {
+                              "type": "string"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "say"
                       ],
                       "additionalProperties": false
                     },
@@ -1895,31 +2037,6 @@
                       },
                       "required": [
                         "set"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "toast": {
-                          "oneOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "text": {
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "toast"
                       ],
                       "additionalProperties": false
                     },
@@ -3283,6 +3400,27 @@
                   {
                     "type": "object",
                     "properties": {
+                      "bark": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "text": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "bark"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
                       "clear": {
                         "oneOf": [
                           {
@@ -3432,6 +3570,27 @@
                                 {
                                   "type": "object",
                                   "properties": {
+                                    "bark": {
+                                      "type": "object",
+                                      "properties": {
+                                        "id": {
+                                          "type": "string"
+                                        },
+                                        "text": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "bark"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
                                     "clear": {
                                       "oneOf": [
                                         {
@@ -3608,6 +3767,31 @@
                                 {
                                   "type": "object",
                                   "properties": {
+                                    "notice": {
+                                      "oneOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "text": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "notice"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
                                     "release": {
                                       "type": "object",
                                       "properties": {},
@@ -3616,6 +3800,24 @@
                                   },
                                   "required": [
                                     "release"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "say": {
+                                      "type": "object",
+                                      "properties": {
+                                        "speaker": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "say"
                                   ],
                                   "additionalProperties": false
                                 },
@@ -3641,31 +3843,6 @@
                                   },
                                   "required": [
                                     "set"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "toast": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "text": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "toast"
                                   ],
                                   "additionalProperties": false
                                 },
@@ -3734,6 +3911,27 @@
                                 {
                                   "type": "object",
                                   "properties": {
+                                    "bark": {
+                                      "type": "object",
+                                      "properties": {
+                                        "id": {
+                                          "type": "string"
+                                        },
+                                        "text": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "bark"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
                                     "clear": {
                                       "oneOf": [
                                         {
@@ -3910,6 +4108,31 @@
                                 {
                                   "type": "object",
                                   "properties": {
+                                    "notice": {
+                                      "oneOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "text": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "notice"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
                                     "release": {
                                       "type": "object",
                                       "properties": {},
@@ -3918,6 +4141,24 @@
                                   },
                                   "required": [
                                     "release"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "say": {
+                                      "type": "object",
+                                      "properties": {
+                                        "speaker": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "say"
                                   ],
                                   "additionalProperties": false
                                 },
@@ -3943,31 +4184,6 @@
                                   },
                                   "required": [
                                     "set"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "toast": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "text": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "toast"
                                   ],
                                   "additionalProperties": false
                                 },
@@ -4063,6 +4279,31 @@
                   {
                     "type": "object",
                     "properties": {
+                      "notice": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "text": {
+                                "type": "string"
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "notice"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
                       "release": {
                         "type": "object",
                         "properties": {},
@@ -4071,6 +4312,24 @@
                     },
                     "required": [
                       "release"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "say": {
+                        "type": "object",
+                        "properties": {
+                          "speaker": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "say"
                     ],
                     "additionalProperties": false
                   },
@@ -4096,31 +4355,6 @@
                     },
                     "required": [
                       "set"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "toast": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "text": {
-                                "type": "string"
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "toast"
                     ],
                     "additionalProperties": false
                   },

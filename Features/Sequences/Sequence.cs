@@ -164,15 +164,24 @@ sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem
             case Disable disable:
                 Switch(world, Target(world, disable.Id, Entity.Null), enabled: false);
                 return StepOutcome.Done;
+            
+            case Say say:
+                Say(world, runner.Source, say.Speaker, say.Pages);
+                return StepOutcome.Done;
+            
+            case Bark bark:
+                Bark(world, runner.Source, bark.Id, bark.Text);
+                return StepOutcome.Done;
 
-            case Toast toast:
-                toasts.Show(toast.Text);
+            case Notice notice:
+                toasts.Show(notice.Text);
                 return StepOutcome.Done;
 
             case Move move:
                 return Slide(world, ref runner, move, deltaTime);
 
             default:
+                Console.WriteLine($"SequenceSystem: Unhandled step type {step.GetType().Name}");
                 return StepOutcome.Done;
         }
     }
@@ -235,6 +244,14 @@ sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem
         }
     }
 
+    static void Say(World world, Entity source, string speaker, string[] pages) {
+        throw new NotImplementedException();
+    }
+    
+    static void Bark(World world, Entity source, string id, string text) {
+        throw new NotImplementedException();
+    }
+    
     // Helpers
 
     static Entity Target(World world, string? id, Entity fallback) =>
