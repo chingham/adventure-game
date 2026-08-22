@@ -11,17 +11,20 @@ namespace AdventureGame.Features.Sequences;
 // sequence would otherwise hold the reins of a world it no longer recognises. The flag is raised inside
 // the reload and drained on the next frame, since the world is mid-callback when it fires.
 sealed class SequenceReloadSystem : ISystem {
+    readonly SequenceDirector director;
     bool pending = true;   // the first load counts too
 
-    public SequenceReloadSystem(SceneFileHandle level) => level.Reloaded += _ => pending = true;
+    public SequenceReloadSystem(SceneFileHandle level, SequenceDirector director) {
+        this.director = director;
+        level.Reloaded += _ => pending = true;
+    }
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
         if (!pending)
             return;
         pending = false;
 
-        foreach (var row in world.Query<SequenceRunner>())
-            commands.Destroy(row.Entity);
+        director.Runs.Clear();
 
         ReportDanglingReferences(world);
     }

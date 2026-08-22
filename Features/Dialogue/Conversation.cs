@@ -3,6 +3,7 @@ using AdventureGame.Features.Dialogue.Text;
 namespace AdventureGame.Features.Dialogue;
 
 sealed class Conversation {
+    public required string Id { get; set; }
     public required string Speaker { get; set; }
     public required string[] Pages { get; set; }
     

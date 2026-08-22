@@ -17,7 +17,8 @@ sealed class DialogueFeature : IGameFeature {
         game.Provide<Speech>();
     }
     public void Install(Game game) {
-        game.Ui.Add(new ConversationPanel());
+        var speech = game.Find<Speech>()!;
+        game.Ui.Add(new ConversationPanel(speech));
         
         game.AddSystem<SpeechSystem>(QuarkPhases.Input);
     }

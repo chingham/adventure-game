@@ -1,5 +1,6 @@
 using AdventureGame.App;
 using AdventureGame.Features.Dialogue.Text;
+using AdventureGame.Features.Sequences;
 using Quark.Ecs;
 using Quark.Platform.Input;
 
@@ -18,7 +19,10 @@ sealed class SpeechSystem(Speech speech, IInput input) : ISystem {
         if (input.Consume(Controls.Interact)) {
             if (AdvanceSpeech(talk)) {
                 // If finished, clear active conversation
-                speech.ActiveConversation = null;
+                var conversationId = speech.End();
+                if (conversationId is not null) {
+                    world.Events<Signal>().Write(new Signal(conversationId + ".done"));
+                }
             }
         }
     }

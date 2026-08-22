@@ -1,4 +1,5 @@
 using AdventureGame.App;
+using AdventureGame.Flow;
 using Quark.Kit;
 
 namespace AdventureGame.Features.Sequences;
@@ -8,6 +9,9 @@ sealed class SequenceFeature : IGameFeature {
     // The level file is read during the Install pass, so its rules have to be spelled out before it
     public void Provide(Game game) {
         SequenceVocabulary.Register(game.SceneFiles.Vocabulary);
+
+        var flow = game.Find<GameFlow>()!;
+        game.Provide(new SequenceDirector(flow));
     }
 
     public void Install(Game game) {

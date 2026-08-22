@@ -1,6 +1,7 @@
 using AdventureGame.Debug;
 using AdventureGame.Features.Camera;
 using AdventureGame.Features.Character;
+using AdventureGame.Features.Dialogue;
 using AdventureGame.Features.Interaction;
 using AdventureGame.Features.Inventory;
 using AdventureGame.Features.Menu;
@@ -31,6 +32,7 @@ static class Features {
         new CameraFeature(),
         new CharacterFeature(),
         new InteractionFeature(),
+        new DialogueFeature(),
         new SequenceFeature(),
         new PlatformFeature(),
         new PortalFeature(),
