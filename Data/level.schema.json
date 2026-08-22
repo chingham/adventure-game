@@ -1491,6 +1491,13 @@
                                       "say": {
                                         "type": "object",
                                         "properties": {
+                                          "pages": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            },
+                                            "minItems": 1
+                                          },
                                           "speaker": {
                                             "type": "string"
                                           }
@@ -1832,6 +1839,13 @@
                                       "say": {
                                         "type": "object",
                                         "properties": {
+                                          "pages": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            },
+                                            "minItems": 1
+                                          },
                                           "speaker": {
                                             "type": "string"
                                           }
@@ -2003,6 +2017,13 @@
                         "say": {
                           "type": "object",
                           "properties": {
+                            "pages": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "minItems": 1
+                            },
                             "speaker": {
                               "type": "string"
                             }
@@ -3809,6 +3830,13 @@
                                     "say": {
                                       "type": "object",
                                       "properties": {
+                                        "pages": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          },
+                                          "minItems": 1
+                                        },
                                         "speaker": {
                                           "type": "string"
                                         }
@@ -4150,6 +4178,13 @@
                                     "say": {
                                       "type": "object",
                                       "properties": {
+                                        "pages": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          },
+                                          "minItems": 1
+                                        },
                                         "speaker": {
                                           "type": "string"
                                         }
@@ -4321,6 +4356,13 @@
                       "say": {
                         "type": "object",
                         "properties": {
+                          "pages": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "minItems": 1
+                          },
                           "speaker": {
                             "type": "string"
                           }

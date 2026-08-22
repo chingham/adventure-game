@@ -470,5 +470,24 @@
                 ],
             },
         },
+
+        {
+            "id": "seq-dialogue",
+            "sequence": {
+                "on": "inter-signal",
+                "steps": [
+                    {
+                        "say": {
+                            "speaker": "Twinsen",
+                            "pages": [
+                                "Commodo ex tempor est in duis aliquip occaecat ullamco voluptate. Amet esse ad duis duis ullamco enim pariatur qui sit laborum voluptate.",
+                                "Exercitation magna exercitation fugiat consectetur adipisicing enim enim pariatur excepteur dolore dolore excepteur.",
+                                "Labore reprehenderit sint non quis excepteur dolore ut sunt.",
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
     ],
 }

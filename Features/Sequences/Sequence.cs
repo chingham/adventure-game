@@ -1,5 +1,6 @@
 using AdventureGame.Common;
 using AdventureGame.Features.Character;
+using AdventureGame.Features.Dialogue;
 using AdventureGame.Features.Interaction;
 using AdventureGame.Features.Progression;
 using AdventureGame.Flow;
@@ -36,7 +37,7 @@ struct SequenceRunner {
 // next and the front must be read again.
 enum StepOutcome { Done, Holding, Rewrote }
 
-sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem {
+sealed class SequenceSystem(Flags flags, GameFlow flow, Speech speech, Toasts toasts) : ISystem {
     readonly EventReader<Signal> signals = new();
     readonly List<Signal> heard = [];
 
@@ -166,8 +167,7 @@ sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem
                 return StepOutcome.Done;
             
             case Say say:
-                Say(world, runner.Source, say.Speaker, say.Pages);
-                return StepOutcome.Done;
+                return Say(speech, runner.Source, say.Speaker, say.Pages);
             
             case Bark bark:
                 Bark(world, runner.Source, bark.Id, bark.Text);
@@ -244,8 +244,12 @@ sealed class SequenceSystem(Flags flags, GameFlow flow, Toasts toasts) : ISystem
         }
     }
 
-    static void Say(World world, Entity source, string speaker, string[] pages) {
-        throw new NotImplementedException();
+    static StepOutcome Say(Speech speech, Entity source, string speaker, string[] pages) {
+        // TODO:
+        // Si la conversation actuelle n'est pas déjà celle là,
+        // on la présente, et on attend qu'elle soit finie avant de retourner Done
+        
+        return StepOutcome.Holding;
     }
     
     static void Bark(World world, Entity source, string id, string text) {

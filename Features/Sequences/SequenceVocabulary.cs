@@ -9,6 +9,9 @@ static class SequenceVocabulary {
     public static void Register(SceneVocabulary vocabulary) {
         vocabulary
             .Verb("sequence", SequenceVerb, order: 300, payloadType: typeof(SequencePayload))
+            
+            // Values
+            .Value(ReadStringArray, StringArraySchema)
 
             // Step verbs. A single-field step also takes its value bare: { "emit": "tower-call" }.
             .Variant<IStep, Wait>("wait")
@@ -33,6 +36,21 @@ static class SequenceVocabulary {
         public IStep[] Steps { get; set; } = [];
     }
 
+    const string StringArraySchema = """
+        { "type": "array", "items": { "type": "string" }, "minItems": 1 }                                                              
+        """;
+    static string[] ReadStringArray(JsonElement json, SceneParseContext ctx, string location) {
+        if (json.ValueKind != JsonValueKind.Array)
+            throw new InvalidDataException("Expected an array.");
+
+        var len = json.GetArrayLength();
+        var result = new string[len];
+        for (var i = 0; i < len; i++) {
+            result[i] = json[i].GetString() ?? "";
+        }
+        return result;
+    }
+    
     // A rule has nowhere to stand in the world; it lives as an entity so the file owns it like the rest.
     static void SequenceVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
         var p = ctx.Get<SequencePayload>(json, ctx.Location);
