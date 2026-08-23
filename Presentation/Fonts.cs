@@ -1,4 +1,3 @@
-using Quark.Kit;
 using Quark.Kit.Assets;
 using Quark.Kit.Ui;
 
@@ -9,8 +8,8 @@ namespace AdventureGame.Presentation;
 /// asking for its own <c>UiFont.FromFile</c> read, baked and atlased the same face several times over.
 /// </summary>
 sealed record Fonts(UiFont Regular, UiFont Medium, UiFont Wide) {
-    public static Fonts Build(Game game) => new(
-        game.Assets.Font("Data/Fonts/Fredoka_SemiCondensed-Regular.ttf"),
-        game.Assets.Font("Data/Fonts/Fredoka_SemiCondensed-Medium.ttf"),
-        game.Assets.Font("Data/Fonts/Fredoka-Medium.ttf"));
+    public static Fonts Build(AssetLibrary assets) => new(
+        assets.Font("Data/Fonts/Fredoka_SemiCondensed-Regular.ttf"),
+        assets.Font("Data/Fonts/Fredoka_SemiCondensed-Medium.ttf"),
+        assets.Font("Data/Fonts/Fredoka-Medium.ttf"));
 }

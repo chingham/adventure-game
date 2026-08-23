@@ -1,13 +1,13 @@
 using Quark.Ecs;
+using Quark.Kit;
 using Quark.Kit.Components;
-using IServiceProvider = Quark.Kit.IServiceProvider;
 
 namespace AdventureGame.Features.Sequences;
 
 /// <summary>
 /// A single run of a sequence, which is a list of steps.
 /// </summary>
-sealed class SequenceRun(string on, Entity source, IStep[] steps, World world, IServiceProvider services) {
+sealed class SequenceRun(string on, Entity source, IStep[] steps, World world, IServiceLocator services) {
     public string On { get; } = on;
     public Entity Source { get; } = source;
     public StepList Steps { get; } = new(steps);

@@ -23,20 +23,18 @@ sealed class LevelFeature : IGameFeature {
     // World size the greybox textures span: their inner grid is one metre per cell.
     const float TileMeters = 4f;
 
-    public void Provide(Game game) {
-        // One UV mapping for every primitive the kit spawns, so tiling stays consistent across shapes
-        game.Primitives.DefaultUv = UvMapping.Tiled(TileMeters);
-    }
-
     public void Install(Game game) {
+        // One UV mapping for every primitive the kit spawns, so tiling stays consistent across shapes.
+        // Set before the first mesh is built, which is the one below.
+        game.Primitives.DefaultUv = UvMapping.Tiled(TileMeters);
+        
         // No material: the file gives the terrain entity one by name, like any other brick
         var terrain = game.Meshes.From(
             GreyboxMeshes.Terrain(16, 8, 24, 12, 0.5f, game.Primitives.DefaultUv), MeshCollider.Mesh);
-
+        
         LevelVocabulary.Register(game.SceneFiles.Vocabulary, terrain);
         game.SceneFiles.WriteSchema(SchemaPath);
-
-
+        
         var level = game.SceneFiles.Load(ScenePath);
         var spawn = SpawnPoint(game, level);
         

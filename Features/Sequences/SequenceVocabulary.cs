@@ -4,9 +4,12 @@ using Quark.Scenes;
 
 namespace AdventureGame.Features.Sequences;
 
-// What a level file can say about rules. Registered in the Provide pass, before any file is read.
-static class SequenceVocabulary {
-    public static void Register(SceneVocabulary vocabulary) {
+// What a level file may say about rules. A service rather than a call: building it registers the verbs,
+// so it lands with the rest of the graph and no feature has to install before the one that reads files.
+sealed class SequenceVocabulary {
+    public SequenceVocabulary(SceneFiles files) => Register(files.Vocabulary);
+
+    static void Register(SceneVocabulary vocabulary) {
         vocabulary
             .Verb("sequence", SequenceVerb, order: 300, payloadType: typeof(SequencePayload))
             

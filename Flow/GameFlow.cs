@@ -60,7 +60,7 @@ public sealed class GameFlow(Screen startup, IInput input, GameTime time) {
     }
 
     // Apply
-    readonly HashSet<string> activeGroups = [];
+    readonly HashSet<string> activeGroups = [..startup.InputGroups];
     
     void Apply() {
         var top = Top;

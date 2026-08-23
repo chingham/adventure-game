@@ -6,8 +6,8 @@ namespace AdventureGame.Features.Camera;
 // The cameras that watch the world: the follow rig, the doorway pull, and the director blending
 // between them.
 sealed class CameraFeature : IGameFeature {
-    public void Provide(Game game) {
-        game.Provide<CameraTuning>();
+    public void Provide(IServiceRegistry services) {
+        services.Add<CameraTuning>();
     }
 
     public void Install(Game game) {

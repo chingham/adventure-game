@@ -43,7 +43,11 @@ static class Features {
 
     public static void InstallAll(Game game) {
         foreach (var feature in All)
-            feature.Provide(game);
+            feature.Provide(game.Registry);
+
+        // Everything is declared and nothing is built yet, so the whole graph can be forced here: a
+        // missing or circular dependency comes out as one message now, not as a null three frames in.
+        game.BuildServices();
 
         foreach (var feature in All)
             feature.Install(game);

@@ -10,6 +10,10 @@ static class Order {
     public const int CursorToggle = 10;
     public const int SequenceSweep = 20;
 
+    // Speech advances before the sequences that wait on it, so a conversation ending is seen the same
+    // frame by the step holding for it rather than the next one.
+    public const int Speech = 30;
+
     // Simulation (fixed step): what carries the character moves first, the character last
     public const int MovingPlatform = 5;
     public const int InputBasis = 10;
