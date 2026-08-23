@@ -1,4 +1,5 @@
 using System.Numerics;
+using AdventureGame.App;
 using AdventureGame.Flow;
 using AdventureGame.Presentation;
 using Quark.Kit.Ui;
@@ -77,7 +78,7 @@ sealed class InventoryPanel(UiModule ui, GameFlow flow, Fonts fonts, Icons icons
 
     public void Compose(UiComposer ui) {
         // Use springs for transition
-        var isOpen = flow.IsOpen(ScreenKind.Inventory);
+        var isOpen = flow.IsOpen(Screens.Inventory);
         var spring = isOpen ? openSpring : closeSpring;
         var springTarget = isOpen ? 1 : 0;
         var reveal = revealMotion.Follow(springTarget, spring, ui.DeltaTime);

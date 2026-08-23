@@ -431,13 +431,15 @@
             "sequence": {
                 "on": "chest-shop",
                 "steps": [
-                    { "gate": {} },
-                    { "face": {} },
-                    { "wait": 0.5 },
-                    { "set": "shop-key" },
-                    { "notice": "Clé du magasin obtenue" },
-                    { "wait": 0.4 },
-                    { "release": {} },
+                    {
+                        "cutscene": [
+                            { "face": {} },
+                            { "wait": 0.5 },
+                            { "set": "shop-key" },
+                            { "notice": "Clé du magasin obtenue" },
+                            { "wait": 0.4 },
+                        ],
+                    },
                 ],
             },
         },
@@ -452,17 +454,19 @@
                         "if": {
                             "flag": "shop-key",
                             "then": [
-                                { "gate": {} },
-                                { "notice": "La porte s'ouvre" },
-                                { "disable": "shop-door-panel" },
                                 {
-                                    "move": {
-                                        "id": "shop-door-panel",
-                                        "by": [0, 0, -3.1],
-                                        "s": 1.4,
-                                    },
+                                    "cutscene": [
+                                        { "notice": "La porte s'ouvre" },
+                                        { "disable": "shop-door-panel" },
+                                        {
+                                            "move": {
+                                                "id": "shop-door-panel",
+                                                "by": [0, 0, -3.1],
+                                                "s": 1.4,
+                                            },
+                                        },
+                                    ],
                                 },
-                                { "release": {} },
                             ],
                             "else": [{ "notice": "C'est verrouillé." }],
                         },

@@ -16,7 +16,7 @@ sealed class SpeechSystem(Speech speech, IInput input) : ISystem {
         talk.CurrentReveal = reveal;
         
         // If interact button pressed, advance talk
-        if (input.Consume(Controls.Interact)) {
+        if (input.Consume(Controls.AdvanceDialogue)) {
             if (AdvanceSpeech(talk)) {
                 // If finished, clear active conversation
                 var conversationId = speech.End();

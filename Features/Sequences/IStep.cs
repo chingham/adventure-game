@@ -22,7 +22,9 @@ interface IStep {
 /// <summary>
 /// A step that is in progress.
 /// </summary>
-interface IStepRun {
+interface IStepRun : IDisposable {
     /// <summary>Updates the step. Returns true if it is done, false if it wants the next frame.</summary>
     bool Update(SequenceRun ctx, float deltaTime);
+    
+    void IDisposable.Dispose() { }
 }

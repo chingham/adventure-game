@@ -24,6 +24,9 @@ sealed class SequenceReloadSystem : ISystem {
             return;
         pending = false;
 
+        foreach (var run in director.Runs)
+            run.Steps.Dispose();
+        
         director.Runs.Clear();
 
         ReportDanglingReferences(world);

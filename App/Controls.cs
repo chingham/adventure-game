@@ -6,6 +6,7 @@ static class Controls {
     // Groups
     public const string GameplayGroup = "gameplay";
     public const string FlowGroup = "flow";
+    public const string DialogueGroup = "dialogue";
     
     // Camera
     public static readonly Delta2Action Look = new("look");
@@ -19,6 +20,9 @@ static class Controls {
     // UI / Flow
     public static readonly ButtonAction Pause = new("pause");
     public static readonly ButtonAction OpenInventory = new("toggle_inventory");
+    
+    // Dialogue
+    public static readonly ButtonAction AdvanceDialogue = new("advance_dialogue");
 
     // Cursor
     public static readonly ButtonAction GrabCursor = new("grab_cursor");
@@ -61,6 +65,15 @@ static class Controls {
                 .Key(InputKey.Space)
                 .Letter('i')
                 .Pad(PadButton.North);
+        });
+        
+        // Dialogue
+        map.Group(DialogueGroup, g => {
+            g.Button(AdvanceDialogue)
+                .Key(InputKey.Space)
+                .Letter('e')
+                .Pad(PadButton.West)
+                .Pad(PadButton.South);
         });
 
         // Cursor

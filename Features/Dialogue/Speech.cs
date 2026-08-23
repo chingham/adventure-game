@@ -1,12 +1,15 @@
+using AdventureGame.App;
 using AdventureGame.Features.Dialogue.Text;
+using AdventureGame.Flow;
 
 namespace AdventureGame.Features.Dialogue;
 
-sealed class Speech {
+sealed class Speech(GameFlow flow) {
     public Conversation? ActiveConversation { get; private set; }
     public bool IsBusy => ActiveConversation is not null;
 
     int id;
+    IDisposable? screen;
 
     public string? Begin(string speaker, string[] pages) {
         if (IsBusy) {
@@ -24,6 +27,8 @@ sealed class Speech {
             CurrentText = RichText.Parse(pages[0]),
             CurrentReveal = new TextReveal()
         };
+
+        screen = flow.Open(Screens.Dialogue);
         
         return conversationId;
     }
@@ -37,6 +42,9 @@ sealed class Speech {
         var id = ActiveConversation.Id;
         
         ActiveConversation = null;
+        
+        screen?.Dispose();
+        screen = null;
         
         return id;
     }

@@ -27,14 +27,10 @@ sealed class SequenceSystem(Game game, SequenceDirector director) : ISystem {
         }
 
         UpdateRuns(world, deltaTime);
-        UpdatePlayerLock();
     }
 
     void StartRun(World world, SequenceDefinition definition, Signal signal) {
-        var run = new SequenceRun(definition.On, signal.Source, world, game.Services);
-        foreach (var step in definition.Steps)
-            run.Pending.Add(step);
-                
+        var run = new SequenceRun(definition.On, signal.Source, definition.Steps, world, game.Services);
         director.Runs.Add(run);
     }
 
@@ -46,38 +42,10 @@ sealed class SequenceSystem(Game game, SequenceDirector director) : ISystem {
             run.Heard.Clear();
             run.Heard.AddRange(heard);
 
-            while (true) {
-                // If there is a current run, update it
-                if (run.Active is { } active) {
-                    
-                    // Update the current step, and break if it is not yet complete
-                    var completed = active.Update(run, deltaTime);
-                    if (!completed)  break;
-
-                    // Clear it and remove the step from pending
-                    run.Active = null;
-                }
-
-                // If no more pending step
-                if (run.Pending.Count == 0) {
-                    // Remove the run and emit .done signal
-                    world.Events<Signal>().Write(new Signal(run.On + ".done", run.Source));
-                    director.Runs.RemoveAt(i--);
-                    break;
-                }
-
-                // Start the next step if any
-                var step = run.Pending[0];
-                run.Pending.RemoveAt(0);
-                run.Active = step.Start(run);
-            }
+            if (!run.Steps.Advance(run, deltaTime)) continue;
+            
+            world.Events<Signal>().Write(new Signal(run.On + ".done", run.Source));
+            director.Runs.RemoveAt(i--);
         }
-    }
-    void UpdatePlayerLock() {
-        var locked = false;
-        foreach (var run in director.Runs)
-            locked |= run.Gates > 0;
-        
-        director.SetPlayerLocked(locked);
     }
 }

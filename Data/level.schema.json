@@ -33,141 +33,7 @@
               "adjust": {
                 "type": "array",
                 "items": {
-                  "oneOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "brightness": {
-                          "oneOf": [
-                            {
-                              "type": "number",
-                              "description": null
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "amount": {
-                                  "type": "number",
-                                  "description": null
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "brightness"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "contrast": {
-                          "oneOf": [
-                            {
-                              "type": "number",
-                              "description": null
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "amount": {
-                                  "type": "number",
-                                  "description": null
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "contrast"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "hue": {
-                          "oneOf": [
-                            {
-                              "type": "number",
-                              "description": null
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "degrees": {
-                                  "type": "number",
-                                  "description": null
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "hue"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "saturation": {
-                          "oneOf": [
-                            {
-                              "type": "number",
-                              "description": null
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "amount": {
-                                  "type": "number",
-                                  "description": null
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "saturation"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "tint": {
-                          "oneOf": [
-                            {
-                              "$ref": "#/$defs/color4"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "color": {
-                                  "$ref": "#/$defs/color4"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "tint"
-                      ],
-                      "additionalProperties": false
-                    }
-                  ]
+                  "$ref": "#/$defs/textureOp"
                 }
               }
             },
@@ -333,311 +199,7 @@
               "behaviors": {
                 "type": "array",
                 "items": {
-                  "oneOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "attractor": {
-                          "type": "object",
-                          "properties": {
-                            "point": {
-                              "$ref": "#/$defs/color3"
-                            },
-                            "strength": {
-                              "type": "number",
-                              "description": null
-                            }
-                          },
-                          "additionalProperties": false
-                        }
-                      },
-                      "required": [
-                        "attractor"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "colorOverLife": {
-                          "oneOf": [
-                            {
-                              "oneOf": [
-                                {
-                                  "type": "string",
-                                  "description": "Constant colour"
-                                },
-                                {
-                                  "type": "array",
-                                  "description": "[[time, colour], ...]"
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "constant": {},
-                                    "fade": {},
-                                    "between": {
-                                      "type": "array"
-                                    },
-                                    "ramp": {
-                                      "type": "array"
-                                    }
-                                  },
-                                  "additionalProperties": false
-                                }
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "gradient": {
-                                  "oneOf": [
-                                    {
-                                      "type": "string",
-                                      "description": "Constant colour"
-                                    },
-                                    {
-                                      "type": "array",
-                                      "description": "[[time, colour], ...]"
-                                    },
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "constant": {},
-                                        "fade": {},
-                                        "between": {
-                                          "type": "array"
-                                        },
-                                        "ramp": {
-                                          "type": "array"
-                                        }
-                                      },
-                                      "additionalProperties": false
-                                    }
-                                  ]
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "colorOverLife"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "drag": {
-                          "oneOf": [
-                            {
-                              "type": "number",
-                              "description": null
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "coefficient": {
-                                  "type": "number",
-                                  "description": null
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "drag"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "gravity": {
-                          "oneOf": [
-                            {
-                              "$ref": "#/$defs/color3"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "acceleration": {
-                                  "$ref": "#/$defs/color3"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "gravity"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "sizeOverLife": {
-                          "oneOf": [
-                            {
-                              "oneOf": [
-                                {
-                                  "type": "number",
-                                  "description": "Constant"
-                                },
-                                {
-                                  "type": "array",
-                                  "description": "[[time, value], ...]"
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "constant": {
-                                      "type": "number"
-                                    },
-                                    "linear": {
-                                      "type": "array",
-                                      "items": {
-                                        "type": "number"
-                                      },
-                                      "minItems": 2,
-                                      "maxItems": 2
-                                    },
-                                    "easeIn": {
-                                      "type": "array",
-                                      "items": {
-                                        "type": "number"
-                                      },
-                                      "minItems": 2,
-                                      "maxItems": 2
-                                    },
-                                    "easeOut": {
-                                      "type": "array",
-                                      "items": {
-                                        "type": "number"
-                                      },
-                                      "minItems": 2,
-                                      "maxItems": 2
-                                    },
-                                    "spike": {
-                                      "type": "array",
-                                      "items": {
-                                        "type": "number"
-                                      },
-                                      "minItems": 3,
-                                      "maxItems": 3
-                                    },
-                                    "keys": {
-                                      "type": "array"
-                                    }
-                                  },
-                                  "additionalProperties": false
-                                }
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "curve": {
-                                  "oneOf": [
-                                    {
-                                      "type": "number",
-                                      "description": "Constant"
-                                    },
-                                    {
-                                      "type": "array",
-                                      "description": "[[time, value], ...]"
-                                    },
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "constant": {
-                                          "type": "number"
-                                        },
-                                        "linear": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "number"
-                                          },
-                                          "minItems": 2,
-                                          "maxItems": 2
-                                        },
-                                        "easeIn": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "number"
-                                          },
-                                          "minItems": 2,
-                                          "maxItems": 2
-                                        },
-                                        "easeOut": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "number"
-                                          },
-                                          "minItems": 2,
-                                          "maxItems": 2
-                                        },
-                                        "spike": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "number"
-                                          },
-                                          "minItems": 3,
-                                          "maxItems": 3
-                                        },
-                                        "keys": {
-                                          "type": "array"
-                                        }
-                                      },
-                                      "additionalProperties": false
-                                    }
-                                  ]
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "sizeOverLife"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "turbulence": {
-                          "type": "object",
-                          "properties": {
-                            "scale": {
-                              "type": "number",
-                              "description": null
-                            },
-                            "speed": {
-                              "type": "number",
-                              "description": null
-                            },
-                            "strength": {
-                              "type": "number",
-                              "description": null
-                            }
-                          },
-                          "additionalProperties": false
-                        }
-                      },
-                      "required": [
-                        "turbulence"
-                      ],
-                      "additionalProperties": false
-                    }
-                  ]
+                  "$ref": "#/$defs/particleBehavior"
                 }
               },
               "blend": {
@@ -1078,1042 +640,7 @@
               "steps": {
                 "type": "array",
                 "items": {
-                  "oneOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "bark": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string"
-                            },
-                            "text": {
-                              "type": "string"
-                            }
-                          },
-                          "additionalProperties": false
-                        }
-                      },
-                      "required": [
-                        "bark"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "clear": {
-                          "oneOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "flag": {
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "clear"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "disable": {
-                          "oneOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "disable"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "emit": {
-                          "oneOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "signal": {
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "emit"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "enable": {
-                          "oneOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "enable"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "face": {
-                          "oneOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "face"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "gate": {
-                          "type": "object",
-                          "properties": {},
-                          "additionalProperties": false
-                        }
-                      },
-                      "required": [
-                        "gate"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "if": {
-                          "type": "object",
-                          "properties": {
-                            "else": {
-                              "type": "array",
-                              "items": {
-                                "oneOf": [
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "bark": {
-                                        "type": "object",
-                                        "properties": {
-                                          "id": {
-                                            "type": "string"
-                                          },
-                                          "text": {
-                                            "type": "string"
-                                          }
-                                        },
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "bark"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "clear": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "flag": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "clear"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "disable": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "id": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "disable"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "emit": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "signal": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "emit"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "enable": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "id": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "enable"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "face": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "id": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "face"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "gate": {
-                                        "type": "object",
-                                        "properties": {},
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "gate"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "if": {
-                                        "type": "object"
-                                      }
-                                    },
-                                    "required": [
-                                      "if"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "move": {
-                                        "type": "object",
-                                        "properties": {
-                                          "by": {
-                                            "$ref": "#/$defs/vec3"
-                                          },
-                                          "id": {
-                                            "type": "string"
-                                          },
-                                          "s": {
-                                            "type": "number",
-                                            "description": null
-                                          }
-                                        },
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "move"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "notice": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "text": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "notice"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "release": {
-                                        "type": "object",
-                                        "properties": {},
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "release"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "say": {
-                                        "type": "object",
-                                        "properties": {
-                                          "pages": {
-                                            "type": "array",
-                                            "items": {
-                                              "type": "string"
-                                            },
-                                            "minItems": 1
-                                          },
-                                          "speaker": {
-                                            "type": "string"
-                                          }
-                                        },
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "say"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "set": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "flag": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "set"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "wait": {
-                                        "oneOf": [
-                                          {
-                                            "type": "number",
-                                            "description": null
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "s": {
-                                                "type": "number",
-                                                "description": null
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "wait"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "waitSignal": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "signal": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "waitSignal"
-                                    ],
-                                    "additionalProperties": false
-                                  }
-                                ]
-                              }
-                            },
-                            "flag": {
-                              "type": "string"
-                            },
-                            "then": {
-                              "type": "array",
-                              "items": {
-                                "oneOf": [
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "bark": {
-                                        "type": "object",
-                                        "properties": {
-                                          "id": {
-                                            "type": "string"
-                                          },
-                                          "text": {
-                                            "type": "string"
-                                          }
-                                        },
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "bark"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "clear": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "flag": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "clear"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "disable": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "id": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "disable"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "emit": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "signal": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "emit"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "enable": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "id": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "enable"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "face": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "id": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "face"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "gate": {
-                                        "type": "object",
-                                        "properties": {},
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "gate"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "if": {
-                                        "type": "object"
-                                      }
-                                    },
-                                    "required": [
-                                      "if"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "move": {
-                                        "type": "object",
-                                        "properties": {
-                                          "by": {
-                                            "$ref": "#/$defs/vec3"
-                                          },
-                                          "id": {
-                                            "type": "string"
-                                          },
-                                          "s": {
-                                            "type": "number",
-                                            "description": null
-                                          }
-                                        },
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "move"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "notice": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "text": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "notice"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "release": {
-                                        "type": "object",
-                                        "properties": {},
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "release"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "say": {
-                                        "type": "object",
-                                        "properties": {
-                                          "pages": {
-                                            "type": "array",
-                                            "items": {
-                                              "type": "string"
-                                            },
-                                            "minItems": 1
-                                          },
-                                          "speaker": {
-                                            "type": "string"
-                                          }
-                                        },
-                                        "additionalProperties": false
-                                      }
-                                    },
-                                    "required": [
-                                      "say"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "set": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "flag": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "set"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "wait": {
-                                        "oneOf": [
-                                          {
-                                            "type": "number",
-                                            "description": null
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "s": {
-                                                "type": "number",
-                                                "description": null
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "wait"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "waitSignal": {
-                                        "oneOf": [
-                                          {
-                                            "type": "string"
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "signal": {
-                                                "type": "string"
-                                              }
-                                            },
-                                            "additionalProperties": false
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "waitSignal"
-                                    ],
-                                    "additionalProperties": false
-                                  }
-                                ]
-                              }
-                            }
-                          },
-                          "additionalProperties": false
-                        }
-                      },
-                      "required": [
-                        "if"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "move": {
-                          "type": "object",
-                          "properties": {
-                            "by": {
-                              "$ref": "#/$defs/vec3"
-                            },
-                            "id": {
-                              "type": "string"
-                            },
-                            "s": {
-                              "type": "number",
-                              "description": null
-                            }
-                          },
-                          "additionalProperties": false
-                        }
-                      },
-                      "required": [
-                        "move"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "notice": {
-                          "oneOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "text": {
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "notice"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "release": {
-                          "type": "object",
-                          "properties": {},
-                          "additionalProperties": false
-                        }
-                      },
-                      "required": [
-                        "release"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "say": {
-                          "type": "object",
-                          "properties": {
-                            "pages": {
-                              "type": "array",
-                              "items": {
-                                "type": "string"
-                              },
-                              "minItems": 1
-                            },
-                            "speaker": {
-                              "type": "string"
-                            }
-                          },
-                          "additionalProperties": false
-                        }
-                      },
-                      "required": [
-                        "say"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "set": {
-                          "oneOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "flag": {
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "set"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "wait": {
-                          "oneOf": [
-                            {
-                              "type": "number",
-                              "description": null
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "s": {
-                                  "type": "number",
-                                  "description": null
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "wait"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "waitSignal": {
-                          "oneOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "signal": {
-                                  "type": "string"
-                                }
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "waitSignal"
-                      ],
-                      "additionalProperties": false
-                    }
-                  ]
+                  "$ref": "#/$defs/step"
                 }
               }
             },
@@ -2672,311 +1199,7 @@
             "behaviors": {
               "type": "array",
               "items": {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "attractor": {
-                        "type": "object",
-                        "properties": {
-                          "point": {
-                            "$ref": "#/$defs/color3"
-                          },
-                          "strength": {
-                            "type": "number",
-                            "description": null
-                          }
-                        },
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "attractor"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "colorOverLife": {
-                        "oneOf": [
-                          {
-                            "oneOf": [
-                              {
-                                "type": "string",
-                                "description": "Constant colour"
-                              },
-                              {
-                                "type": "array",
-                                "description": "[[time, colour], ...]"
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "constant": {},
-                                  "fade": {},
-                                  "between": {
-                                    "type": "array"
-                                  },
-                                  "ramp": {
-                                    "type": "array"
-                                  }
-                                },
-                                "additionalProperties": false
-                              }
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "gradient": {
-                                "oneOf": [
-                                  {
-                                    "type": "string",
-                                    "description": "Constant colour"
-                                  },
-                                  {
-                                    "type": "array",
-                                    "description": "[[time, colour], ...]"
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "constant": {},
-                                      "fade": {},
-                                      "between": {
-                                        "type": "array"
-                                      },
-                                      "ramp": {
-                                        "type": "array"
-                                      }
-                                    },
-                                    "additionalProperties": false
-                                  }
-                                ]
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "colorOverLife"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "drag": {
-                        "oneOf": [
-                          {
-                            "type": "number",
-                            "description": null
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "coefficient": {
-                                "type": "number",
-                                "description": null
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "drag"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "gravity": {
-                        "oneOf": [
-                          {
-                            "$ref": "#/$defs/color3"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "acceleration": {
-                                "$ref": "#/$defs/color3"
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "gravity"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "sizeOverLife": {
-                        "oneOf": [
-                          {
-                            "oneOf": [
-                              {
-                                "type": "number",
-                                "description": "Constant"
-                              },
-                              {
-                                "type": "array",
-                                "description": "[[time, value], ...]"
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "constant": {
-                                    "type": "number"
-                                  },
-                                  "linear": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "number"
-                                    },
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                  },
-                                  "easeIn": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "number"
-                                    },
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                  },
-                                  "easeOut": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "number"
-                                    },
-                                    "minItems": 2,
-                                    "maxItems": 2
-                                  },
-                                  "spike": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "number"
-                                    },
-                                    "minItems": 3,
-                                    "maxItems": 3
-                                  },
-                                  "keys": {
-                                    "type": "array"
-                                  }
-                                },
-                                "additionalProperties": false
-                              }
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "curve": {
-                                "oneOf": [
-                                  {
-                                    "type": "number",
-                                    "description": "Constant"
-                                  },
-                                  {
-                                    "type": "array",
-                                    "description": "[[time, value], ...]"
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "constant": {
-                                        "type": "number"
-                                      },
-                                      "linear": {
-                                        "type": "array",
-                                        "items": {
-                                          "type": "number"
-                                        },
-                                        "minItems": 2,
-                                        "maxItems": 2
-                                      },
-                                      "easeIn": {
-                                        "type": "array",
-                                        "items": {
-                                          "type": "number"
-                                        },
-                                        "minItems": 2,
-                                        "maxItems": 2
-                                      },
-                                      "easeOut": {
-                                        "type": "array",
-                                        "items": {
-                                          "type": "number"
-                                        },
-                                        "minItems": 2,
-                                        "maxItems": 2
-                                      },
-                                      "spike": {
-                                        "type": "array",
-                                        "items": {
-                                          "type": "number"
-                                        },
-                                        "minItems": 3,
-                                        "maxItems": 3
-                                      },
-                                      "keys": {
-                                        "type": "array"
-                                      }
-                                    },
-                                    "additionalProperties": false
-                                  }
-                                ]
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "sizeOverLife"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "turbulence": {
-                        "type": "object",
-                        "properties": {
-                          "scale": {
-                            "type": "number",
-                            "description": null
-                          },
-                          "speed": {
-                            "type": "number",
-                            "description": null
-                          },
-                          "strength": {
-                            "type": "number",
-                            "description": null
-                          }
-                        },
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "turbulence"
-                    ],
-                    "additionalProperties": false
-                  }
-                ]
+                "$ref": "#/$defs/particleBehavior"
               }
             },
             "blend": {
@@ -3417,1042 +1640,7 @@
             "steps": {
               "type": "array",
               "items": {
-                "oneOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "bark": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "text": {
-                            "type": "string"
-                          }
-                        },
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "bark"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "clear": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "flag": {
-                                "type": "string"
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "clear"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "disable": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string"
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "disable"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "emit": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "signal": {
-                                "type": "string"
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "emit"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "enable": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string"
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "enable"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "face": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string"
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "face"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "gate": {
-                        "type": "object",
-                        "properties": {},
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "gate"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "if": {
-                        "type": "object",
-                        "properties": {
-                          "else": {
-                            "type": "array",
-                            "items": {
-                              "oneOf": [
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "bark": {
-                                      "type": "object",
-                                      "properties": {
-                                        "id": {
-                                          "type": "string"
-                                        },
-                                        "text": {
-                                          "type": "string"
-                                        }
-                                      },
-                                      "additionalProperties": false
-                                    }
-                                  },
-                                  "required": [
-                                    "bark"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "clear": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "flag": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "clear"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "disable": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "disable"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "emit": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "signal": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "emit"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "enable": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "enable"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "face": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "face"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "gate": {
-                                      "type": "object",
-                                      "properties": {},
-                                      "additionalProperties": false
-                                    }
-                                  },
-                                  "required": [
-                                    "gate"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "if": {
-                                      "type": "object"
-                                    }
-                                  },
-                                  "required": [
-                                    "if"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "move": {
-                                      "type": "object",
-                                      "properties": {
-                                        "by": {
-                                          "$ref": "#/$defs/vec3"
-                                        },
-                                        "id": {
-                                          "type": "string"
-                                        },
-                                        "s": {
-                                          "type": "number",
-                                          "description": null
-                                        }
-                                      },
-                                      "additionalProperties": false
-                                    }
-                                  },
-                                  "required": [
-                                    "move"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "notice": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "text": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "notice"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "release": {
-                                      "type": "object",
-                                      "properties": {},
-                                      "additionalProperties": false
-                                    }
-                                  },
-                                  "required": [
-                                    "release"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "say": {
-                                      "type": "object",
-                                      "properties": {
-                                        "pages": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "string"
-                                          },
-                                          "minItems": 1
-                                        },
-                                        "speaker": {
-                                          "type": "string"
-                                        }
-                                      },
-                                      "additionalProperties": false
-                                    }
-                                  },
-                                  "required": [
-                                    "say"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "set": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "flag": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "set"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "wait": {
-                                      "oneOf": [
-                                        {
-                                          "type": "number",
-                                          "description": null
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "s": {
-                                              "type": "number",
-                                              "description": null
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "wait"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "waitSignal": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "signal": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "waitSignal"
-                                  ],
-                                  "additionalProperties": false
-                                }
-                              ]
-                            }
-                          },
-                          "flag": {
-                            "type": "string"
-                          },
-                          "then": {
-                            "type": "array",
-                            "items": {
-                              "oneOf": [
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "bark": {
-                                      "type": "object",
-                                      "properties": {
-                                        "id": {
-                                          "type": "string"
-                                        },
-                                        "text": {
-                                          "type": "string"
-                                        }
-                                      },
-                                      "additionalProperties": false
-                                    }
-                                  },
-                                  "required": [
-                                    "bark"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "clear": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "flag": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "clear"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "disable": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "disable"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "emit": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "signal": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "emit"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "enable": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "enable"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "face": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "face"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "gate": {
-                                      "type": "object",
-                                      "properties": {},
-                                      "additionalProperties": false
-                                    }
-                                  },
-                                  "required": [
-                                    "gate"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "if": {
-                                      "type": "object"
-                                    }
-                                  },
-                                  "required": [
-                                    "if"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "move": {
-                                      "type": "object",
-                                      "properties": {
-                                        "by": {
-                                          "$ref": "#/$defs/vec3"
-                                        },
-                                        "id": {
-                                          "type": "string"
-                                        },
-                                        "s": {
-                                          "type": "number",
-                                          "description": null
-                                        }
-                                      },
-                                      "additionalProperties": false
-                                    }
-                                  },
-                                  "required": [
-                                    "move"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "notice": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "text": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "notice"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "release": {
-                                      "type": "object",
-                                      "properties": {},
-                                      "additionalProperties": false
-                                    }
-                                  },
-                                  "required": [
-                                    "release"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "say": {
-                                      "type": "object",
-                                      "properties": {
-                                        "pages": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "string"
-                                          },
-                                          "minItems": 1
-                                        },
-                                        "speaker": {
-                                          "type": "string"
-                                        }
-                                      },
-                                      "additionalProperties": false
-                                    }
-                                  },
-                                  "required": [
-                                    "say"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "set": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "flag": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "set"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "wait": {
-                                      "oneOf": [
-                                        {
-                                          "type": "number",
-                                          "description": null
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "s": {
-                                              "type": "number",
-                                              "description": null
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "wait"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "waitSignal": {
-                                      "oneOf": [
-                                        {
-                                          "type": "string"
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "signal": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "additionalProperties": false
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "waitSignal"
-                                  ],
-                                  "additionalProperties": false
-                                }
-                              ]
-                            }
-                          }
-                        },
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "if"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "move": {
-                        "type": "object",
-                        "properties": {
-                          "by": {
-                            "$ref": "#/$defs/vec3"
-                          },
-                          "id": {
-                            "type": "string"
-                          },
-                          "s": {
-                            "type": "number",
-                            "description": null
-                          }
-                        },
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "move"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "notice": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "text": {
-                                "type": "string"
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "notice"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "release": {
-                        "type": "object",
-                        "properties": {},
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "release"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "say": {
-                        "type": "object",
-                        "properties": {
-                          "pages": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            },
-                            "minItems": 1
-                          },
-                          "speaker": {
-                            "type": "string"
-                          }
-                        },
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "say"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "set": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "flag": {
-                                "type": "string"
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "set"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "wait": {
-                        "oneOf": [
-                          {
-                            "type": "number",
-                            "description": null
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "s": {
-                                "type": "number",
-                                "description": null
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "wait"
-                    ],
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "waitSignal": {
-                        "oneOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "signal": {
-                                "type": "string"
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "waitSignal"
-                    ],
-                    "additionalProperties": false
-                  }
-                ]
+                "$ref": "#/$defs/step"
               }
             }
           },
@@ -4724,6 +1912,813 @@
       "additionalProperties": false,
       "required": [
         "id"
+      ]
+    },
+    "textureOp": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "brightness": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": null
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": "number",
+                      "description": null
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "brightness"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "contrast": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": null
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": "number",
+                      "description": null
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "contrast"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "hue": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": null
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "degrees": {
+                      "type": "number",
+                      "description": null
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "hue"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "saturation": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": null
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": "number",
+                      "description": null
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "saturation"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tint": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/color4"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "color": {
+                      "$ref": "#/$defs/color4"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "tint"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "particleBehavior": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "attractor": {
+              "type": "object",
+              "properties": {
+                "point": {
+                  "$ref": "#/$defs/color3"
+                },
+                "strength": {
+                  "type": "number",
+                  "description": null
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "attractor"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "colorOverLife": {
+              "oneOf": [
+                {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "Constant colour"
+                    },
+                    {
+                      "type": "array",
+                      "description": "[[time, colour], ...]"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "constant": {},
+                        "fade": {},
+                        "between": {
+                          "type": "array"
+                        },
+                        "ramp": {
+                          "type": "array"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "gradient": {
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "description": "Constant colour"
+                        },
+                        {
+                          "type": "array",
+                          "description": "[[time, colour], ...]"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "constant": {},
+                            "fade": {},
+                            "between": {
+                              "type": "array"
+                            },
+                            "ramp": {
+                              "type": "array"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "colorOverLife"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "drag": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": null
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "coefficient": {
+                      "type": "number",
+                      "description": null
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "drag"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "gravity": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/color3"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "acceleration": {
+                      "$ref": "#/$defs/color3"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "gravity"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sizeOverLife": {
+              "oneOf": [
+                {
+                  "oneOf": [
+                    {
+                      "type": "number",
+                      "description": "Constant"
+                    },
+                    {
+                      "type": "array",
+                      "description": "[[time, value], ...]"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "constant": {
+                          "type": "number"
+                        },
+                        "linear": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "minItems": 2,
+                          "maxItems": 2
+                        },
+                        "easeIn": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "minItems": 2,
+                          "maxItems": 2
+                        },
+                        "easeOut": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "minItems": 2,
+                          "maxItems": 2
+                        },
+                        "spike": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "minItems": 3,
+                          "maxItems": 3
+                        },
+                        "keys": {
+                          "type": "array"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "curve": {
+                      "oneOf": [
+                        {
+                          "type": "number",
+                          "description": "Constant"
+                        },
+                        {
+                          "type": "array",
+                          "description": "[[time, value], ...]"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "constant": {
+                              "type": "number"
+                            },
+                            "linear": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "minItems": 2,
+                              "maxItems": 2
+                            },
+                            "easeIn": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "minItems": 2,
+                              "maxItems": 2
+                            },
+                            "easeOut": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "minItems": 2,
+                              "maxItems": 2
+                            },
+                            "spike": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "minItems": 3,
+                              "maxItems": 3
+                            },
+                            "keys": {
+                              "type": "array"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "sizeOverLife"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "turbulence": {
+              "type": "object",
+              "properties": {
+                "scale": {
+                  "type": "number",
+                  "description": null
+                },
+                "speed": {
+                  "type": "number",
+                  "description": null
+                },
+                "strength": {
+                  "type": "number",
+                  "description": null
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "turbulence"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "step": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "bark": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "bark"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "clear": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "flag": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "clear"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "cutscene": {
+              "oneOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/step"
+                  }
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "steps": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/$defs/step"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "cutscene"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "disable": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "disable"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "emit": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "signal": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "emit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "enable": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "enable"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "face": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "face"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "if": {
+              "type": "object",
+              "properties": {
+                "else": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/step"
+                  }
+                },
+                "flag": {
+                  "type": "string"
+                },
+                "then": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/step"
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "if"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "move": {
+              "type": "object",
+              "properties": {
+                "by": {
+                  "$ref": "#/$defs/vec3"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "s": {
+                  "type": "number",
+                  "description": null
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "move"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "notice": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "notice"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "say": {
+              "type": "object",
+              "properties": {
+                "pages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                },
+                "speaker": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "say"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "set": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "flag": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "set"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "wait": {
+              "oneOf": [
+                {
+                  "type": "number",
+                  "description": null
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "s": {
+                      "type": "number",
+                      "description": null
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "wait"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "waitSignal": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "signal": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "waitSignal"
+          ],
+          "additionalProperties": false
+        }
       ]
     }
   }

@@ -1,9 +1,10 @@
+using AdventureGame.App;
 using AdventureGame.Common;
 using AdventureGame.Features.Character;
 using AdventureGame.Features.Dialogue;
 using AdventureGame.Features.Interaction;
 using AdventureGame.Features.Progression;
-using Quark.Ecs;
+using AdventureGame.Flow;
 using Quark.Kit.Components;
 using Quark.Numerics;
 
@@ -49,19 +50,20 @@ record struct WaitSignal(string Signal) : IStep {
     }
 }
 
-// The player's reins. A gate holds them until its release, and the runner drops them all when it ends.
+// Cutscene : Disables player control
 
-record struct Gate : IStep {
-    public IStepRun? Start(SequenceRun ctx) {
-        ctx.Gates++;
-        return null;
-    }
-}
+record struct Cutscene(IStep[] Steps) : IStep {
+    public IStepRun? Start(SequenceRun ctx) => new Run(this, ctx);
+    
+    sealed class Run(Cutscene block, SequenceRun run) : IStepRun {
+        readonly IDisposable screen = run.Get<GameFlow>().Open(Screens.Cutscene);
+        readonly StepList list = new(block.Steps);
 
-record struct Release : IStep {
-    public IStepRun? Start(SequenceRun ctx) {
-        ctx.Gates = Math.Max(0, ctx.Gates - 1);
-        return null;
+        public bool Update(SequenceRun ctx, float deltaTime) => list.Advance(ctx, deltaTime);
+        public void Dispose() {
+            list.Dispose();
+            screen.Dispose();
+        }
     }
 }
 
@@ -257,8 +259,13 @@ record struct If(string Flag, IStep[] Then, IStep[] Else) : IStep {
     public IStepRun? Start(SequenceRun ctx) {
         var flags = ctx.Get<Flags>();
         var taken = flags.Has(Flag) ? Then : Else;
-        if (taken is { Length: > 0 })
-            ctx.Pending.InsertRange(0, taken);
-        return null;
+        return taken is { Length: > 0 } ? new Run(taken) : null;
+    }
+
+    sealed class Run(IStep[] steps) : IStepRun {
+        readonly StepList list = new(steps);
+
+        public bool Update(SequenceRun ctx, float deltaTime) => list.Advance(ctx, deltaTime);
+        public void Dispose() => list.Dispose();
     }
 }

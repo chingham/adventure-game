@@ -1,4 +1,5 @@
 using System.Numerics;
+using AdventureGame.App;
 using AdventureGame.Flow;
 using AdventureGame.Presentation;
 using Quark.Kit.Ui;
@@ -31,7 +32,7 @@ sealed class MenuPanel(GameFlow flow, Fonts fonts) : IUiRecipe {
 
     public void Compose(UiComposer ui) {
         // Use springs for transition
-        var isOpen = flow.IsOpen(ScreenKind.Menu);
+        var isOpen = flow.IsOpen(Screens.Menu);
         var spring = isOpen ? openSpring : closeSpring;
         var springTarget = isOpen ? 1 : 0;
         var reveal = revealMotion.Follow(springTarget, spring, ui.DeltaTime);

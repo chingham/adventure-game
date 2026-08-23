@@ -1,4 +1,6 @@
 using AdventureGame.App;
+using AdventureGame.Flow;
+using AdventureGame.Presentation;
 using Quark.Kit;
 using Quark.Kit.Ui;
 
@@ -14,11 +16,13 @@ namespace AdventureGame.Features.Dialogue;
 
 sealed class DialogueFeature : IGameFeature {
     public void Provide(Game game) {
-        game.Provide<Speech>();
+        var flow = game.Find<GameFlow>()!;
+        game.Provide(new Speech(flow));
     }
     public void Install(Game game) {
         var speech = game.Find<Speech>()!;
-        game.Ui.Add(new ConversationPanel(speech));
+        var fonts = game.Find<Fonts>()!;
+        game.Ui.Add(new ConversationPanel(speech, fonts));
         
         game.AddSystem<SpeechSystem>(QuarkPhases.Input);
     }
