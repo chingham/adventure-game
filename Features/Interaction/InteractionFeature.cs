@@ -1,8 +1,9 @@
 using AdventureGame.App;
-using AdventureGame.Input;
 using Quark.Kit;
 using Quark.Kit.Assets;
 using Quark.Kit.Ui;
+using Quark.Platform.Input;
+using InputGlyphs = AdventureGame.Input.InputGlyphs;
 
 namespace AdventureGame.Features.Interaction;
 
@@ -10,7 +11,11 @@ namespace AdventureGame.Features.Interaction;
 sealed class InteractionFeature : IGameFeature {
     public void Provide(IServiceRegistry services) {
         services.Add<InteractionMarkers>();
-        services.Add(locator => new InputGlyphs(locator.Get<AssetLibrary>()));
+        services.Add(locator => new InputGlyphs(
+            locator.Get<AssetLibrary>(),
+            locator.Get<IInput>(),
+            locator.Get<UiModule>()
+        ));
     }
 
     public void Install(Game game) {

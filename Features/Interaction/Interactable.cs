@@ -184,7 +184,7 @@ sealed class InteractionSystem(IInput input, Flags flags, InteractionMarkers mar
     }
 
     static void SetHighlighted(World world, InteractionMarkers markers, Entity entity, bool highlighted) {
-        if (entity.IsNull) return;
+        if (entity.IsNull || !world.IsAlive(entity)) return;
         
         // Find mesh
         if (world.Has<RenderMesh>(entity)) {

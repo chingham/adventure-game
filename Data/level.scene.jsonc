@@ -430,17 +430,15 @@
             "id": "seq-chest-shop",
             "sequence": {
                 "on": "chest-shop",
-                "steps": [
-                    {
-                        "cutscene": [
-                            { "face": {} },
-                            { "wait": 0.5 },
-                            { "set": "shop-key" },
-                            { "notice": "Clé du magasin obtenue" },
-                            { "wait": 0.4 },
-                        ],
-                    },
-                ],
+                "steps": {
+                    "cutscene": [
+                        { "face": {} },
+                        { "wait": 0.5 },
+                        { "set": "shop-key" },
+                        { "notice": "Clé du magasin obtenue" },
+                        { "wait": 0.4 },
+                    ],
+                },
             },
         },
 
@@ -453,22 +451,21 @@
                     {
                         "if": {
                             "flag": "shop-key",
-                            "then": [
-                                {
-                                    "cutscene": [
-                                        { "notice": "La porte s'ouvre" },
-                                        { "disable": "shop-door-panel" },
-                                        {
-                                            "move": {
-                                                "id": "shop-door-panel",
-                                                "by": [0, 0, -3.1],
-                                                "s": 1.4,
-                                            },
+                            "then": {
+                                "cutscene": [
+                                    { "notice": "La porte s'ouvre" },
+                                    { "disable": "shop-door-panel" },
+                                    {
+                                        "move": {
+                                            "id": "shop-door-panel",
+                                            "by": [0, 0, -3.1],
+                                            "s": 1.4,
                                         },
-                                    ],
-                                },
-                            ],
-                            "else": [{ "notice": "C'est verrouillé." }],
+                                    },
+                                    { "set": "shop-door-open" },
+                                ],
+                            },
+                            "else": { "notice": "C'est verrouillé." },
                         },
                     },
                 ],
@@ -479,18 +476,37 @@
             "id": "seq-dialogue",
             "sequence": {
                 "on": "inter-signal",
-                "steps": [
-                    {
-                        "say": {
-                            "speaker": "Twinsen",
-                            "pages": [
-                                "Commodo ex tempor est in duis aliquip occaecat ullamco voluptate. Amet esse ad duis duis ullamco enim pariatur qui sit laborum voluptate.",
-                                "Exercitation magna exercitation fugiat consectetur adipisicing enim enim pariatur excepteur dolore dolore excepteur.",
-                                "Labore reprehenderit sint non quis excepteur dolore ut sunt.",
-                            ],
+                "steps": {
+                    "if": {
+                        "flag": "shop-door-open",
+                        "then": {
+                            "say": {
+                                "speaker": "Twinsen",
+                                "pages": ["La porte est ouverte, ce coffre est vraiment [shake]mystérieux[/shake]."],
+                            },
+                        },
+                        "else": {
+                            "if": {
+                                "flag": "shop-key",
+                                "then": {
+                                    "say": {
+                                        "speaker": "Twinsen",
+                                        "pages": ["J'ai une [color=#ffc749][glow]clé[/glow][/color], à quoi sert-elle ?"],
+                                    },
+                                },
+                                "else": {
+                                    "say": {
+                                        "speaker": "Twinsen",
+                                        "pages": [
+                                            "Il semblerait qu'il y ait un [wave]coffre[/wave] dans ce magasin.",
+                                            "Il est peut-être verrouillé, mais je devrais pouvoir le fouiller.",
+                                        ],
+                                    },
+                                },
+                            },
                         },
                     },
-                ],
+                },
             },
         },
     ],

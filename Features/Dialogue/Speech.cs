@@ -7,6 +7,7 @@ namespace AdventureGame.Features.Dialogue;
 sealed class Speech(GameFlow flow) {
     public Conversation? ActiveConversation { get; private set; }
     public bool IsBusy => ActiveConversation is not null;
+    public float AdvanceFarewell { get; set; } = 0;
 
     int id;
     IDisposable? screen;

@@ -15,6 +15,11 @@ sealed class SpeechSystem(Speech speech, IInput input) : ISystem {
         AdvanceReveal(ref reveal, talk.CurrentText, deltaTime);
         talk.CurrentReveal = reveal;
         
+        // Advance farewell timer
+        if (speech.AdvanceFarewell > 0f) {
+            speech.AdvanceFarewell = Math.Max(0, speech.AdvanceFarewell - deltaTime);
+        }
+        
         // If interact button pressed, advance talk
         if (input.Consume(Controls.AdvanceDialogue)) {
             if (AdvanceSpeech(talk)) {
@@ -23,6 +28,9 @@ sealed class SpeechSystem(Speech speech, IInput input) : ISystem {
                 if (conversationId is not null) {
                     world.Events<Signal>().Write(new Signal(conversationId + ".done"));
                 }
+            }
+            else {
+                speech.AdvanceFarewell = speech.ActiveConversation.CurrentReveal.Complete ? 0f : 1f;
             }
         }
     }
@@ -80,7 +88,7 @@ sealed class SpeechSystem(Speech speech, IInput input) : ISystem {
             // If we haven't reached the end of the beat, exit
             if (reveal.Clock < beatTotalDuration) {
                 var t = beat.Duration > 0f ? Math.Min(1f, reveal.Clock / beat.Duration) : 1f;
-                reveal.CharacterIndex = (int)(t * beat.CharacterCount);
+                reveal.CharacterIndex = t * beat.CharacterCount;
                 break;
             }
             

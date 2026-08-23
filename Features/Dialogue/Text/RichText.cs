@@ -5,8 +5,8 @@ namespace AdventureGame.Features.Dialogue.Text;
 
 // TODO: [pause=0.5] tag
 sealed record RichText(TextSegment[] Segments, TextBeat[] Beats) {
-    const float CharacterDuration = 1f / 40; // 40 characters per second
-    const float SemanticPause = 0.12f; // Pause after a [,.!?] for a more natural reading speed
+    const float CharacterDuration = 1f / 40; // Characters per second
+    const float SemanticPause = 0.2f; // Pause after a [,.!?] for a more natural reading speed
     
     record struct Tag(string Name, string? Value);
     record struct Segment(string Text, Tag[] Tags);
@@ -200,7 +200,7 @@ sealed record RichText(TextSegment[] Segments, TextBeat[] Beats) {
             if (index > start) {
                 var duration = (index - start) * CharacterDuration ;
                 beats.Add(new TextBeat { 
-                    CharacterIndex = index, 
+                    CharacterIndex = start, 
                     Duration = duration,
                     PauseAfter = pause
                 });

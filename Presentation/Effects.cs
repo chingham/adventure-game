@@ -145,3 +145,15 @@ struct Colorize : IUiEffect {
         }
         """;
 }
+
+struct TextGlow : IUiEffect {
+    public Vector4 Color;
+    public Vector4 Halo;
+    public float Radius;
+
+    public static string Effect => """
+        fn effect(s: Surface, p: Params) -> vec4f {
+            return opaque(p.color.rgb, fill(s.d)) + light(p.halo.rgb * p.halo.a * halo(s, p.radius));
+        }
+        """;
+}

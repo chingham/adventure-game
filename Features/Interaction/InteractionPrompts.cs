@@ -14,13 +14,12 @@ sealed class InteractionPrompts(
     InteractionMarkers markers,
     InputGlyphs glyphs,
     IRenderer renderer,
-    IInput input, 
-    UiModule module) : IUiRecipe {
+    IInput input) : IUiRecipe {
     
     public void Compose(UiComposer ui) {
 
         var camera = renderer.Camera;
-        var hasInteractionImage = TryGetInteractionImage(out var interactionImage);
+        var hasInteractionImage = glyphs.TryGetImage(Controls.Interact, out var interactionImage);
         var held = input.Held(Controls.Interact);
         
         // Draw the circle exactly at the projected position
@@ -90,54 +89,6 @@ sealed class InteractionPrompts(
         }
 
         //ui.DrawRect(rect).Stroke(0xFF0000FF, 1).Color(0x00000000);
-    }
-    
-    // Glyph images
-    readonly Dictionary<string, UiImage> glyphImages = [];
-
-    bool TryGetInteractionImage(out UiImage image) {
-        var prompt = input.Prompt(Controls.Interact);
-        
-        // Depends on scheme
-        switch (prompt.Source) {
-            case PadButtonSource s: {
-                var brand = input.Player.Brand;
-                var button = s.Button;
-                
-                var cacheKey = $"gamepad:{brand}:{button}";
-                if (glyphImages.TryGetValue(cacheKey, out image)) return true;
-                if (!glyphs.TryGetGlyph(brand, button, out var g)) {
-                    Console.WriteLine($"{brand}:{button} not found");
-                    return false;
-                }
-        
-                image = module.Image(g.Texture).Region(g.Rect);
-                glyphImages[cacheKey] = image;
-                return true;
-            }
-            
-            case KeySource s: {
-                var key = s.Key;
-                
-                var cacheKey = $"keyboard:{key}";
-                if (glyphImages.TryGetValue(cacheKey, out image)) return true;
-                if (!glyphs.TryGetGlyph(key, out var g)) {
-                    Console.WriteLine($"{key} not found");
-                    return false;
-                }
-                
-                image = module.Image(g.Texture).Region(g.Rect);
-                glyphImages[cacheKey] = image;
-                return true;
-            }
-            
-            case LetterSource:
-            case MouseButtonSource:
-            default:
-                Console.WriteLine($"No glyph for {prompt.Source}");
-                image = default;
-                return false;
-        }
     }
 
     // Marker spring states

@@ -1,12 +1,18 @@
 using Quark.Kit.Assets;
 using Quark.Kit.Rendering;
+using Quark.Kit.Ui;
 using Quark.Numerics;
 using Quark.Platform.Input;
 
 namespace AdventureGame.Input;
 
 sealed class InputGlyphs {
-    public InputGlyphs(AssetLibrary assets) {
+    readonly IInput input;
+    readonly UiModule ui;
+
+    public InputGlyphs(AssetLibrary assets, IInput input, UiModule ui) {
+        this.input = input;
+        this.ui = ui;
         keyboardGlyphs = new GlyphAtlas("pc", assets);
         
         gamepadGlyphs[PadBrand.Xbox] = new GlyphAtlas("xbox", assets);
@@ -18,6 +24,84 @@ sealed class InputGlyphs {
     readonly Dictionary<PadBrand, GlyphAtlas> gamepadGlyphs = [];
     
     // Public API
+    
+    readonly Dictionary<string, UiImage> glyphImages = [];
+
+    public bool TryGetImage(InputPrompt prompt, out UiImage image) {
+        
+        // Depends on scheme
+        switch (prompt.Source) {
+            case PadButtonSource s: {
+                var brand = input.Player.Brand;
+                var button = s.Button;
+                
+                var cacheKey = $"gamepad:{brand}:{button}";
+                if (glyphImages.TryGetValue(cacheKey, out image)) return true;
+                if (!TryGetGlyph(brand, button, out var g)) {
+                    Console.WriteLine($"{brand}:{button} not found");
+                    return false;
+                }
+        
+                image = ui.Image(g.Texture).Region(g.Rect);
+                glyphImages[cacheKey] = image;
+                return true;
+            }
+
+            case KeySource s: {
+                var key = s.Key;
+                
+                var cacheKey = $"keyboard:{key}";
+                if (glyphImages.TryGetValue(cacheKey, out image)) return true;
+                if (!TryGetGlyph(key, out var g)) {
+                    Console.WriteLine($"{key} not found");
+                    return false;
+                }
+                
+                image = ui.Image(g.Texture).Region(g.Rect);
+                glyphImages[cacheKey] = image;
+                return true;
+            }
+            
+            case LetterSource:
+            case MouseButtonSource:
+            case KeyPairSource:
+            case PadStickAxisSource:
+            case PadTriggerSource:
+            case Axis1Source:
+            case KeyQuadSource:
+            case PadDpadSource:
+            case PadStickSource:
+            case Axis2Source:
+            case ButtonSource:
+            case MouseWheelSource:
+            case PadButtonDeltaSource:
+            case PadStickAxisDeltaSource:
+            case Delta1Source :
+            case MouseMotionSource:
+            case PadStickDeltaSource :
+            case Delta2Source:
+            default:
+                Console.WriteLine($"No glyph for {prompt.Source}");
+                image = default;
+                return false;
+        }
+    }
+
+    public bool TryGetImage(ButtonAction action, out UiImage image) {
+        return TryGetImage(input.Prompt(action), out image);
+    }
+    public bool TryGetImage(Axis1Action action, out UiImage image) {
+        return TryGetImage(input.Prompt(action), out image);
+    }
+    public bool TryGetImage(Axis2Action action, out UiImage image) {
+        return TryGetImage(input.Prompt(action), out image);
+    }
+    public bool TryGetImage(Delta1Action action, out UiImage image) {
+        return TryGetImage(input.Prompt(action), out image);
+    }
+    public bool TryGetImage(Delta2Action action, out UiImage image) {
+        return TryGetImage(input.Prompt(action), out image);
+    }
     
     public bool TryGetGlyph(InputKey key, out InputGlyph glyph) {
         if (keyboardGlyphs == null) {
