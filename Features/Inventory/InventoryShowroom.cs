@@ -40,7 +40,7 @@ sealed record InventoryShowroom(UiImage Atlas) {
         var atlas = rendering.Textures.CreateRenderTarget(
             "Showroom", (uint)(Cell * Columns), (uint)(Cell * Rows), TextureFormat.RGBA8Unorm);
 
-        var view = rendering.AddView(atlas);
+        /*var view = rendering.AddView(atlas);
         view.Layers = Layer;
         view.Transparent = true;
         view.RendersShadows = false;
@@ -76,7 +76,7 @@ sealed record InventoryShowroom(UiImage Atlas) {
                 .At(eye, Rotations.LookAt(eye, Vector3d.Zero));
         });
 
-        game.AddSystem<SpinSystem>(QuarkPhases.LateUpdate, order: 5);
+        game.AddSystem<SpinSystem>(QuarkPhases.LateUpdate, order: 5);*/
         return new InventoryShowroom(game.Ui.Image(atlas));
     }
 

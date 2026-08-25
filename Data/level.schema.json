@@ -1907,7 +1907,7 @@
         },
         "id": {
           "type": "string",
-          "pattern": "^[A-Za-z0-9_.-]\u002B$"
+          "pattern": "^[A-Za-z0-9.-][A-Za-z0-9_.-]*$"
         },
         "prefab": {
           "type": "string"
@@ -1944,10 +1944,7 @@
           ]
         }
       },
-      "additionalProperties": false,
-      "required": [
-        "id"
-      ]
+      "additionalProperties": false
     },
     "textureOp": {
       "oneOf": [
