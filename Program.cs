@@ -12,12 +12,14 @@ Console.WriteLine("F3: Show hidden volumes   F5: Reload level");
 Game.Create("Adventure Game", 1920, 1080, vsync: false)
     .UseInput(Controls.Bind)
     .UseDefaultRendering(rendering => {
+        rendering.MsaaSampleCount = 1;
+        
         rendering.Stencil = true;
-        rendering.DepthPrepass = true;
+        //rendering.DepthPrepass = true;
 
         rendering.AmbientOcclusion.Enabled = true;
         rendering.AmbientOcclusion.Quality = AmbientOcclusionQuality.Balanced;
-        rendering.AmbientOcclusion.Filter  = AmbientOcclusionFilter.High;
+        rendering.AmbientOcclusion.Filter  = AmbientOcclusionFilter.Low;
         rendering.AmbientOcclusion.Radius = 2.0f;
         rendering.AmbientOcclusion.Intensity = 0.8f;
         rendering.AmbientOcclusion.DirectOcclusion = 0.3f;
@@ -32,9 +34,9 @@ Game.Create("Adventure Game", 1920, 1080, vsync: false)
     .UseAssets()
     .UseSceneFiles()
     .UseUi()
-    .UseCapture(capture => {
+    /*.UseCapture(capture => {
         capture.Name = "adventure-game";
         capture.Directory = "/Users/thomas/Desktop/Gamedev/Adventure Game/Captures";
-    })
+    })*/
     .Setup(Features.InstallAll)
     .Run();

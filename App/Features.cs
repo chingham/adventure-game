@@ -38,7 +38,7 @@ static class Features {
         new PortalFeature(),
         new InventoryFeature(),
         new MenuFeature(),
-        new DebugFeature()
+        //new DebugFeature()
     ];
 
     public static void InstallAll(Game game) {
