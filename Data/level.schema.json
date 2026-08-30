@@ -129,6 +129,15 @@
                     "type": "number",
                     "description": null
                   },
+                  "atlas": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": null
+                  },
                   "billboard": {
                     "oneOf": [
                       {
@@ -2341,6 +2350,31 @@
           },
           "required": [
             "drag"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "flipbook": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "frames": {
+                      "type": "integer"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "flipbook"
           ],
           "additionalProperties": false
         },

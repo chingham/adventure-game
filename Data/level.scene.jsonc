@@ -128,9 +128,9 @@
             "id": "world",
             "camera": { "iso": false, "distance": 90, "fov": 0.4 },
             "ambience": {
-                "fog": { "density": 0.05, "color": "#030404" },
-                "grade": { "saturation": 0.9, "warmth": 0.1 },
-                "rain": { "intensity": 0.1, "tilt": 4 },
+                "fog": { "density": 0.07, "color": "#030404" },
+                "grade": { "saturation": 1.0, "warmth": 0.0 },
+                "rain": { "intensity": 0.15, "tilt": 4 },
             },
         },
 
