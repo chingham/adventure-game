@@ -12,12 +12,6 @@ namespace AdventureGame.Presentation;
 // the rest of the chain are authored in the level file.
 sealed class PresentationFeature : IGameFeature {
     public void Provide(IServiceRegistry services) {
-        // Driven zone by zone rather than authored: a system needs a handle to write every frame, and
-        // the file supplies the values through its aspects instead. Grading lands after the tonemap.
-        services.Add(locator => locator.Get<DefaultRenderingModule>().AddPostEffect(
-            new DepthFogEffect { Color = Color.FromHex("0E0F15"), Density = 0.02f }, fold: true));
-        services.Add(locator => locator.Get<DefaultRenderingModule>().AddPostEffect(
-            new GradeEffect { Saturation = 1, Warmth = 0 }, PostEffectSpace.Ldr, fold: true));
 
         // The passes the effect reads from are installed with it rather than beside it, so the handle
         // cannot exist without what it draws.

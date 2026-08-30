@@ -38,7 +38,7 @@ static class Character {
         // Smoke material
         var smokeTexture = assets.LoadTexture("Data/Textures/smoke.png");
         var smokeMaterial = rendering.CreateMaterial(
-            new SoftParticleMaterial { Fade = 0.8f },
+            new ParticleMaterial { Response = 1, Fade = 0.8f },
             smokeTexture);
         
         // Spawn root character

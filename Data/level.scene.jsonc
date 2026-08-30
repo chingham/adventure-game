@@ -3,9 +3,12 @@
 
     "textures": {
         "greyGrid": { "path": "Data/Textures/greybox-unit-darkgray.png" },
+        //"greyGrid": { "path": "Data/test2.png" },
         "whiteGrid": { "path": "Data/Textures/greybox-unit-white.png" },
         "redGrid": { "path": "Data/Textures/greybox-unit-red.png" },
+        //"redGrid": { "path": "Data/test.png" },
         "yellowGrid": { "path": "Data/Textures/greybox-unit-yellow.png" },
+        "raindrop": { "path": "Data/Textures/raindrop.png", "adjust": { "brightness": 0.5 } },
     },
     "materials": {
         "environment": { "baseColorTexture": "greyGrid", "roughness": 0.9 },
@@ -14,6 +17,7 @@
         "interactive": { "baseColorTexture": "yellowGrid", "roughness": 0.7 },
         "lamp-emissive": { "emissive": "#f7a452", "emissiveStrength": 7.0 },
         "window-emissive": { "emissive": "#f7a452", "emissiveStrength": 4.0 },
+        "rain": { "particle": { "response": 1.0, "fade": 1.0, "stamp": "raindrop", "billboard": "velocity" } },
     },
 
     "view": {
@@ -118,6 +122,28 @@
             "mesh": "terrain",
             "solid": true,
         },
+
+        // Rain emitter
+        /*{
+            "id": "rain",
+            "at": [-13, -12, 30],
+            "rot": [180, 5, 0],
+            "particles": {
+                "prewarm": 10,
+                "rate": 5000,
+                "emission": { "circle": { "radius": 20 } },
+                "spread": 2,
+                "lifetime": 2.0,
+                "capacity": 32000,
+                "speed": 50,
+                "material": "rain",
+                "blend": "Alpha",
+                "startSize": [
+                    [0.02, 1],
+                    [0.02, 1],
+                ],
+            },
+        },*/
 
         // The open air: aspects with no volume, in force wherever no zone says otherwise
         {

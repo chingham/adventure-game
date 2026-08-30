@@ -55,67 +55,138 @@
     "materials": {
       "type": "object",
       "additionalProperties": {
-        "type": "object",
-        "properties": {
-          "alphaCutoff": {
-            "type": "number",
-            "description": null
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "alphaCutoff": {
+                "type": "number",
+                "description": null
+              },
+              "alphaMode": {
+                "enum": [
+                  "Opaque",
+                  "Mask",
+                  "Blend"
+                ]
+              },
+              "baseColor": {
+                "$ref": "#/$defs/color4"
+              },
+              "baseColorTexture": {
+                "type": "string",
+                "description": "Texture name"
+              },
+              "emissive": {
+                "$ref": "#/$defs/color3"
+              },
+              "emissiveStrength": {
+                "type": "number",
+                "description": null
+              },
+              "emissiveTexture": {
+                "type": "string",
+                "description": "Texture name"
+              },
+              "metallic": {
+                "type": "number",
+                "description": null
+              },
+              "metallicRoughnessTexture": {
+                "type": "string",
+                "description": "Texture name"
+              },
+              "normalScale": {
+                "type": "number",
+                "description": null
+              },
+              "normalTexture": {
+                "type": "string",
+                "description": "Texture name"
+              },
+              "occlusionStrength": {
+                "type": "number",
+                "description": null
+              },
+              "occlusionTexture": {
+                "type": "string",
+                "description": "Texture name"
+              },
+              "roughness": {
+                "type": "number",
+                "description": null
+              }
+            },
+            "additionalProperties": false
           },
-          "alphaMode": {
-            "enum": [
-              "Opaque",
-              "Mask",
-              "Blend"
-            ]
-          },
-          "baseColor": {
-            "$ref": "#/$defs/color4"
-          },
-          "baseColorTexture": {
-            "type": "string",
-            "description": "Texture name"
-          },
-          "emissive": {
-            "$ref": "#/$defs/color3"
-          },
-          "emissiveStrength": {
-            "type": "number",
-            "description": null
-          },
-          "emissiveTexture": {
-            "type": "string",
-            "description": "Texture name"
-          },
-          "metallic": {
-            "type": "number",
-            "description": null
-          },
-          "metallicRoughnessTexture": {
-            "type": "string",
-            "description": "Texture name"
-          },
-          "normalScale": {
-            "type": "number",
-            "description": null
-          },
-          "normalTexture": {
-            "type": "string",
-            "description": "Texture name"
-          },
-          "occlusionStrength": {
-            "type": "number",
-            "description": null
-          },
-          "occlusionTexture": {
-            "type": "string",
-            "description": "Texture name"
-          },
-          "roughness": {
-            "type": "number",
-            "description": null
+          {
+            "type": "object",
+            "properties": {
+              "particle": {
+                "type": "object",
+                "properties": {
+                  "additive": {
+                    "type": "number",
+                    "description": null
+                  },
+                  "billboard": {
+                    "oneOf": [
+                      {
+                        "enum": [
+                          "camera",
+                          "velocity"
+                        ],
+                        "description": "Alignment alone"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "align": {
+                            "enum": [
+                              "camera",
+                              "velocity"
+                            ]
+                          },
+                          "pivot": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            },
+                            "minItems": 2,
+                            "maxItems": 2,
+                            "description": "Which point of the quad sits on the particle, in [0,1] UV"
+                          },
+                          "minLength": {
+                            "type": "number",
+                            "description": "Velocity only: head-on length floor, in widths"
+                          },
+                          "scale": {
+                            "type": "number"
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "fade": {
+                    "type": "number",
+                    "description": null
+                  },
+                  "response": {
+                    "type": "number",
+                    "description": null
+                  },
+                  "stamp": {
+                    "type": "string",
+                    "description": "Texture name"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false
+        ]
       }
     },
     "models": {
@@ -197,12 +268,6 @@
           "particles": {
             "type": "object",
             "properties": {
-              "align": {
-                "enum": [
-                  "Camera",
-                  "Velocity"
-                ]
-              },
               "behaviors": {
                 "anyOf": [
                   {
@@ -213,6 +278,45 @@
                   },
                   {
                     "$ref": "#/$defs/particleBehavior"
+                  }
+                ]
+              },
+              "billboard": {
+                "oneOf": [
+                  {
+                    "enum": [
+                      "camera",
+                      "velocity"
+                    ],
+                    "description": "Alignment alone"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "align": {
+                        "enum": [
+                          "camera",
+                          "velocity"
+                        ]
+                      },
+                      "pivot": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "description": "Which point of the quad sits on the particle, in [0,1] UV"
+                      },
+                      "minLength": {
+                        "type": "number",
+                        "description": "Velocity only: head-on length floor, in widths"
+                      },
+                      "scale": {
+                        "type": "number"
+                      }
+                    },
+                    "additionalProperties": false
                   }
                 ]
               },
@@ -1211,12 +1315,6 @@
         "particles": {
           "type": "object",
           "properties": {
-            "align": {
-              "enum": [
-                "Camera",
-                "Velocity"
-              ]
-            },
             "behaviors": {
               "anyOf": [
                 {
@@ -1227,6 +1325,45 @@
                 },
                 {
                   "$ref": "#/$defs/particleBehavior"
+                }
+              ]
+            },
+            "billboard": {
+              "oneOf": [
+                {
+                  "enum": [
+                    "camera",
+                    "velocity"
+                  ],
+                  "description": "Alignment alone"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "align": {
+                      "enum": [
+                        "camera",
+                        "velocity"
+                      ]
+                    },
+                    "pivot": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "description": "Which point of the quad sits on the particle, in [0,1] UV"
+                    },
+                    "minLength": {
+                      "type": "number",
+                      "description": "Velocity only: head-on length floor, in widths"
+                    },
+                    "scale": {
+                      "type": "number"
+                    }
+                  },
+                  "additionalProperties": false
                 }
               ]
             },
