@@ -1,3 +1,4 @@
+using AdventureGame.Level;
 using Quark.Ecs;
 using Quark.Kit;
 using Quark.Numerics;
@@ -20,7 +21,7 @@ sealed class CameraZoneSystem : ISystem {
     const double JumpDistance = 50;
 
     public void Update(World world, EntityCommands commands, float deltaTime) {
-        if (!Zones.TryListener(world, out var position))
+        if (!CameraListener.TryResolve(world, out var position, out _))
             return;
 
         var zone = Zones.Resolve<CameraZone>(world, position);

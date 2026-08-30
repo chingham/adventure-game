@@ -1,4 +1,5 @@
 using System.Text.Json;
+using AdventureGame.Features.Ambience;
 using AdventureGame.Features.Camera;
 using AdventureGame.Features.Interaction;
 using AdventureGame.Features.Platforms;
@@ -72,14 +73,19 @@ partial class LevelVocabulary {
         });
     }
 
+    // Ambience
+    //
+    // One verb for the whole feel of a place, each part of it optional: what the file leaves out is
+    // what the air around the volume keeps saying.
+
+    sealed class FogPayload {
+        public double Density { get; set; } = 0.02;
+        public Vector4 Color { get; set; } = new(0.05f, 0.06f, 0.08f, 1);
+    }
+
     sealed class GradePayload {
         public double Saturation { get; set; } = 1;
         public double Warmth { get; set; }
-    }
-
-    void GradeVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
-        var p = ctx.Get<GradePayload>(json, ctx.Location);
-        entity.Add(new GradeZone { Saturation = p.Saturation, Warmth = p.Warmth });
     }
 
     sealed class RainPayload {
@@ -87,13 +93,65 @@ partial class LevelVocabulary {
         public double Tilt { get; set; } = 8;
     }
 
-    void RainVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
-        var p = ctx.Get<RainPayload>(json, ctx.Location);
-        if (p.Intensity is < 0 or > 1)
-            throw ctx.Error(ctx.Location, "Rain intensity runs from 0 to 1.");
+    void AmbienceVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
+        if (json.ValueKind != JsonValueKind.Object)
+            throw ctx.Error(ctx.Location, "'ambience' takes an object.");
 
-        entity.Add(new RainZone { Intensity = p.Intensity, Tilt = p.Tilt });
+        var zone = new AmbienceZone();
+
+        if (Part<FogPayload>(json, ctx, "fog") is { } fog)
+            zone.Fog = new Fog { Density = fog.Density, Color = fog.Color };
+
+        if (Part<GradePayload>(json, ctx, "grade") is { } grade)
+            zone.Grade = new Grade { Saturation = grade.Saturation, Warmth = grade.Warmth };
+
+        if (Part<RainPayload>(json, ctx, "rain") is { } rain) {
+            if (rain.Intensity is < 0 or > 1)
+                throw ctx.Error($"{ctx.Location}.rain", "Rain intensity runs from 0 to 1.");
+
+            zone.Rain = new Rain { Intensity = rain.Intensity, Tilt = rain.Tilt };
+        }
+
+        entity.Add(zone);
     }
+
+    // The binder reflects one object deep, so the sub-blocks are read one at a time rather than as
+    // members of an ambience payload.
+    static T? Part<T>(JsonElement json, SceneParseContext ctx, string name) where T : class, new() =>
+        json.TryGetProperty(name, out var part) ? ctx.Get<T>(part, $"{ctx.Location}.{name}") : null;
+
+    const string AmbienceSchema = """
+        {
+          "type": "object",
+          "properties": {
+            "fog": {
+              "type": "object",
+              "properties": {
+                "density": { "type": "number" },
+                "color": { "$ref": "#/$defs/color4" }
+              },
+              "additionalProperties": false
+            },
+            "grade": {
+              "type": "object",
+              "properties": {
+                "saturation": { "type": "number" },
+                "warmth": { "type": "number" }
+              },
+              "additionalProperties": false
+            },
+            "rain": {
+              "type": "object",
+              "properties": {
+                "intensity": { "type": "number" },
+                "tilt": { "type": "number" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+        """;
 
     sealed class ShroudPayload {
         public double Edge { get; set; } = 1;
@@ -105,16 +163,6 @@ partial class LevelVocabulary {
     void ShroudVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
         var p = ctx.Get<ShroudPayload>(json, ctx.Location);
         entity.Add(new Shroud { Edge = p.Edge, Color = p.Color });
-    }
-
-    sealed class FogPayload {
-        public double Density { get; set; } = 0.02;
-        public Vector4 Color { get; set; } = new(0.05f, 0.06f, 0.08f, 1);
-    }
-
-    void FogVerb(SceneEntityBuilder entity, JsonElement json, SceneParseContext ctx) {
-        var p = ctx.Get<FogPayload>(json, ctx.Location);
-        entity.Add(new FogZone { Density = p.Density, Color = p.Color });
     }
 
     // Doorways

@@ -40,9 +40,7 @@ sealed partial class LevelVocabulary {
 
             // Zone aspects: each rides a volume, or stands alone as the level's own
             .Verb("camera", level.CameraVerb, Rider, payloadType: typeof(CameraPayload))
-            .Verb("fog", level.FogVerb, Rider, payloadType: typeof(FogPayload))
-            .Verb("grade", level.GradeVerb, Rider, payloadType: typeof(GradePayload))
-            .Verb("rain", level.RainVerb, Rider, payloadType: typeof(RainPayload))
+            .Verb("ambience", level.AmbienceVerb, Rider, schema: AmbienceSchema)
             .Verb("shroud", level.ShroudVerb, Rider, payloadType: typeof(ShroudPayload))
             .Verb("portalEnd", level.PortalEnd, Shape, payloadType: typeof(PortalEndPayload))
 

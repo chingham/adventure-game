@@ -1,4 +1,5 @@
 using AdventureGame.Debug;
+using AdventureGame.Features.Ambience;
 using AdventureGame.Features.Camera;
 using AdventureGame.Features.Character;
 using AdventureGame.Features.Dialogue;
@@ -30,6 +31,7 @@ static class Features {
         new ProgressionFeature(),
         new LevelFeature(),
         new CameraFeature(),
+        new AmbienceFeature(),
         new CharacterFeature(),
         new InteractionFeature(),
         new DialogueFeature(),

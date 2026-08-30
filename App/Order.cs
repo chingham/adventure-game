@@ -28,6 +28,7 @@ static class Order {
     public const int PlatformCall = -10;
     public const int Portal = -10;
     public const int Zones = -7;
+    public const int Ambience = -7;
     public const int DoorApproach = -6;
     public const int FollowRig = -5;
     public const int CameraDirector = -4;

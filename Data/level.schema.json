@@ -857,43 +857,44 @@
             "minItems": 3,
             "maxItems": 3
           },
-          "fog": {
+          "ambience": {
             "type": "object",
             "properties": {
-              "color": {
-                "$ref": "#/$defs/color4"
+              "fog": {
+                "type": "object",
+                "properties": {
+                  "density": {
+                    "type": "number"
+                  },
+                  "color": {
+                    "$ref": "#/$defs/color4"
+                  }
+                },
+                "additionalProperties": false
               },
-              "density": {
-                "type": "number",
-                "description": null
-              }
-            },
-            "additionalProperties": false
-          },
-          "grade": {
-            "type": "object",
-            "properties": {
-              "saturation": {
-                "type": "number",
-                "description": null
+              "grade": {
+                "type": "object",
+                "properties": {
+                  "saturation": {
+                    "type": "number"
+                  },
+                  "warmth": {
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false
               },
-              "warmth": {
-                "type": "number",
-                "description": null
-              }
-            },
-            "additionalProperties": false
-          },
-          "rain": {
-            "type": "object",
-            "properties": {
-              "intensity": {
-                "type": "number",
-                "description": null
-              },
-              "tilt": {
-                "type": "number",
-                "description": null
+              "rain": {
+                "type": "object",
+                "properties": {
+                  "intensity": {
+                    "type": "number"
+                  },
+                  "tilt": {
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": false
               }
             },
             "additionalProperties": false
@@ -1904,43 +1905,44 @@
           "minItems": 3,
           "maxItems": 3
         },
-        "fog": {
+        "ambience": {
           "type": "object",
           "properties": {
-            "color": {
-              "$ref": "#/$defs/color4"
+            "fog": {
+              "type": "object",
+              "properties": {
+                "density": {
+                  "type": "number"
+                },
+                "color": {
+                  "$ref": "#/$defs/color4"
+                }
+              },
+              "additionalProperties": false
             },
-            "density": {
-              "type": "number",
-              "description": null
-            }
-          },
-          "additionalProperties": false
-        },
-        "grade": {
-          "type": "object",
-          "properties": {
-            "saturation": {
-              "type": "number",
-              "description": null
+            "grade": {
+              "type": "object",
+              "properties": {
+                "saturation": {
+                  "type": "number"
+                },
+                "warmth": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false
             },
-            "warmth": {
-              "type": "number",
-              "description": null
-            }
-          },
-          "additionalProperties": false
-        },
-        "rain": {
-          "type": "object",
-          "properties": {
-            "intensity": {
-              "type": "number",
-              "description": null
-            },
-            "tilt": {
-              "type": "number",
-              "description": null
+            "rain": {
+              "type": "object",
+              "properties": {
+                "intensity": {
+                  "type": "number"
+                },
+                "tilt": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
