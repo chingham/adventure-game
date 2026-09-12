@@ -432,6 +432,21 @@
                   }
                 ]
               },
+              "layers": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "description": "Layer name, or \u0022default\u0022 / \u0022all\u0022"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Layers combined into a mask"
+                  }
+                ]
+              },
               "lifetime": {
                 "oneOf": [
                   {
@@ -1477,6 +1492,21 @@
                     }
                   },
                   "additionalProperties": false
+                }
+              ]
+            },
+            "layers": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "Layer name, or \u0022default\u0022 / \u0022all\u0022"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Layers combined into a mask"
                 }
               ]
             },

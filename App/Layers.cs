@@ -12,5 +12,6 @@ static class Layers {
     public static class Render {
         public static readonly LayerMask Character = 2;
         public static readonly LayerMask Highlight = 4;
+        public static readonly LayerMask Lightning = 8;
     }
 }

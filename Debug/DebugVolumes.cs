@@ -34,9 +34,9 @@ sealed class DebugVolumeSystem(DefaultRenderingModule rendering, IInput input) :
         if (input.Button(Controls.ToggleVolumes) == ButtonState.JustPressed)
             shown = !shown;
 
-        // The only writer of the line stream, so it owns the clear
+        // The module clears the stream at frame start, so this only adds to it - and anything else
+        // drawing lines this frame keeps its own.
         var lines = rendering.DebugProcessor;
-        lines.Clear();
         if (!shown)
             return;
 

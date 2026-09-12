@@ -13,12 +13,12 @@ Console.WriteLine("F3: Show hidden volumes   F5: Reload level");
 Game.Create("Adventure Game", 1920, 1080, vsync: true)
     .UseInput(Controls.Bind)
     .UseDefaultRendering(rendering => {
-        rendering.MsaaSampleCount = 1;
+        rendering.MsaaSampleCount = 4;
         
         rendering.Stencil = true;
         rendering.DepthPrepass = DepthPrepassMode.Auto;
 
-        rendering.AmbientOcclusion.Enabled = false;
+        rendering.AmbientOcclusion.Enabled = true;
         rendering.AmbientOcclusion.Quality = AmbientOcclusionQuality.Balanced;
         rendering.AmbientOcclusion.Filter  = AmbientOcclusionFilter.Low;
         rendering.AmbientOcclusion.Radius = 2.0f;

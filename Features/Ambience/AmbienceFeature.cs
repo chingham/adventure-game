@@ -32,6 +32,53 @@ sealed class AmbienceFeature : IGameFeature {
 
     public void Install(Game game) {
         game.AddSystem<AmbienceSystem>(QuarkPhases.Gameplay, Order.Ambience);
+        game.AddSystem<LightningSystem>(QuarkPhases.Gameplay, Order.Ambience);
+
+        /*var boltMaterial = game.Rendering.CreateMaterial(new PbrMaterial {
+            AlphaMode = AlphaMode.Blend,
+            BaseColor = new Vector4(1, 1, 1, 0.1f),
+            Emissive = Color.White,
+            EmissiveStrength = 0,
+        });*/
+        var lightningMaterial = game.Rendering.CreateMaterial(new LightningMaterial {
+            Color = new Color(1, 1, 1),
+            Fade = 0,
+            Intensity = 4,
+        });
+
+        var haloMaterial = game.Rendering.CreateMaterial(new LightningHaloMaterial {
+            Radius = LightningSystem.HaloRadius,
+            Color = new Vector3(0.8f, 0.85f, 1f)
+        });
+
+        var halo = game.World
+            .Spawn(new LightningHalo { Material = haloMaterial })
+            .With(new RenderMesh {
+                Casts = ShadowMode.Off,
+                Receives = ShadowMode.Off,
+                Layers = Layers.Render.Lightning,
+                Material = haloMaterial,
+                // Dense enough that the interpolated normal still points at the centre
+                Mesh = game.Primitives.Sphere(LightningSystem.HaloRadius, slices: 48, stacks: 24).Mesh!
+            })
+            .At(Vector3d.Zero);
+
+        game.World
+            .Spawn(new Lightning {
+                Frequency = 5f,
+                Material = lightningMaterial,
+                Halo = halo
+            })
+            .With(Light.Directional(new Vector3(-1,-1,0), Color.FromHex("#FFFFFF"), 0.0f))
+            .With(new RenderMesh {
+                Casts = ShadowMode.Off,
+                Receives = ShadowMode.Off,
+                Layer = RenderLayer.Transparent,
+                Layers = Layers.Render.Lightning,
+                Material = lightningMaterial,
+                Mesh = new ListMesh<MeshVertex>(game.Context.Resources)
+            })
+            .At(new Vector3d(100, 100, 0));
     }
 
     // What the ambience drives
@@ -45,11 +92,14 @@ sealed class AmbienceFeature : IGameFeature {
             Warmth = 0
         }, PostEffectSpace.Ldr, fold: true);
 
-    static SurfaceFeatureHandle<DepthFogFeature> AddFog(DefaultRenderingModule rendering) =>
-        rendering.MainView.AddSurfaceFeature(new DepthFogFeature {
+    static SurfaceFeatureHandle<DepthFogFeature> AddFog(DefaultRenderingModule rendering) {
+        var fog = rendering.MainView.AddSurfaceFeature(new DepthFogFeature {
             Color = Color.FromHex("0E0F15"),
             Density = 0.02f
         });
+        fog.Layers = LayerMask.All.Without(Layers.Render.Lightning);
+        return fog;
+    }
 
     // One emitter for the whole level, moved and rated by the system. It is born silent: Rate is what
     // the weather writes, and the level opens on whatever intensity the air around the spawn asks for.
