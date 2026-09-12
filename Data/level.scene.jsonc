@@ -233,7 +233,7 @@
         {
             "id": "lift1",
             "name": "lift1",
-            "at": [10, 39, 11.75],
+            "at": [30, 36, 16.75],
             "material": "danger",
             "block": [4, 4, 0.25],
             "mover": {
@@ -244,7 +244,10 @@
                 "dwell": 2,
             },
         },
-        { "id": "callable-lifts-2", "at": [6, 43, 11], "block": [8, 8, 1] },
+
+        // Lighthouse
+        { "at": [26, 40, 0], "block": [8, 8, 17] },
+        { "at": [28, 42, 17], "block": [4, 4, 6] },
 
         {
             "id": "lift-pad",

@@ -65,7 +65,7 @@ sealed class AmbienceFeature : IGameFeature {
 
         game.World
             .Spawn(new Lightning {
-                Frequency = 5f,
+                Frequency = 12f,
                 Material = lightningMaterial,
                 Halo = halo
             })

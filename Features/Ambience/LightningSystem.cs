@@ -56,7 +56,7 @@ sealed class LightningSystem(Context context, DefaultRenderingModule rendering, 
             
             // Check if timer has elapsed
             lightning.Timer -= deltaTime;
-            if (/*lightning.Timer <= 0 ||*/ trigger) {
+            if (lightning.Timer <= 0 || trigger) {
                 lightning.Timer += lightning.Frequency.Lerp(Random.Shared.NextSingle());
                 lightning.Clock = 0;
                 
